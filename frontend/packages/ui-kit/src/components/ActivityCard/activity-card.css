@@ -1,0 +1,107 @@
+/*
+ * ActivityCard (docs/design-system/components/ActivityCard): one tap target on surface-raised,
+ * with a line border, radius-lg and shadow-sm. The art band's 112px height and the chip's padding
+ * come from the spec's bundle.css, which the READMEs leave open (ADR 0019).
+ */
+.lf-activity-card {
+  --ui-card-art: var(--sky);
+  --ui-card-kind-tint: var(--sky-soft);
+  --ui-card-kind-ink: var(--sky-ink);
+
+  display: flex;
+  flex-direction: column;
+  inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-raised);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.lf-activity-card:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-sm), var(--focus-ring);
+}
+
+.lf-activity-card--review {
+  --ui-card-art: var(--coral);
+  --ui-card-kind-tint: var(--coral-soft);
+  --ui-card-kind-ink: var(--coral-ink);
+}
+
+.lf-activity-card--new {
+  --ui-card-art: var(--sun);
+  --ui-card-kind-tint: var(--sun-soft);
+  --ui-card-kind-ink: var(--sun-ink);
+}
+
+.lf-activity-card__art {
+  display: block;
+  inline-size: 100%;
+  block-size: 7rem;
+  background-color: var(--ui-card-art);
+}
+
+/* The shapes are placed from the inline start, so the picture turns round right to left. */
+[dir='rtl'] .lf-activity-card__art {
+  transform: scaleX(-1);
+}
+
+.lf-activity-card__shape--soft {
+  fill: var(--surface-raised);
+}
+
+.lf-activity-card__shape--leaf {
+  fill: var(--leaf);
+}
+
+.lf-activity-card__shape--navy {
+  fill: var(--navy);
+}
+
+.lf-activity-card__shape--sun {
+  fill: var(--sun);
+}
+
+.lf-activity-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-block: var(--space-4) var(--space-5);
+  padding-inline: var(--space-5);
+}
+
+/* The kind, in its soft tint and ink. Child text is never below 20px (ADR 0019). */
+.lf-activity-card__kind {
+  align-self: flex-start;
+  padding-block: 0.125rem;
+  padding-inline: 0.625rem;
+  border-radius: var(--radius-full);
+  background-color: var(--ui-card-kind-tint);
+  color: var(--ui-card-kind-ink);
+  font-family: var(--play-label-font-family);
+  font-size: var(--play-label-font-size);
+  font-weight: var(--play-label-font-weight);
+  line-height: var(--play-label-line-height);
+}
+
+.lf-activity-card__title {
+  font-family: var(--play-label-font-family);
+  font-size: var(--play-label-font-size);
+  font-weight: var(--play-label-font-weight);
+  line-height: var(--play-label-line-height);
+}
+
+.lf-activity-card__length {
+  color: var(--ink-muted);
+  font-family: var(--play-label-font-family);
+  font-size: var(--play-label-font-size);
+  font-weight: 500;
+  line-height: var(--play-label-line-height);
+}

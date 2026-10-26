@@ -1,0 +1,2135 @@
+{
+  "meta": {
+    "purpose": "All mock data for the frontend while it is built before the backend (ADR 0001). Validated against packages/contracts on load.",
+    "skillGraph": {
+      "status": "draft",
+      "note": "Placeholder skill graph of 25 maths skills for ages 6–8 and 5 early-English skills for ages 6–8 (ADR 0027). A learning designer must review skills, prerequisites, difficulties and thresholds before any child sees them."
+    },
+    "market": "GB is a placeholder: the launch market is not decided yet (plan 12.1).",
+    "entitlements": "The family is on the free plan with a support override to two children (plan 9), so the premium Tile Farm arrays activity stays locked.",
+    "picturePins": "Ari has the picture PIN sun, fish, star (ADR 0018); Robin has none.",
+    "families": "Two families (ADR 0025): Sam owns the free-plan family of Robin and Ari, and is a guardian in Alex's premium family, with Nia, so the family switcher and the plan views have both to show. This device belongs to the first family: only its children appear in the profile picker.",
+    "markets": "GB's grade scheme is a draft (ADR 0026): England's school years for ages 3 to 8, until the launch market is decided (plan 12.1).",
+    "sessionScripts": "Past sessions as scripts (ADR 0025, ADR 0028, ADR 0031, ADR 0034): the mock API plays each through the real session engine, with number items at each skill's mastery difficulty, or `aboveMastery` above it as the in-session policy serves a child doing well, into sessions and learning events, and the learner model works out every skill status from them. They are written to give each child the statuses meant here, reviews included; a mastered skill has the evidence of a few sessions behind it, as the learner model asks."
+  },
+  "catalog": {
+    "release": "mock-2026-10-20",
+    "games": ["hop-line", "ten-frame-cafe", "tile-farm"],
+    "skillGraph": {
+      "strands": [
+        {
+          "id": "counting",
+          "subjectId": "mathematics",
+          "title": {
+            "en": "Counting"
+          }
+        },
+        {
+          "id": "place-value",
+          "subjectId": "mathematics",
+          "title": {
+            "en": "Place value"
+          }
+        },
+        {
+          "id": "addition-and-subtraction",
+          "subjectId": "mathematics",
+          "title": {
+            "en": "Addition and subtraction"
+          }
+        },
+        {
+          "id": "multiplication-and-division",
+          "subjectId": "mathematics",
+          "title": {
+            "en": "Multiplication and division"
+          }
+        },
+        {
+          "id": "fractions",
+          "subjectId": "mathematics",
+          "title": {
+            "en": "Fractions"
+          }
+        },
+        {
+          "id": "phonics",
+          "subjectId": "literacy",
+          "title": {
+            "en": "Phonics"
+          }
+        },
+        {
+          "id": "reading",
+          "subjectId": "literacy",
+          "title": {
+            "en": "Reading"
+          }
+        },
+        {
+          "id": "spelling",
+          "subjectId": "literacy",
+          "title": {
+            "en": "Spelling"
+          }
+        }
+      ],
+      "skills": [
+        {
+          "id": "count-to-20",
+          "subjectId": "mathematics",
+          "strand": "counting",
+          "title": {
+            "en": "Count objects and numbers to 20"
+          },
+          "masteryDifficulty": -1.5,
+          "uncertaintyThreshold": 0.35,
+          "broad": false,
+          "fluency": false
+        },
+        {
+          "id": "count-to-100",
+          "subjectId": "mathematics",
+          "strand": "counting",
+          "title": {
+            "en": "Count to 100, forwards and backwards"
+          },
+          "masteryDifficulty": -1,
+          "uncertaintyThreshold": 0.35,
+          "broad": false,
+          "fluency": false
+        },
+        {
+          "id": "count-in-2s-5s-10s",
+          "subjectId": "mathematics",
+          "strand": "counting",
+          "title": {
+            "en": "Count in 2s, 5s and 10s"
+          },
+          "masteryDifficulty": -0.5,
+          "uncertaintyThreshold": 0.35,
+          "broad": false,
+          "fluency": true
+        },
+        {
+          "id": "place-value-to-100",
+          "subjectId": "mathematics",
+          "strand": "place-value",
+          "title": {
+            "en": "Tens and ones in numbers to 100"
+          },
+          "masteryDifficulty": -0.3,
+          "uncertaintyThreshold": 0.35,
+          "broad": false,
+          "fluency": false
+        },
+        {
+          "id": "compare-numbers-to-100",
+          "subjectId": "mathematics",
+          "strand": "place-value",
+          "title": {
+            "en": "Compare and order numbers to 100"
+          },
+          "masteryDifficulty": 0,
+          "uncertaintyThreshold": 0.35,
+          "broad": false,
+          "fluency": false
+        },
+        {
+          "id": "number-line-to-100",
+          "subjectId": "mathematics",
+          "strand": "place-value",
+          "title": {
+            "en": "Place numbers to 100 on a number line"
+          },
+          "masteryDifficulty": 0.2,
+          "uncertaintyThreshold": 0.35,
+          "broad": false,
+          "fluency": false
+        },
+        {
+          "id": "number-bonds-to-10",
+          "subjectId": "mathematics",
+          "strand": "addition-and-subtraction",
+          "title": {
+            "en": "Number bonds to 10"
+          },
+          "masteryDifficulty": -1,
+          "uncertaintyThreshold": 0.3,
+          "broad": false,
+          "fluency": true
+        },
+        {
+          "id": "number-bonds-to-20",
+          "subjectId": "mathematics",
+          "strand": "addition-and-subtraction",
+          "title": {
+            "en": "Number bonds to 20"
+          },
+          "masteryDifficulty": -0.4,
+          "uncertaintyThreshold": 0.3,
+          "broad": false,
+          "fluency": true
+        },
+        {
+          "id": "add-within-10",
+          "subjectId": "mathematics",
+          "strand": "addition-and-subtraction",
+          "title": {
+            "en": "Add within 10"
+          },
+          "masteryDifficulty": -0.9,
+          "uncertaintyThreshold": 0.3,
+          "broad": false,
+          "fluency": true
+        },
+        {
+          "id": "subtract-within-10",
+          "subjectId": "mathematics",
+          "strand": "addition-and-subtraction",
+          "title": {
+            "en": "Subtract within 10"
+          },
+          "masteryDifficulty": -0.7,
+          "uncertaintyThreshold": 0.3,
+          "broad": false,
+          "fluency": true
+        },
+        {
+          "id": "add-within-20",
+          "subjectId": "mathematics",
+          "strand": "addition-and-subtraction",
+          "title": {
+            "en": "Add within 20 by counting on"
+          },
+          "masteryDifficulty": -0.3,
+          "uncertaintyThreshold": 0.3,
+          "broad": true,
+          "fluency": false
+        },
+        {
+          "id": "subtract-within-20",
+          "subjectId": "mathematics",
+          "strand": "addition-and-subtraction",
+          "title": {
+            "en": "Subtract within 20"
+          },
+          "masteryDifficulty": -0.1,
+          "uncertaintyThreshold": 0.3,
+          "broad": true,
+          "fluency": false
+        },
+        {
+          "id": "make-ten-to-add",
+          "subjectId": "mathematics",
+          "strand": "addition-and-subtraction",
+          "title": {
+            "en": "Make ten to add, such as 8 + 5 = 8 + 2 + 3"
+          },
+          "masteryDifficulty": 0.2,
+          "uncertaintyThreshold": 0.3,
+          "broad": false,
+          "fluency": false
+        },
+        {
+          "id": "add-two-digit-and-ones",
+          "subjectId": "mathematics",
+          "strand": "addition-and-subtraction",
+          "title": {
+            "en": "Add a two-digit number and ones"
+          },
+          "masteryDifficulty": 0.4,
+          "uncertaintyThreshold": 0.3,
+          "broad": false,
+          "fluency": false
+        },
+        {
+          "id": "add-two-digit-numbers",
+          "subjectId": "mathematics",
+          "strand": "addition-and-subtraction",
+          "title": {
+            "en": "Add two-digit numbers within 100"
+          },
+          "masteryDifficulty": 0.8,
+          "uncertaintyThreshold": 0.3,
+          "broad": true,
+          "fluency": false
+        },
+        {
+          "id": "subtract-two-digit-numbers",
+          "subjectId": "mathematics",
+          "strand": "addition-and-subtraction",
+          "title": {
+            "en": "Subtract two-digit numbers within 100"
+          },
+          "masteryDifficulty": 1,
+          "uncertaintyThreshold": 0.3,
+          "broad": true,
+          "fluency": false
+        },
+        {
+          "id": "add-subtract-word-problems",
+          "subjectId": "mathematics",
+          "strand": "addition-and-subtraction",
+          "title": {
+            "en": "Solve one-step addition and subtraction problems"
+          },
+          "masteryDifficulty": 1.2,
+          "uncertaintyThreshold": 0.35,
+          "broad": true,
+          "fluency": false
+        },
+        {
+          "id": "equal-groups",
+          "subjectId": "mathematics",
+          "strand": "multiplication-and-division",
+          "title": {
+            "en": "Make and count equal groups"
+          },
+          "masteryDifficulty": -0.2,
+          "uncertaintyThreshold": 0.35,
+          "broad": false,
+          "fluency": false
+        },
+        {
+          "id": "repeated-addition",
+          "subjectId": "mathematics",
+          "strand": "multiplication-and-division",
+          "title": {
+            "en": "Multiply as repeated addition"
+          },
+          "masteryDifficulty": 0.3,
+          "uncertaintyThreshold": 0.35,
+          "broad": false,
+          "fluency": false
+        },
+        {
+          "id": "arrays",
+          "subjectId": "mathematics",
+          "strand": "multiplication-and-division",
+          "title": {
+            "en": "Use arrays of rows and columns to multiply"
+          },
+          "masteryDifficulty": 0.5,
+          "uncertaintyThreshold": 0.35,
+          "broad": false,
+          "fluency": false
+        },
+        {
+          "id": "multiply-by-2-5-10",
+          "subjectId": "mathematics",
+          "strand": "multiplication-and-division",
+          "title": {
+            "en": "The 2, 5 and 10 times tables"
+          },
+          "masteryDifficulty": 0.7,
+          "uncertaintyThreshold": 0.3,
+          "broad": true,
+          "fluency": true
+        },
+        {
+          "id": "share-equally",
+          "subjectId": "mathematics",
+          "strand": "multiplication-and-division",
+          "title": {
+            "en": "Divide by sharing equally"
+          },
+          "masteryDifficulty": 0.4,
+          "uncertaintyThreshold": 0.35,
+          "broad": false,
+          "fluency": false
+        },
+        {
+          "id": "multiply-by-3-4",
+          "subjectId": "mathematics",
+          "strand": "multiplication-and-division",
+          "title": {
+            "en": "The 3 and 4 times tables"
+          },
+          "masteryDifficulty": 1.1,
+          "uncertaintyThreshold": 0.3,
+          "broad": true,
+          "fluency": true
+        },
+        {
+          "id": "halves-and-quarters",
+          "subjectId": "mathematics",
+          "strand": "fractions",
+          "title": {
+            "en": "Halves and quarters of shapes and amounts"
+          },
+          "masteryDifficulty": 0.5,
+          "uncertaintyThreshold": 0.35,
+          "broad": false,
+          "fluency": false
+        },
+        {
+          "id": "thirds",
+          "subjectId": "mathematics",
+          "strand": "fractions",
+          "title": {
+            "en": "Thirds of shapes and amounts"
+          },
+          "masteryDifficulty": 0.8,
+          "uncertaintyThreshold": 0.35,
+          "broad": false,
+          "fluency": false
+        },
+        {
+          "id": "letter-sounds",
+          "subjectId": "literacy",
+          "strand": "phonics",
+          "title": {
+            "en": "Say the sound for each letter"
+          },
+          "learningLanguage": "en",
+          "masteryDifficulty": -1.5,
+          "uncertaintyThreshold": 0.35,
+          "broad": false,
+          "fluency": false
+        },
+        {
+          "id": "blend-cvc-words",
+          "subjectId": "literacy",
+          "strand": "phonics",
+          "title": {
+            "en": "Blend sounds to read words such as cat and sun"
+          },
+          "learningLanguage": "en",
+          "masteryDifficulty": -1,
+          "uncertaintyThreshold": 0.35,
+          "broad": false,
+          "fluency": false
+        },
+        {
+          "id": "tricky-words",
+          "subjectId": "literacy",
+          "strand": "reading",
+          "title": {
+            "en": "Read common tricky words such as the and was"
+          },
+          "learningLanguage": "en",
+          "masteryDifficulty": -0.5,
+          "uncertaintyThreshold": 0.35,
+          "broad": false,
+          "fluency": false
+        },
+        {
+          "id": "read-simple-sentences",
+          "subjectId": "literacy",
+          "strand": "reading",
+          "title": {
+            "en": "Read short sentences"
+          },
+          "learningLanguage": "en",
+          "masteryDifficulty": 0,
+          "uncertaintyThreshold": 0.35,
+          "broad": false,
+          "fluency": false
+        },
+        {
+          "id": "spell-cvc-words",
+          "subjectId": "literacy",
+          "strand": "spelling",
+          "title": {
+            "en": "Spell words such as cat and sun"
+          },
+          "learningLanguage": "en",
+          "masteryDifficulty": -0.5,
+          "uncertaintyThreshold": 0.35,
+          "broad": false,
+          "fluency": false
+        }
+      ],
+      "prerequisites": [
+        {
+          "skillId": "count-to-100",
+          "prerequisiteId": "count-to-20"
+        },
+        {
+          "skillId": "count-in-2s-5s-10s",
+          "prerequisiteId": "count-to-100"
+        },
+        {
+          "skillId": "place-value-to-100",
+          "prerequisiteId": "count-to-100"
+        },
+        {
+          "skillId": "compare-numbers-to-100",
+          "prerequisiteId": "place-value-to-100"
+        },
+        {
+          "skillId": "number-line-to-100",
+          "prerequisiteId": "place-value-to-100"
+        },
+        {
+          "skillId": "number-bonds-to-10",
+          "prerequisiteId": "count-to-20"
+        },
+        {
+          "skillId": "number-bonds-to-20",
+          "prerequisiteId": "number-bonds-to-10"
+        },
+        {
+          "skillId": "add-within-10",
+          "prerequisiteId": "number-bonds-to-10"
+        },
+        {
+          "skillId": "subtract-within-10",
+          "prerequisiteId": "number-bonds-to-10"
+        },
+        {
+          "skillId": "add-within-20",
+          "prerequisiteId": "add-within-10"
+        },
+        {
+          "skillId": "subtract-within-20",
+          "prerequisiteId": "subtract-within-10"
+        },
+        {
+          "skillId": "make-ten-to-add",
+          "prerequisiteId": "number-bonds-to-10"
+        },
+        {
+          "skillId": "make-ten-to-add",
+          "prerequisiteId": "add-within-20"
+        },
+        {
+          "skillId": "add-two-digit-and-ones",
+          "prerequisiteId": "place-value-to-100"
+        },
+        {
+          "skillId": "add-two-digit-and-ones",
+          "prerequisiteId": "add-within-20"
+        },
+        {
+          "skillId": "add-two-digit-numbers",
+          "prerequisiteId": "add-two-digit-and-ones"
+        },
+        {
+          "skillId": "subtract-two-digit-numbers",
+          "prerequisiteId": "place-value-to-100"
+        },
+        {
+          "skillId": "subtract-two-digit-numbers",
+          "prerequisiteId": "subtract-within-20"
+        },
+        {
+          "skillId": "add-subtract-word-problems",
+          "prerequisiteId": "add-two-digit-numbers"
+        },
+        {
+          "skillId": "add-subtract-word-problems",
+          "prerequisiteId": "subtract-two-digit-numbers"
+        },
+        {
+          "skillId": "equal-groups",
+          "prerequisiteId": "count-in-2s-5s-10s"
+        },
+        {
+          "skillId": "repeated-addition",
+          "prerequisiteId": "equal-groups"
+        },
+        {
+          "skillId": "repeated-addition",
+          "prerequisiteId": "add-within-20"
+        },
+        {
+          "skillId": "arrays",
+          "prerequisiteId": "repeated-addition"
+        },
+        {
+          "skillId": "multiply-by-2-5-10",
+          "prerequisiteId": "arrays"
+        },
+        {
+          "skillId": "multiply-by-3-4",
+          "prerequisiteId": "multiply-by-2-5-10"
+        },
+        {
+          "skillId": "share-equally",
+          "prerequisiteId": "equal-groups"
+        },
+        {
+          "skillId": "halves-and-quarters",
+          "prerequisiteId": "share-equally"
+        },
+        {
+          "skillId": "thirds",
+          "prerequisiteId": "halves-and-quarters"
+        },
+        {
+          "skillId": "blend-cvc-words",
+          "prerequisiteId": "letter-sounds"
+        },
+        {
+          "skillId": "spell-cvc-words",
+          "prerequisiteId": "letter-sounds"
+        },
+        {
+          "skillId": "read-simple-sentences",
+          "prerequisiteId": "blend-cvc-words"
+        },
+        {
+          "skillId": "read-simple-sentences",
+          "prerequisiteId": "tricky-words"
+        }
+      ]
+    },
+    "activities": [
+      {
+        "id": "hop-line-add-within-20",
+        "gameId": "hop-line",
+        "title": {
+          "en": "Hop Line: add within 20"
+        },
+        "targetSkillIds": ["add-within-20", "add-within-10"],
+        "itemSource": {
+          "kind": "template",
+          "templateId": "hop-line-addition"
+        },
+        "modes": ["practice", "challenge"],
+        "experienceBands": ["early-primary"],
+        "minutes": 5,
+        "tier": "free"
+      },
+      {
+        "id": "hop-line-subtract-within-20",
+        "gameId": "hop-line",
+        "title": {
+          "en": "Hop Line: subtract within 20"
+        },
+        "targetSkillIds": ["subtract-within-20", "subtract-within-10"],
+        "itemSource": {
+          "kind": "template",
+          "templateId": "hop-line-subtraction"
+        },
+        "modes": ["practice", "challenge"],
+        "experienceBands": ["early-primary"],
+        "minutes": 5,
+        "tier": "free"
+      },
+      {
+        "id": "ten-frame-cafe-count",
+        "gameId": "ten-frame-cafe",
+        "title": {
+          "en": "Ten Frame Café: count the order"
+        },
+        "targetSkillIds": ["count-to-20"],
+        "itemSource": {
+          "kind": "template",
+          "templateId": "ten-frame-counting"
+        },
+        "modes": ["practice"],
+        "experienceBands": ["early-years", "early-primary"],
+        "minutes": 4,
+        "tier": "free"
+      },
+      {
+        "id": "ten-frame-cafe-bonds-to-10",
+        "gameId": "ten-frame-cafe",
+        "title": {
+          "en": "Ten Frame Café: fill the tray to 10"
+        },
+        "targetSkillIds": ["number-bonds-to-10"],
+        "itemSource": {
+          "kind": "template",
+          "templateId": "ten-frame-bonds-10"
+        },
+        "modes": ["practice", "challenge"],
+        "experienceBands": ["early-years", "early-primary"],
+        "minutes": 4,
+        "tier": "free"
+      },
+      {
+        "id": "ten-frame-cafe-make-ten",
+        "gameId": "ten-frame-cafe",
+        "title": {
+          "en": "Ten Frame Café: make ten to add"
+        },
+        "targetSkillIds": ["make-ten-to-add", "number-bonds-to-20", "add-within-20"],
+        "itemSource": {
+          "kind": "template",
+          "templateId": "ten-frame-make-ten"
+        },
+        "modes": ["practice", "challenge"],
+        "experienceBands": ["early-primary"],
+        "minutes": 6,
+        "tier": "free"
+      },
+      {
+        "id": "tile-farm-equal-groups",
+        "gameId": "tile-farm",
+        "title": {
+          "en": "Tile Farm: plant equal groups"
+        },
+        "targetSkillIds": ["equal-groups", "repeated-addition"],
+        "itemSource": {
+          "kind": "template",
+          "templateId": "tile-farm-groups"
+        },
+        "modes": ["practice"],
+        "experienceBands": ["early-primary"],
+        "minutes": 5,
+        "tier": "free"
+      },
+      {
+        "id": "tile-farm-arrays",
+        "gameId": "tile-farm",
+        "title": {
+          "en": "Tile Farm: fill the field with arrays"
+        },
+        "targetSkillIds": ["arrays", "multiply-by-2-5-10"],
+        "itemSource": {
+          "kind": "template",
+          "templateId": "tile-farm-arrays"
+        },
+        "modes": ["practice", "challenge"],
+        "experienceBands": ["early-primary"],
+        "minutes": 6,
+        "tier": "premium"
+      }
+    ],
+    "itemTemplates": [
+      {
+        "id": "hop-line-addition",
+        "generator": "number-line-addition",
+        "line": {
+          "min": 0,
+          "max": 20
+        },
+        "skillIds": ["add-within-20"],
+        "skillIdsWithinTen": ["add-within-10", "add-within-20"],
+        "difficulty": {
+          "base": -1.2,
+          "sumAboveTen": 0.4,
+          "largeHops": 0.3,
+          "largeHopsFrom": 4,
+          "crossesTen": 0.4,
+          "landmarksOnly": 0.4
+        },
+        "misconceptions": {
+          "countsTheStart": "counts-the-start",
+          "extraHop": "extra-hop",
+          "goesToTheNumber": "goes-to-the-number",
+          "hopsBackwards": "hops-backwards"
+        },
+        "levels": [
+          {
+            "minSum": 2,
+            "maxSum": 10,
+            "minHops": 1,
+            "maxHops": 3,
+            "crossesTen": "never",
+            "labelEvery": 1
+          },
+          {
+            "minSum": 5,
+            "maxSum": 10,
+            "minHops": 4,
+            "maxHops": 9,
+            "crossesTen": "never",
+            "labelEvery": 1
+          },
+          {
+            "minSum": 11,
+            "maxSum": 20,
+            "minHops": 1,
+            "maxHops": 3,
+            "crossesTen": "never",
+            "labelEvery": 1
+          },
+          {
+            "minSum": 11,
+            "maxSum": 20,
+            "minHops": 4,
+            "maxHops": 9,
+            "crossesTen": "never",
+            "labelEvery": 1
+          },
+          {
+            "minSum": 11,
+            "maxSum": 20,
+            "minHops": 2,
+            "maxHops": 9,
+            "crossesTen": "always",
+            "labelEvery": 1
+          },
+          {
+            "minSum": 11,
+            "maxSum": 20,
+            "minHops": 2,
+            "maxHops": 9,
+            "crossesTen": "always",
+            "labelEvery": 5
+          }
+        ]
+      },
+      {
+        "id": "ten-frame-counting",
+        "generator": "ten-frame-fill-to",
+        "skillIds": ["count-to-20"],
+        "fruits": ["apple", "pear", "lemon", "strawberry"],
+        "difficulty": {
+          "base": -2.3,
+          "perFruit": 0.04,
+          "aboveTen": 0.3
+        },
+        "misconceptions": {
+          "countsOneTwice": "counts-one-twice"
+        },
+        "levels": [
+          {
+            "min": 1,
+            "max": 5
+          },
+          {
+            "min": 6,
+            "max": 10
+          },
+          {
+            "min": 11,
+            "max": 15
+          },
+          {
+            "min": 16,
+            "max": 20
+          }
+        ]
+      },
+      {
+        "id": "ten-frame-bonds-10",
+        "generator": "ten-frame-fill-up",
+        "skillIds": ["number-bonds-to-10"],
+        "fruits": ["apple", "pear", "lemon", "strawberry"],
+        "difficulty": {
+          "base": -1.6,
+          "perMissing": 0.08,
+          "largeMissing": 0.2,
+          "largeMissingFrom": 6
+        },
+        "misconceptions": {
+          "givesThePart": "gives-the-part",
+          "countsAll": "counts-all"
+        },
+        "levels": [
+          {
+            "minShown": 7,
+            "maxShown": 9
+          },
+          {
+            "minShown": 5,
+            "maxShown": 6
+          },
+          {
+            "minShown": 3,
+            "maxShown": 4
+          },
+          {
+            "minShown": 1,
+            "maxShown": 2
+          }
+        ]
+      },
+      {
+        "id": "ten-frame-make-ten",
+        "generator": "ten-frame-make-ten",
+        "skillIds": ["make-ten-to-add", "number-bonds-to-20", "add-within-20"],
+        "fruits": ["apple", "pear", "lemon", "strawberry"],
+        "difficulty": {
+          "base": -0.1,
+          "farFromTen": 0.3,
+          "farFrom": 3,
+          "aboveFifteen": 0.3
+        },
+        "misconceptions": {
+          "stopsAtTen": "stops-at-ten",
+          "countsMovedTwice": "counts-moved-twice"
+        },
+        "levels": [
+          {
+            "minFirst": 8,
+            "maxFirst": 9,
+            "minSecond": 3,
+            "maxSecond": 5
+          },
+          {
+            "minFirst": 8,
+            "maxFirst": 9,
+            "minSecond": 6,
+            "maxSecond": 9
+          },
+          {
+            "minFirst": 4,
+            "maxFirst": 7,
+            "minSecond": 7,
+            "maxSecond": 8
+          },
+          {
+            "minFirst": 4,
+            "maxFirst": 7,
+            "minSecond": 9,
+            "maxSecond": 9
+          }
+        ]
+      },
+      {
+        "id": "tile-farm-groups",
+        "generator": "field-equal-groups",
+        "skillIds": ["equal-groups", "repeated-addition"],
+        "crops": ["carrot", "cabbage", "sunflower"],
+        "difficulty": {
+          "base": -1.1,
+          "perRow": 0.1,
+          "perTen": 0.15,
+          "awkwardLength": 0.4,
+          "easyLengths": [2, 5, 10]
+        },
+        "misconceptions": {
+          "addsTheNumbers": "adds-the-numbers",
+          "countsOneRow": "counts-one-row",
+          "countsTheRows": "counts-the-rows",
+          "skipsARow": "skips-a-row"
+        },
+        "levels": [
+          {
+            "minRows": 2,
+            "maxRows": 3,
+            "rowLengths": [2, 5]
+          },
+          {
+            "minRows": 2,
+            "maxRows": 5,
+            "rowLengths": [2, 5, 10]
+          },
+          {
+            "minRows": 2,
+            "maxRows": 4,
+            "rowLengths": [3, 4]
+          },
+          {
+            "minRows": 4,
+            "maxRows": 6,
+            "rowLengths": [3, 4]
+          }
+        ]
+      },
+      {
+        "id": "tile-farm-arrays",
+        "generator": "field-array",
+        "skillIds": ["arrays"],
+        "timesTables": {
+          "rowLengths": [2, 5, 10],
+          "skillIds": ["multiply-by-2-5-10"]
+        },
+        "crops": ["carrot", "cabbage", "sunflower"],
+        "difficulty": {
+          "base": -0.5,
+          "perRow": 0.1,
+          "perTen": 0.15,
+          "awkwardLength": 0.4,
+          "easyLengths": [2, 5, 10]
+        },
+        "misconceptions": {
+          "addsTheNumbers": "adds-the-numbers",
+          "countsOneRow": "counts-one-row",
+          "countsTheRows": "counts-the-rows",
+          "skipsARow": "skips-a-row"
+        },
+        "levels": [
+          {
+            "minRows": 2,
+            "maxRows": 3,
+            "rowLengths": [2, 5, 10]
+          },
+          {
+            "minRows": 2,
+            "maxRows": 4,
+            "rowLengths": [3, 4]
+          },
+          {
+            "minRows": 4,
+            "maxRows": 6,
+            "rowLengths": [2, 5, 10]
+          },
+          {
+            "minRows": 4,
+            "maxRows": 6,
+            "rowLengths": [3, 4]
+          }
+        ]
+      }
+    ],
+    "misconceptions": [
+      {
+        "id": "counts-the-start",
+        "skillId": "add-within-20",
+        "title": {
+          "en": "Counts the starting number as the first hop"
+        },
+        "explanation": {
+          "en": "The first hop goes to the next number, so the number you start on is not counted."
+        }
+      },
+      {
+        "id": "extra-hop",
+        "skillId": "add-within-20",
+        "title": {
+          "en": "Makes one hop too many"
+        },
+        "explanation": {
+          "en": "Count each hop once, and stop when the count reaches the second number."
+        }
+      },
+      {
+        "id": "goes-to-the-number",
+        "skillId": "add-within-20",
+        "title": {
+          "en": "Goes to the second number instead of moving on by it"
+        },
+        "explanation": {
+          "en": "Adding 4 means moving on 4 from the first number, not going to 4."
+        }
+      },
+      {
+        "id": "hops-backwards",
+        "skillId": "add-within-20",
+        "title": {
+          "en": "Moves backwards when adding"
+        },
+        "explanation": {
+          "en": "Adding moves forward, towards bigger numbers."
+        }
+      },
+      {
+        "id": "counts-one-twice",
+        "skillId": "count-to-20",
+        "title": {
+          "en": "Counts a fruit twice, or skips one"
+        },
+        "explanation": {
+          "en": "Touch each fruit once as you count, and say one number for each."
+        }
+      },
+      {
+        "id": "gives-the-part",
+        "skillId": "number-bonds-to-10",
+        "title": {
+          "en": "Gives the part shown instead of the part missing"
+        },
+        "explanation": {
+          "en": "The tray already has some. Count only how many more make 10."
+        }
+      },
+      {
+        "id": "counts-all",
+        "skillId": "number-bonds-to-10",
+        "title": {
+          "en": "Counts the whole tray instead of the fruit added"
+        },
+        "explanation": {
+          "en": "A full tray is 10. The answer is how many were added to fill it."
+        }
+      },
+      {
+        "id": "stops-at-ten",
+        "skillId": "make-ten-to-add",
+        "title": {
+          "en": "Stops at the full tray"
+        },
+        "explanation": {
+          "en": "One tray makes 10. Add what is left in the other tray."
+        }
+      },
+      {
+        "id": "counts-moved-twice",
+        "skillId": "make-ten-to-add",
+        "title": {
+          "en": "Counts the moved fruit in both trays"
+        },
+        "explanation": {
+          "en": "The fruit that moved is now in the first tray. Count it once."
+        }
+      },
+      {
+        "id": "adds-the-numbers",
+        "skillId": "equal-groups",
+        "title": {
+          "en": "Adds the rows and the row length"
+        },
+        "explanation": {
+          "en": "Each row has the same number of plants. Count every plant, a row at a time."
+        }
+      },
+      {
+        "id": "counts-one-row",
+        "skillId": "equal-groups",
+        "title": {
+          "en": "Counts one row"
+        },
+        "explanation": {
+          "en": "That is one row. Count the plants in every row."
+        }
+      },
+      {
+        "id": "counts-the-rows",
+        "skillId": "equal-groups",
+        "title": {
+          "en": "Counts the rows instead of the plants"
+        },
+        "explanation": {
+          "en": "That is how many rows there are. Now count the plants in them."
+        }
+      },
+      {
+        "id": "skips-a-row",
+        "skillId": "repeated-addition",
+        "title": {
+          "en": "Counts a row too few or too many"
+        },
+        "explanation": {
+          "en": "Count each row once, adding one row at a time."
+        }
+      }
+    ]
+  },
+  "markets": [
+    {
+      "market": "GB",
+      "learningLanguages": ["en"],
+      "defaultCurriculumId": "england-national-curriculum",
+      "gradeScheme": {
+        "id": "england-school-years",
+        "grades": [
+          {
+            "id": "nursery",
+            "name": {
+              "en": "Nursery"
+            }
+          },
+          {
+            "id": "reception",
+            "name": {
+              "en": "Reception"
+            }
+          },
+          {
+            "id": "year-1",
+            "name": {
+              "en": "Year 1"
+            }
+          },
+          {
+            "id": "year-2",
+            "name": {
+              "en": "Year 2"
+            }
+          },
+          {
+            "id": "year-3",
+            "name": {
+              "en": "Year 3"
+            }
+          },
+          {
+            "id": "year-4",
+            "name": {
+              "en": "Year 4"
+            }
+          }
+        ]
+      },
+      "ageBands": [
+        {
+          "band": "early-years",
+          "minAge": 3,
+          "maxAge": 5,
+          "subjects": ["mathematics"]
+        },
+        {
+          "band": "early-primary",
+          "minAge": 6,
+          "maxAge": 8,
+          "subjects": ["mathematics", "literacy"]
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "id": "0192f4c1-0000-7000-8000-00000000a001",
+      "displayName": "Sam",
+      "email": "sam@example.com",
+      "uiLocale": "en-GB",
+      "createdAt": "2026-09-01T08:00:00.000Z"
+    },
+    {
+      "id": "0192f4c1-0000-7000-8000-00000000a002",
+      "displayName": "Alex",
+      "email": "alex@example.com",
+      "uiLocale": "en-GB",
+      "createdAt": "2026-09-10T19:00:00.000Z"
+    }
+  ],
+  "families": [
+    {
+      "id": "0192f4c1-0000-7000-8000-00000000f001",
+      "market": "GB",
+      "homeRegion": "eu-1",
+      "timeZone": "Europe/London",
+      "members": [
+        {
+          "accountId": "0192f4c1-0000-7000-8000-00000000a001",
+          "role": "owner"
+        }
+      ],
+      "createdAt": "2026-09-01T08:00:00.000Z"
+    },
+    {
+      "id": "0192f4c1-0000-7000-8000-00000000f002",
+      "market": "GB",
+      "homeRegion": "eu-1",
+      "timeZone": "Europe/London",
+      "members": [
+        {
+          "accountId": "0192f4c1-0000-7000-8000-00000000a002",
+          "role": "owner"
+        },
+        {
+          "accountId": "0192f4c1-0000-7000-8000-00000000a001",
+          "role": "guardian"
+        }
+      ],
+      "createdAt": "2026-09-10T19:00:00.000Z"
+    }
+  ],
+  "children": [
+    {
+      "id": "0192f4c1-0000-7000-8000-00000000c001",
+      "familyId": "0192f4c1-0000-7000-8000-00000000f001",
+      "nickname": "Robin",
+      "birthYear": 2018,
+      "birthMonth": 5,
+      "learningLanguage": "en",
+      "grade": "year-3",
+      "curriculumId": "england-national-curriculum",
+      "uiLocale": "en-GB",
+      "avatarId": "purple-star",
+      "timeZone": "Europe/London",
+      "createdAt": "2026-09-01T08:05:00.000Z"
+    },
+    {
+      "id": "0192f4c1-0000-7000-8000-00000000c002",
+      "familyId": "0192f4c1-0000-7000-8000-00000000f001",
+      "nickname": "Ari",
+      "birthYear": 2020,
+      "birthMonth": 2,
+      "learningLanguage": "en",
+      "grade": "year-1",
+      "curriculumId": "england-national-curriculum",
+      "uiLocale": "en-GB",
+      "avatarId": "orange-circle",
+      "timeZone": "Europe/London",
+      "createdAt": "2026-09-01T08:07:00.000Z"
+    },
+    {
+      "id": "0192f4c1-0000-7000-8000-00000000c003",
+      "familyId": "0192f4c1-0000-7000-8000-00000000f002",
+      "nickname": "Nia",
+      "birthYear": 2019,
+      "birthMonth": 3,
+      "learningLanguage": "en",
+      "grade": "year-2",
+      "curriculumId": "england-national-curriculum",
+      "uiLocale": "en-GB",
+      "avatarId": "orange-circle",
+      "timeZone": "Europe/London",
+      "createdAt": "2026-09-10T19:10:00.000Z"
+    }
+  ],
+  "settings": [
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "sound": true,
+      "music": true,
+      "voice": true,
+      "timers": true,
+      "reducedMotion": false,
+      "highContrast": false,
+      "dyslexiaFont": false,
+      "textScale": 1,
+      "dailyLimitMinutes": 30,
+      "sessionMinutes": 10,
+      "breakReminderMinutes": 20
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c002",
+      "sound": true,
+      "music": false,
+      "voice": true,
+      "timers": false,
+      "reducedMotion": false,
+      "highContrast": false,
+      "dyslexiaFont": false,
+      "textScale": 1.25,
+      "dailyLimitMinutes": 15,
+      "sessionMinutes": 10,
+      "breakReminderMinutes": 15,
+      "picturePin": ["sun", "fish", "star"]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c003",
+      "sound": true,
+      "music": true,
+      "voice": true,
+      "timers": true,
+      "reducedMotion": false,
+      "highContrast": false,
+      "dyslexiaFont": false,
+      "textScale": 1,
+      "dailyLimitMinutes": 30,
+      "sessionMinutes": 10,
+      "breakReminderMinutes": 20
+    }
+  ],
+  "goals": [
+    {
+      "id": "0192f4c1-0000-7000-8000-00000000d001",
+      "childId": "0192f4c1-0000-7000-8000-00000000c002",
+      "subjectId": "mathematics",
+      "createdAt": "2026-10-01T18:00:00.000Z"
+    }
+  ],
+  "entitlements": [
+    {
+      "familyId": "0192f4c1-0000-7000-8000-00000000f001",
+      "features": {
+        "children.max": 2,
+        "activities.tier": "free",
+        "insights.detail": "basic",
+        "digest.weekly": false,
+        "goals.custom": false
+      },
+      "computedAt": "2026-09-01T08:00:00.000Z"
+    },
+    {
+      "familyId": "0192f4c1-0000-7000-8000-00000000f002",
+      "features": {
+        "children.max": 4,
+        "activities.tier": "premium",
+        "insights.detail": "full",
+        "digest.weekly": true,
+        "goals.custom": true
+      },
+      "computedAt": "2026-09-10T19:00:00.000Z"
+    }
+  ],
+  "sessionScripts": [
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "ten-frame-cafe-count",
+      "mode": "practice",
+      "startedAt": "2026-09-07T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "count-to-20",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ],
+          "aboveMastery": 1.5
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "ten-frame-cafe-count",
+      "mode": "practice",
+      "startedAt": "2026-09-08T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "count-to-20",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ],
+          "aboveMastery": 1.5
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "ten-frame-cafe-bonds-to-10",
+      "mode": "practice",
+      "startedAt": "2026-09-10T15:30:00.000Z",
+      "items": [
+        {
+          "skillId": "number-bonds-to-10",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ],
+          "aboveMastery": 1.5
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "ten-frame-cafe-count",
+      "mode": "practice",
+      "startedAt": "2026-09-11T15:30:00.000Z",
+      "items": [
+        {
+          "skillId": "count-to-20",
+          "outcomes": ["first-try", "first-try"]
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "hop-line-add-within-20",
+      "mode": "practice",
+      "startedAt": "2026-09-14T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "add-within-10",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ],
+          "aboveMastery": 1.5
+        },
+        {
+          "skillId": "add-within-20",
+          "outcomes": ["first-try", "first-try", "first-try", "second-try", "second-try"]
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "ten-frame-cafe-count",
+      "mode": "practice",
+      "startedAt": "2026-09-18T15:30:00.000Z",
+      "items": [
+        {
+          "skillId": "count-to-20",
+          "outcomes": ["first-try", "first-try"]
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "ten-frame-cafe-bonds-to-10",
+      "mode": "practice",
+      "startedAt": "2026-09-21T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "number-bonds-to-10",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ],
+          "aboveMastery": 1.5
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "hop-line-add-within-20",
+      "mode": "practice",
+      "startedAt": "2026-09-24T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "add-within-10",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try"
+          ],
+          "aboveMastery": 1.5
+        },
+        {
+          "skillId": "add-within-20",
+          "outcomes": ["first-try", "first-try", "first-try", "first-try", "first-try", "hint"]
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "ten-frame-cafe-bonds-to-10",
+      "mode": "practice",
+      "startedAt": "2026-09-28T15:50:00.000Z",
+      "items": [
+        {
+          "skillId": "number-bonds-to-10",
+          "outcomes": ["first-try", "first-try", "first-try", "first-try", "first-try", "first-try"]
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "hop-line-add-within-20",
+      "mode": "practice",
+      "startedAt": "2026-10-05T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "add-within-10",
+          "outcomes": ["first-try"]
+        },
+        {
+          "skillId": "add-within-20",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ]
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "hop-line-subtract-within-20",
+      "mode": "practice",
+      "startedAt": "2026-10-08T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "subtract-within-10",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ]
+        },
+        {
+          "skillId": "subtract-within-20",
+          "outcomes": ["first-try", "first-try", "first-try", "second-try", "show-me"]
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "ten-frame-cafe-count",
+      "mode": "practice",
+      "startedAt": "2026-10-09T15:30:00.000Z",
+      "items": [
+        {
+          "skillId": "count-to-20",
+          "outcomes": ["first-try", "first-try"]
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "hop-line-add-within-20",
+      "mode": "practice",
+      "startedAt": "2026-10-15T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "add-within-10",
+          "outcomes": ["first-try"]
+        },
+        {
+          "skillId": "add-within-20",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ]
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "tile-farm-equal-groups",
+      "mode": "practice",
+      "startedAt": "2026-10-17T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "equal-groups",
+          "outcomes": ["first-try", "first-try", "first-try", "second-try", "hint"]
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "hop-line-subtract-within-20",
+      "mode": "practice",
+      "startedAt": "2026-10-19T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "subtract-within-10",
+          "outcomes": ["first-try", "first-try"]
+        },
+        {
+          "skillId": "subtract-within-20",
+          "outcomes": ["first-try", "first-try", "first-try", "second-try", "second-try", "skipped"]
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c002",
+      "activityId": "ten-frame-cafe-count",
+      "mode": "practice",
+      "startedAt": "2026-10-06T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "count-to-20",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "second-try",
+            "second-try",
+            "hint"
+          ]
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c002",
+      "activityId": "ten-frame-cafe-count",
+      "mode": "practice",
+      "startedAt": "2026-10-13T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "count-to-20",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "second-try",
+            "show-me"
+          ]
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c002",
+      "activityId": "ten-frame-cafe-bonds-to-10",
+      "mode": "practice",
+      "startedAt": "2026-10-14T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "number-bonds-to-10",
+          "outcomes": ["first-try", "first-try", "second-try", "second-try", "hint"]
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c002",
+      "activityId": "hop-line-add-within-20",
+      "mode": "practice",
+      "startedAt": "2026-10-16T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "add-within-10",
+          "outcomes": ["first-try", "first-try", "first-try", "second-try", "second-try", "hint"]
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c003",
+      "activityId": "hop-line-add-within-20",
+      "mode": "practice",
+      "startedAt": "2026-09-16T16:00:00.000Z",
+      "items": [
+        {
+          "skillId": "add-within-10",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ],
+          "aboveMastery": 1.5
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c003",
+      "activityId": "hop-line-add-within-20",
+      "mode": "practice",
+      "startedAt": "2026-09-30T16:50:00.000Z",
+      "items": [
+        {
+          "skillId": "add-within-10",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ],
+          "aboveMastery": 1.5
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c003",
+      "activityId": "tile-farm-equal-groups",
+      "mode": "practice",
+      "startedAt": "2026-10-02T16:00:00.000Z",
+      "items": [
+        {
+          "skillId": "equal-groups",
+          "outcomes": ["first-try", "first-try", "first-try", "first-try", "second-try"]
+        },
+        {
+          "skillId": "repeated-addition",
+          "outcomes": ["first-try", "first-try", "first-try", "second-try"]
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c003",
+      "activityId": "tile-farm-equal-groups",
+      "mode": "practice",
+      "startedAt": "2026-10-09T16:00:00.000Z",
+      "items": [
+        {
+          "skillId": "equal-groups",
+          "outcomes": ["first-try", "first-try", "first-try", "first-try"]
+        },
+        {
+          "skillId": "repeated-addition",
+          "outcomes": ["first-try", "first-try", "first-try", "first-try", "hint"]
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c003",
+      "activityId": "tile-farm-equal-groups",
+      "mode": "practice",
+      "startedAt": "2026-10-16T16:00:00.000Z",
+      "items": [
+        {
+          "skillId": "equal-groups",
+          "outcomes": ["first-try", "first-try", "first-try"]
+        },
+        {
+          "skillId": "repeated-addition",
+          "outcomes": ["first-try", "first-try", "first-try", "first-try"]
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "ten-frame-cafe-count",
+      "mode": "practice",
+      "startedAt": "2026-09-05T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "count-to-20",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ],
+          "aboveMastery": 1.5
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "ten-frame-cafe-bonds-to-10",
+      "mode": "practice",
+      "startedAt": "2026-09-13T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "number-bonds-to-10",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ],
+          "aboveMastery": 1.5
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "ten-frame-cafe-bonds-to-10",
+      "mode": "practice",
+      "startedAt": "2026-09-16T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "number-bonds-to-10",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ],
+          "aboveMastery": 1.5
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "hop-line-add-within-20",
+      "mode": "practice",
+      "startedAt": "2026-09-17T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "add-within-10",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ],
+          "aboveMastery": 1.5
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "hop-line-add-within-20",
+      "mode": "practice",
+      "startedAt": "2026-09-20T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "add-within-10",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ],
+          "aboveMastery": 1.5
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c001",
+      "activityId": "hop-line-add-within-20",
+      "mode": "practice",
+      "startedAt": "2026-09-22T15:00:00.000Z",
+      "items": [
+        {
+          "skillId": "add-within-10",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ],
+          "aboveMastery": 1.5
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c003",
+      "activityId": "hop-line-add-within-20",
+      "mode": "practice",
+      "startedAt": "2026-09-19T16:00:00.000Z",
+      "items": [
+        {
+          "skillId": "add-within-10",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ],
+          "aboveMastery": 1.5
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c003",
+      "activityId": "hop-line-add-within-20",
+      "mode": "practice",
+      "startedAt": "2026-09-23T16:00:00.000Z",
+      "items": [
+        {
+          "skillId": "add-within-10",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ],
+          "aboveMastery": 1.5
+        }
+      ]
+    },
+    {
+      "childId": "0192f4c1-0000-7000-8000-00000000c003",
+      "activityId": "hop-line-add-within-20",
+      "mode": "practice",
+      "startedAt": "2026-09-26T16:00:00.000Z",
+      "items": [
+        {
+          "skillId": "add-within-10",
+          "outcomes": [
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "first-try",
+            "second-try"
+          ],
+          "aboveMastery": 1.5
+        }
+      ]
+    }
+  ]
+}

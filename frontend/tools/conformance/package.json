@@ -1,0 +1,27 @@
+{
+  "name": "@learnofun/conformance",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "e2e": "playwright test"
+  },
+  "dependencies": {
+    "@learnofun/contracts": "*",
+    "@learnofun/game-demo-choice": "*",
+    "@learnofun/game-hop-line": "*",
+    "@learnofun/game-registry": "*",
+    "@learnofun/game-sdk": "*",
+    "@learnofun/game-ten-frame-cafe": "*",
+    "@learnofun/game-tile-farm": "*",
+    "@learnofun/i18n": "*"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@learnofun/learning-core": "*",
+    "@playwright/test": "^1.64.1",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.5"
+  }
+}

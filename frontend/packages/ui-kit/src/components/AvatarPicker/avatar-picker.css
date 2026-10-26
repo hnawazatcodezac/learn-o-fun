@@ -1,0 +1,130 @@
+/* Avatars in the brand fills, each its own shape, so none is told apart by colour (ADR 0019). */
+.lf-avatar {
+  inline-size: 100%;
+  block-size: 100%;
+  fill: var(--ui-avatar-fill);
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.lf-avatar--orange-circle {
+  --ui-avatar-fill: var(--sun);
+}
+
+.lf-avatar--blue-square {
+  --ui-avatar-fill: var(--sky);
+}
+
+.lf-avatar--green-triangle {
+  --ui-avatar-fill: var(--leaf);
+}
+
+.lf-avatar--purple-star {
+  --ui-avatar-fill: var(--navy);
+}
+
+.lf-avatar--pink-heart {
+  --ui-avatar-fill: var(--coral);
+}
+
+.lf-avatar--teal-diamond {
+  --ui-avatar-fill: var(--teal);
+}
+
+.lf-avatar-picker {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.lf-avatar-picker__legend {
+  margin-block-end: var(--space-3);
+  padding: 0;
+  font-family: var(--ui-heading-font-family);
+  font-size: var(--ui-heading-font-size);
+  font-weight: var(--ui-heading-font-weight);
+  line-height: var(--ui-heading-line-height);
+}
+
+.lf-avatar-picker__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+/* Each avatar is a tile like an AnswerTile: tile-min square, on a ledge in the Play world. */
+.lf-avatar-picker__option {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: var(--tile-min);
+  block-size: var(--tile-min);
+  padding: var(--space-3);
+  border: var(--ui-tile-line-width) solid var(--line-strong);
+  border-radius: var(--ui-radius);
+  background-color: var(--surface-raised);
+  cursor: pointer;
+  transition-property: transform, box-shadow;
+  transition-duration: var(--ui-duration-short);
+  transition-timing-function: var(--ui-easing);
+}
+
+:root[data-band] .lf-avatar-picker__option {
+  box-shadow: var(--press-depth);
+}
+
+:root[data-band] .lf-avatar-picker__option:active {
+  box-shadow: none;
+  transform: translateY(6px);
+}
+
+/* The radio covers the whole tile, so the tile is the touch target. */
+.lf-avatar-picker__input {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.lf-avatar-picker__option:has(:focus-visible) {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+:root[data-band] .lf-avatar-picker__option:has(:focus-visible) {
+  box-shadow: var(--press-depth), var(--focus-ring);
+}
+
+/* The chosen avatar takes the selected state, with a tick (ADR 0019). */
+.lf-avatar-picker__option:has(:checked) {
+  border-color: var(--ui-selected-border);
+  background-color: var(--ui-selected);
+}
+
+/* Selection shows a tick as well as the border, so it never relies on colour alone. */
+.lf-avatar-picker__check {
+  position: absolute;
+  inset-block-start: calc(var(--space-2) * -1);
+  inset-inline-end: calc(var(--space-2) * -1);
+  display: none;
+  place-items: center;
+  inline-size: var(--space-6);
+  block-size: var(--space-6);
+  border-radius: var(--radius-full);
+  background-color: var(--leaf);
+  color: var(--on-bright);
+}
+
+.lf-avatar-picker__option:has(:checked) .lf-avatar-picker__check {
+  display: grid;
+}
+
+/* A mark inside the badge, so smaller than an icon. */
+.lf-avatar-picker__check .lf-icon {
+  inline-size: var(--space-5);
+  block-size: var(--space-5);
+}

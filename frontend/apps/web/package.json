@@ -1,0 +1,41 @@
+{
+  "name": "@learnofun/web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 5173",
+    "dev:lan": "next dev --port 5173 --hostname 0.0.0.0",
+    "build": "next build && node scripts/build-sw.mjs out",
+    "preview": "node ../../scripts/serve-static.mjs out --port 4173",
+    "build:e2e": "next build",
+    "preview:e2e": "node ../../scripts/serve-static.mjs out-e2e",
+    "typecheck": "next typegen && tsc -p tsconfig.json && tsc -p src/sw",
+    "icons": "node scripts/icons.mjs",
+    "test": "vitest run",
+    "e2e": "playwright test"
+  },
+  "dependencies": {
+    "@learnofun/contracts": "*",
+    "@learnofun/game-registry": "*",
+    "@learnofun/game-sdk": "*",
+    "@learnofun/i18n": "*",
+    "@learnofun/learning-core": "*",
+    "@learnofun/mock-api": "*",
+    "@learnofun/ui-kit": "*",
+    "next": "^16.4.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "serwist": "^9.5.13"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.64.1",
+    "@serwist/build": "^9.5.13",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "esbuild": "^0.28.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.5"
+  }
+}

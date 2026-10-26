@@ -1,0 +1,141 @@
+/*
+ * AnswerTile (docs/design-system/components/AnswerTile), as classes that the React AnswerTile and
+ * DOM games share (ADR 0020):
+ *
+ *   <div class="lf-answer lf-answer--number [lf-answer--correct]">
+ *     <button class="lf-answer__tile">12</button>
+ *     <span class="lf-answer__state">Correct</span>
+ *   </div>
+ *
+ * Modifiers: --number or --word for the content; --selected, --correct, --try-again or
+ * --ruled-out for the state. The state words come from the catalog (ui.answer.*).
+ */
+.lf-answer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.lf-answer__tile {
+  display: grid;
+  place-items: center;
+  min-inline-size: var(--tile-min);
+  min-block-size: var(--tile-min);
+  padding-block: 0;
+  padding-inline: var(--space-4);
+  border: var(--ui-tile-line-width) solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-raised);
+  color: var(--ink);
+  box-shadow: var(--press-depth);
+  font-family: var(--play-number-font-family);
+  font-size: var(--play-number-font-size);
+  font-weight: var(--play-number-font-weight);
+  line-height: var(--play-number-line-height);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition-property: transform, box-shadow;
+  transition-duration: var(--ui-duration-short);
+  transition-timing-function: var(--ui-easing);
+}
+
+.lf-answer--word .lf-answer__tile {
+  font-family: var(--read-early-font-family);
+  font-size: var(--read-early-font-size);
+  font-weight: var(--read-early-font-weight);
+  line-height: var(--read-early-line-height);
+}
+
+/* A play piece: pressed, it moves down 6px and the ledge disappears. */
+.lf-answer__tile:active:not(:disabled) {
+  box-shadow: none;
+  transform: translateY(6px);
+}
+
+.lf-answer__tile:focus-visible {
+  outline: none;
+  box-shadow: var(--press-depth), var(--focus-ring);
+}
+
+/* Waiting while the game is paused or between answers: disabled, as ADR 0019 says. */
+.lf-answer__tile:disabled {
+  border-color: var(--ui-disabled-border);
+  background-color: var(--ui-disabled);
+  color: var(--ui-on-disabled);
+  box-shadow: none;
+  cursor: default;
+}
+
+.lf-answer--selected .lf-answer__tile {
+  border-color: var(--sky-ink);
+  background-color: var(--sky-soft);
+}
+
+/* Correct and try again keep their colours while the tiles wait for the next item. */
+.lf-answer--correct .lf-answer__tile,
+.lf-answer--correct .lf-answer__tile:disabled {
+  border-color: var(--leaf-ink);
+  background-color: var(--leaf-soft);
+  color: var(--leaf-ink);
+}
+
+.lf-answer--try-again .lf-answer__tile,
+.lf-answer--try-again .lf-answer__tile:disabled {
+  border-color: var(--sun-ink);
+  background-color: var(--sun-soft);
+  color: var(--sun-ink);
+}
+
+/* Ruled out by a hint: disabled, with a dashed edge and a line through, not colour alone. */
+.lf-answer--ruled-out .lf-answer__tile {
+  border-style: dashed;
+  text-decoration: line-through;
+}
+
+/*
+ * The state words, with an icon: a check for correct, a loop arrow for try again. They take no
+ * width, centred under the tile, so the row of tiles never moves when they appear.
+ */
+.lf-answer__state {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  inline-size: 0;
+  white-space: nowrap;
+  min-block-size: var(--play-label-line-height);
+  color: var(--ink-muted);
+  font-family: var(--play-label-font-family);
+  font-size: var(--play-label-font-size);
+  font-weight: var(--play-label-font-weight);
+  line-height: var(--play-label-line-height);
+}
+
+.lf-answer--correct .lf-answer__state {
+  color: var(--leaf-ink);
+}
+
+.lf-answer--try-again .lf-answer__state {
+  color: var(--sun-ink);
+}
+
+.lf-answer--correct .lf-answer__state::before,
+.lf-answer--try-again .lf-answer__state::before {
+  content: '';
+  flex: none;
+  inline-size: var(--ui-icon-size);
+  block-size: var(--ui-icon-size);
+  background-color: currentcolor;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+}
+
+.lf-answer--correct .lf-answer__state::before {
+  mask-image: url('@phosphor-icons/core/bold/check-bold.svg');
+}
+
+.lf-answer--try-again .lf-answer__state::before {
+  mask-image: url('@phosphor-icons/core/bold/arrow-counter-clockwise-bold.svg');
+}

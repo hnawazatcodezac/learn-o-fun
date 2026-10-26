@@ -1,0 +1,28 @@
+# @learnofun/web
+
+The Learnofun web app: one app with two areas (ADR 0007).
+
+- `/` is the child area (`src/child`): profile picker, Today plan, activity library and game sessions, in the child's experience band. Works through connectivity drops: what is played waits in the outbox (ADR 0023), and the last data the API gave is kept on the device, so the installed app opens and plays offline (ADR 0024). Plan sections 1, 2.1 and 8.1.
+- `/parent` is the parent dashboard (`src/parent`): child profiles, goals and limits, progress by skill and explained recommendations, in growth language. Plan sections 1, 4.4, 8.3 and 9. It loads only when opened, so the child area never downloads its code.
+
+The two areas never import each other; shared code goes in a package or `src/shared`. Rules in `.claude/rules/frontend.md`.
+
+Status: the child flows (FRONTEND-KICKOFF steps 8 and 9), and the parent dashboard's frame, child profiles, and goals and time, progress, and session history (step 10).
+
+- `/` asks who's playing: each child on the device by avatar and nickname, with a picture PIN where a grown-up has set one (ADR 0018). "Grown-ups" leads to `/parent` through the parental gate. The device remembers who is playing, so a refresh keeps them.
+- `/today` shows the chosen child's Today cards, and `/library` everything they can play. Both show only activities the child can play here: no unbuilt games, nothing outside the family's plan. "Grown-ups" opens the child's settings, including the picture PIN, behind the gate. Pages for a child go back to `/` when nobody is playing.
+
+- `/play/:activityId` plays one session of a catalog activity in the game shell, such as `/play/hop-line-add-within-20` (`?mode=challenge` for Challenge). Its items come from the activity's template, shaped by the band (ADR 0022). Its session and events go to the API through the outbox in IndexedDB, which keeps them through a lost network or a reload, and a session left mid-way carries on, paused, when the same activity opens again within 24 hours (`src/child/sync`, ADR 0023). It plays as the child chosen in the profile picker.
+- `/play/dev/:gameId` (development builds only) plays a game's stories in the shell, with `?story=`, `?mode=` and `?seed=`.
+
+- `/parent/login` is the mock sign-in (ADR 0025): choose a fixture account, with no password. Sam belongs to two families, Sam's on the free plan and Alex's premium; Alex belongs to one. Every other `/parent` page needs someone signed in, and signing in returns to the page that asked.
+- `/parent` is the overview of the chosen family's children, and `/parent/plan` what the family's plan includes, read from its feature keys (plan 9). A parent in more than one family switches between them in the header; the device remembers the last one chosen.
+- `/parent/children/new` adds a child and `/parent/children/:childId` edits one (ADR 0026): nickname, birth month and year, learning language, an optional school year and the picture, for ages 3 to 8. The choices come from the family's market (`GET /api/markets/:market`). Owners and guardians can do this; at the plan's `children.max`, "Add a child" says why it is unavailable and links to the plan.
+- `/parent/children/:childId/learning` is a child's goals and time (ADR 0027): a goal to focus on one subject (on premium, also a skill and an end date), the share of practice between their subjects, and the session length, daily limit and break reminder, each saved on its own.
+- `/parent/children/:childId/progress` is a child's progress (ADR 0028): why each Today activity was chosen, explained from its reason codes with counts from the events, then the child's skills by subject and strand. On premium every skill shows with its status, evidence and "early signal"; on the free plan each strand is a summary.
+- `/parent/children/:childId/sessions` is a child's session history (ADR 0029): every session by week, newest first, with plan 5.2's measures as counts. On premium each session shows every measure and opens question by question; on the free plan, its status, time on task and first tries.
+
+- `npm run dev` (from `frontend/`) serves it on http://localhost:5173, with the parent dashboard at http://localhost:5173/parent.
+- `npm run dev:lan` serves it to other devices on the same network, such as a tablet for playtests: open the "Network" address Vite prints for Wi-Fi. There the mock API answers from inside the page, because browsers allow no service worker over plain HTTP at a network address (ADR 0017).
+- Builds are an installable PWA (ADR 0024): `src/sw/sw.ts` caches every file of the build, and in builds with the mock API it imports MSW's worker, so one service worker serves both. A new version takes over once every tab of the app has closed. `npm run icons` renders the placeholder icons in `public/icons` from the design tokens.
+- `npm test -w @learnofun/web` runs the unit tests; `npm run e2e -w @learnofun/web` runs the Playwright tests against the test build (`npm run build:e2e`, bundled like production with the development tools, on port 4174), and the PWA's against a production build (ADR 0041).

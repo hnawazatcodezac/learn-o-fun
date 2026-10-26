@@ -1,0 +1,222 @@
+.g-hop-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  inline-size: 100%;
+  padding-block: var(--space-3);
+  padding-inline: var(--space-1);
+  text-align: center;
+}
+
+/* Every numeral in a maths game is in the display face (design system README). */
+.g-hop-line__sum {
+  margin: 0;
+  font-family: var(--play-number-font-family);
+  font-size: var(--play-number-font-size);
+  font-weight: var(--play-number-font-weight);
+  line-height: var(--play-number-line-height);
+}
+
+.g-hop-line__instructions,
+.g-hop-line__counter,
+.g-hop-line__message {
+  margin: 0;
+}
+
+.g-hop-line__instructions {
+  color: var(--ink-muted);
+}
+
+.g-hop-line__counter,
+.g-hop-line__message {
+  min-block-size: 1lh;
+  font-family: var(--play-label-font-family);
+  font-size: var(--play-label-font-size);
+  font-weight: var(--play-label-font-weight);
+  line-height: var(--play-label-line-height);
+}
+
+.g-hop-line__counter[hidden] {
+  display: none;
+}
+
+/* The number line: one keyboard control, the full width of the game up to a comfortable size. */
+.g-hop-line__track {
+  inline-size: 100%;
+  max-inline-size: 48rem;
+  border-radius: var(--ui-radius);
+  cursor: default;
+}
+
+.g-hop-line__track:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.g-hop-line__track svg {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+/* SVG sizes are in the scene's own units, which scale with the line's width. */
+.g-hop-line__axis,
+.g-hop-line__tick {
+  stroke: var(--ink);
+  stroke-linecap: round;
+  stroke-width: 3px;
+}
+
+.g-hop-line__tick {
+  stroke-width: 2px;
+}
+
+.g-hop-line__tick--labelled {
+  stroke-width: 3px;
+}
+
+.g-hop-line__label {
+  fill: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 30px;
+}
+
+.g-hop-line__label--marked {
+  font-weight: var(--ui-label-font-weight);
+}
+
+/* The start has a solid outline and the answer a dashed one: not colour alone. */
+.g-hop-line__marker {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2px;
+}
+
+.g-hop-line__marker--answer {
+  stroke-dasharray: 6 4;
+}
+
+.g-hop-line__arc {
+  fill: none;
+  stroke: var(--ink);
+  stroke-linecap: round;
+  stroke-width: 3px;
+}
+
+.g-hop-line__arc-number {
+  fill: var(--ink-muted);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+}
+
+/* A placeholder frog, until the art is made. Its hop follows the motion setting. */
+.g-hop-line__frog {
+  cursor: pointer;
+  transition: transform var(--ui-duration-medium) var(--ui-easing);
+}
+
+.g-hop-line__frog-body {
+  fill: var(--ui-primary);
+  stroke: var(--ink);
+  stroke-width: 2px;
+}
+
+.g-hop-line__frog-eye {
+  fill: var(--surface-raised);
+  stroke: var(--ink);
+  stroke-width: 2px;
+}
+
+.g-hop-line__frog-pupil {
+  fill: var(--ink);
+}
+
+/* The hint's footprints: outlined for hops still to make, filled once made. */
+.g-hop-line__footprints {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.g-hop-line__footprints[hidden] {
+  display: none;
+}
+
+.g-hop-line__footprint {
+  inline-size: 1rem;
+  block-size: 1.25rem;
+  border: 2px solid var(--ink);
+  border-radius: 50% 50% 45% 45%;
+}
+
+.g-hop-line__footprint--made {
+  background-color: var(--ink);
+}
+
+.g-hop-line__controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.g-hop-line__button {
+  min-inline-size: var(--ui-target);
+  min-block-size: var(--ui-target);
+  padding-inline: var(--space-5);
+  border: var(--ui-line-width) solid var(--ui-secondary-border);
+  border-radius: var(--ui-radius);
+  background-color: var(--ui-secondary);
+  color: var(--ui-on-secondary);
+  font-family: var(--play-label-font-family);
+  font-size: var(--play-label-font-size);
+  font-weight: var(--play-label-font-weight);
+  line-height: var(--play-label-line-height);
+  box-shadow: var(--press-depth);
+  cursor: pointer;
+  transition-property: transform, box-shadow;
+  transition-duration: var(--ui-duration-short);
+  transition-timing-function: var(--ui-easing);
+}
+
+/* Play buttons sit on a ledge; pressed, they move down 6px and the ledge disappears. */
+.g-hop-line__button:active:not(:disabled) {
+  box-shadow: none;
+  transform: translateY(6px);
+}
+
+.g-hop-line__button--land {
+  background-color: var(--ui-primary);
+  color: var(--ui-on-primary);
+}
+
+.g-hop-line__button:focus-visible {
+  outline: none;
+  box-shadow: var(--press-depth), var(--focus-ring);
+}
+
+.g-hop-line__button:disabled {
+  border-color: var(--ui-disabled-border);
+  box-shadow: none;
+  background-color: var(--ui-disabled);
+  color: var(--ui-on-disabled);
+  cursor: default;
+}
+
+/* On phones, the controls share one row in equal columns, so long labels never wrap the row. */
+@media (width < 30rem) {
+  .g-hop-line__controls {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    inline-size: 100%;
+  }
+
+  .g-hop-line__button {
+    padding-inline: var(--space-2);
+  }
+}

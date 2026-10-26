@@ -1,0 +1,71 @@
+/*
+ * Button (docs/design-system/components/Button). In the Play world, a chunky piece in sun, or
+ * sky for a second action, resting on press-depth; in the Family world, a calm action or quiet
+ * button. The world comes from the page's experience band.
+ */
+.lf-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-block-size: var(--ui-target);
+  min-inline-size: var(--ui-target);
+  padding-block: 0;
+  padding-inline: var(--space-5);
+  border: var(--ui-line-width) solid transparent;
+  border-radius: var(--ui-radius);
+  font-family: var(--ui-label-font-family);
+  font-size: var(--ui-label-font-size);
+  font-weight: var(--ui-label-font-weight);
+  line-height: var(--ui-label-line-height);
+  cursor: pointer;
+  transition-property: transform, box-shadow;
+  transition-duration: var(--ui-duration-short);
+  transition-timing-function: var(--ui-easing);
+}
+
+.lf-button--primary {
+  background-color: var(--ui-primary);
+  color: var(--ui-on-primary);
+}
+
+.lf-button--secondary {
+  border-color: var(--ui-secondary-border);
+  background-color: var(--ui-secondary);
+  color: var(--ui-on-secondary);
+}
+
+.lf-button:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Play pieces sit on a solid ledge; pressed, they move down 6px and the ledge disappears. */
+:root[data-band] .lf-button {
+  padding-inline: var(--space-6);
+  box-shadow: var(--press-depth);
+}
+
+:root[data-band] .lf-button:active:not(:disabled) {
+  box-shadow: none;
+  transform: translateY(6px);
+}
+
+:root[data-band] .lf-button:focus-visible {
+  box-shadow: var(--press-depth), var(--focus-ring);
+}
+
+/* Disabled shows by shape as well as colour: no ledge, sunken and muted (ADR 0019). */
+.lf-button:disabled,
+:root[data-band] .lf-button:disabled {
+  border-color: var(--ui-disabled-border);
+  background-color: var(--ui-disabled);
+  color: var(--ui-on-disabled);
+  box-shadow: none;
+  transform: none;
+  cursor: not-allowed;
+}
+
+:root[data-band] .lf-button:disabled:focus-visible {
+  box-shadow: var(--focus-ring);
+}

@@ -1,0 +1,117 @@
+/* The game shell: a bar with pause, progress and hint above the game, which fills the rest. */
+.game-shell {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100dvh;
+}
+
+.game-shell__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding-block: var(--space-3);
+  padding-inline: var(--space-4);
+}
+
+.game-shell__progress {
+  flex: 1 1 10rem;
+  min-inline-size: 0;
+}
+
+/*
+ * On phones, Pause and Hint show only their icons, with the trail's count between them and the
+ * trail itself on a row of its own, so the game keeps its room (ADR 0019). Their words stay as
+ * the buttons' names for screen readers.
+ */
+@media (width < 30rem) {
+  .game-shell__bar {
+    display: grid;
+    grid-template-areas:
+      'pause count hint'
+      'trail trail trail';
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .game-shell__bar > .lf-button:first-child {
+    grid-area: pause;
+  }
+
+  .game-shell__bar > .lf-button:last-child:not(:first-child) {
+    grid-area: hint;
+  }
+
+  .game-shell__progress,
+  .game-shell__progress .lf-trail {
+    display: contents;
+  }
+
+  .game-shell__progress .lf-trail__steps {
+    grid-area: trail;
+    justify-self: center;
+  }
+
+  .game-shell__progress .lf-trail__count {
+    grid-area: count;
+    justify-self: center;
+  }
+
+  :root[data-band] .game-shell__bar .lf-button {
+    inline-size: var(--ui-target);
+    padding-inline: 0;
+  }
+
+  .game-shell__bar .lf-button__label {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+.game-shell__stage {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  padding-inline: var(--space-4);
+}
+
+.game-shell__stage:focus {
+  outline: none;
+}
+
+.game-shell__stage[hidden] {
+  display: none;
+}
+
+.game-shell__menu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.game-shell__menu p {
+  margin: 0;
+}
+
+.play-error {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding-inline: var(--space-4);
+  text-align: center;
+}
+
+.play-error p {
+  margin: 0;
+}
+
+.play-error__title {
+  font-size: var(--ui-heading-font-size);
+  font-weight: var(--ui-label-font-weight);
+}

@@ -1,0 +1,48 @@
+{
+  "name": "learnofun",
+  "private": true,
+  "type": "module",
+  "packageManager": "npm@10.9.2",
+  "engines": {
+    "node": ">=22.22"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "packages/games/*",
+    "tools/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev --filter=@learnofun/web",
+    "dev:lan": "npm run dev:lan -w @learnofun/web",
+    "dev:ui": "turbo run dev --filter=@learnofun/ui-preview",
+    "dev:sandbox": "turbo run dev --filter=@learnofun/game-sandbox",
+    "build": "turbo run build",
+    "lint": "eslint . && stylelint \"**/*.css\" && prettier --check .",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "e2e": "turbo run e2e --concurrency=1",
+    "conformance": "turbo run test e2e --filter=@learnofun/conformance",
+    "sim": "npm run sim -w @learnofun/simulator",
+    "visual": "npm run visual -w @learnofun/ui-preview --",
+    "create-game": "node tools/create-game/scripts/create-game.mjs",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.13.0",
+    "eslint-plugin-import-x": "^4.17.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "prettier": "^3.9.10",
+    "stylelint": "^17.16.0",
+    "stylelint-use-logical": "^2.1.3",
+    "turbo": "^2.11.9",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.0"
+  },
+  "msw": {
+    "workerDirectory": [
+      "apps/web/public"
+    ]
+  }
+}

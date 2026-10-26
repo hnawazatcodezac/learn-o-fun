@@ -1,0 +1,147 @@
+/*
+ * The design system's two worlds (ADR 0019), as roles the components use. Every role is a
+ * design-system token, or a value the team chose for a gap the design system leaves.
+ *
+ * Family, the parent dashboard, is the default: a page without an experience band. Play, the
+ * child area, is any page with one (<html data-band>, from configuration, never a child's age).
+ */
+:root {
+  --ui-ground: var(--family-ground);
+  --ui-primary: var(--action);
+  --ui-on-primary: var(--on-action);
+  --ui-primary-text: var(--action);
+  --ui-secondary: var(--surface-raised);
+  --ui-on-secondary: var(--ink);
+  --ui-secondary-border: var(--line-strong);
+  --ui-target: var(--target-family);
+  --ui-radius: var(--radius-md);
+  --ui-gap: var(--space-2);
+  --ui-card-padding: var(--space-4);
+  /* Phosphor Regular at 20px for parents (design system README). */
+  --ui-icon-size: 1.25rem;
+  /*
+   * A chosen option, in both worlds, takes AnswerTile's selected state: the design system's only
+   * selected state, and it keeps sun as a child screen's one primary action (ADR 0019).
+   */
+  --ui-selected: var(--sky-soft);
+  --ui-on-selected: var(--sky-ink);
+  --ui-selected-border: var(--sky-ink);
+
+  --ui-body-font-family: var(--family-body-font-family);
+  --ui-body-font-size: var(--family-body-font-size);
+  --ui-body-line-height: var(--family-body-line-height);
+  --ui-body-font-weight: var(--family-body-font-weight);
+  --ui-label-font-family: var(--family-body-font-family);
+  --ui-label-font-size: var(--family-body-font-size);
+  --ui-label-line-height: var(--family-body-line-height);
+  --ui-label-font-weight: var(--family-heading-font-weight);
+  --ui-heading-font-family: var(--family-heading-font-family);
+  --ui-heading-font-size: var(--family-heading-font-size);
+  --ui-heading-line-height: var(--family-heading-line-height);
+  --ui-heading-font-weight: var(--family-heading-font-weight);
+  --ui-title-font-family: var(--family-title-font-family);
+  --ui-title-font-size: var(--family-title-font-size);
+  --ui-title-line-height: var(--family-title-line-height);
+  --ui-title-font-weight: var(--family-title-font-weight);
+  --ui-small-font-family: var(--family-small-font-family);
+  --ui-small-font-size: var(--family-small-font-size);
+  --ui-small-line-height: var(--family-small-line-height);
+  --ui-small-font-weight: var(--family-small-font-weight);
+
+  /* Gaps the design system leaves, as the team decided (ADR 0019). */
+  --ui-disabled: var(--surface-sunken);
+  --ui-on-disabled: var(--ink-muted);
+  --ui-disabled-border: var(--line);
+  --ui-backdrop: color-mix(in srgb, var(--navy) 50%, transparent);
+  --ui-line-width: 2px;
+  --ui-tile-line-width: 3px;
+
+  /* Motion: transitions of 150 to 250ms that ease out; celebrations end by 1.2 seconds. */
+  --ui-duration-short: 150ms;
+  --ui-duration-medium: 250ms;
+  --ui-duration-fade: 150ms;
+  --ui-celebration: 1200ms;
+  --ui-easing: ease-out;
+}
+
+/* Play: the child area. One sun action per screen, and sky for a second one. */
+:root[data-band] {
+  --ui-ground: var(--play-ground);
+  --ui-primary: var(--sun);
+  --ui-on-primary: var(--on-bright);
+  --ui-primary-text: var(--ink);
+  --ui-secondary: var(--sky);
+  --ui-on-secondary: var(--on-bright);
+  --ui-secondary-border: transparent;
+  --ui-radius: var(--radius-lg);
+  --ui-gap: var(--space-3);
+  --ui-card-padding: var(--space-5);
+  /* Phosphor Bold at 28px in the child app (design system README). */
+  --ui-icon-size: 1.75rem;
+
+  /* Child-facing text is never smaller than 20px. */
+  --ui-label-font-family: var(--play-label-font-family);
+  --ui-label-font-size: var(--play-label-font-size);
+  --ui-label-line-height: var(--play-label-line-height);
+  --ui-label-font-weight: var(--play-label-font-weight);
+  --ui-heading-font-family: var(--play-label-font-family);
+  --ui-heading-font-size: var(--play-label-font-size);
+  --ui-heading-line-height: var(--play-label-line-height);
+  --ui-heading-font-weight: var(--play-label-font-weight);
+  --ui-title-font-family: var(--play-title-font-family);
+  --ui-title-font-size: var(--play-title-font-size);
+  --ui-title-line-height: var(--play-title-line-height);
+  --ui-title-font-weight: var(--play-title-font-weight);
+  --ui-small-font-family: var(--play-label-font-family);
+  --ui-small-font-size: var(--play-label-font-size);
+  --ui-small-line-height: var(--play-label-line-height);
+  --ui-small-font-weight: var(--play-label-font-weight);
+}
+
+/* Ages 3 to 5: audio first and no reading needed, so only the play styles. */
+:root[data-band='early-years'] {
+  --ui-target: var(--target-early);
+  --ui-body-font-family: var(--play-label-font-family);
+  --ui-body-font-size: var(--play-label-font-size);
+  --ui-body-line-height: var(--play-label-line-height);
+  --ui-body-font-weight: var(--play-label-font-weight);
+}
+
+/* Ages 6 to 8: short text, always with audio, in read-early for anything to decode. */
+:root[data-band='early-primary'] {
+  --ui-target: var(--target-play);
+  --ui-body-font-family: var(--read-early-font-family);
+  --ui-body-font-size: var(--read-early-font-size);
+  --ui-body-line-height: var(--read-early-line-height);
+  --ui-body-font-weight: var(--read-early-font-weight);
+}
+
+/* Reduced motion, from the device or the setting: movement stops, and short fades stay. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ui-duration-short: 0ms;
+    --ui-duration-medium: 0ms;
+    --ui-celebration: 0ms;
+  }
+}
+
+:root[data-motion='reduced'] {
+  --ui-duration-short: 0ms;
+  --ui-duration-medium: 0ms;
+  --ui-celebration: 0ms;
+}
+
+/* Text-size setting: type is in rem, so it grows with the root size. */
+:root[data-text-scale='1.25'] {
+  font-size: 125%;
+}
+
+:root[data-text-scale='1.5'] {
+  font-size: 150%;
+}
+
+/* Dyslexia-friendly font setting (plan 8.6, ADR 0008): Andika, the read face, everywhere. */
+:root[data-font='dyslexia'] {
+  --font-display: var(--font-read);
+  --font-sans: var(--font-read);
+}

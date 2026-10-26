@@ -1,0 +1,17 @@
+{
+  "name": "@learnofun/simulator",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "sim": "vitest run --config vitest.sim.config.ts"
+  },
+  "dependencies": {
+    "@learnofun/contracts": "*",
+    "@learnofun/learning-core": "*"
+  },
+  "devDependencies": {
+    "vitest": "^5.0.5"
+  }
+}

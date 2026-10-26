@@ -1,0 +1,714 @@
+{
+  "common": {
+    "notFound": {
+      "title": "We can’t find that page",
+      "home": "Go to the start"
+    },
+    "loading": "Loading…",
+    "loadError": {
+      "title": "We can’t reach Learnofun right now",
+      "body": "Nothing is lost. Please try again in a moment."
+    },
+    "retry": "Try again"
+  },
+  "ui": {
+    "avatars": {
+      "orange-circle": "Circle",
+      "blue-square": "Square",
+      "green-triangle": "Triangle",
+      "purple-star": "Star",
+      "pink-heart": "Heart",
+      "teal-diamond": "Diamond"
+    },
+    "progress": {
+      "label": "Question {current, number} of {total, number}",
+      "count": "{current, number} of {total, number}"
+    },
+    "dialog": {
+      "close": "Close"
+    },
+    "toast": {
+      "close": "Dismiss message"
+    },
+    "feedback": {
+      "correct": "That’s it!",
+      "tryAgain": "Nearly. Have another go!",
+      "hint": "Here’s a hint."
+    },
+    "celebration": {
+      "message": "You did it!"
+    },
+    "answer": {
+      "correct": "Correct",
+      "tryAgain": "Try again"
+    },
+    "skillStatus": {
+      "not-started": "Not started",
+      "exploring": "Exploring",
+      "building": "Building",
+      "strong": "Strong",
+      "mastered": "Mastered",
+      "review-due": "Review due",
+      "earlySignal": "Early signal"
+    },
+    "activityCard": {
+      "kinds": {
+        "review": "Review",
+        "new": "New skill",
+        "choice": "Your choice"
+      },
+      "minutes": "About {minutes, plural, one {# minute} other {# minutes}}"
+    },
+    "gate": {
+      "title": "For grown-ups",
+      "intro": "Please ask a grown-up to answer this.",
+      "question": "What is {a} times {b}?",
+      "numbers": {
+        "3": "three",
+        "4": "four",
+        "5": "five",
+        "6": "six",
+        "7": "seven",
+        "8": "eight",
+        "9": "nine"
+      },
+      "keypad": "Number pad",
+      "delete": "Delete",
+      "submit": "Done",
+      "wrong": "That’s not it. Here’s another one.",
+      "pinPrompt": "Enter your parent PIN.",
+      "pinEntered": "{count, plural, =0 {No digits entered} one {# digit entered} other {# digits entered}}",
+      "pinWrong": "That PIN doesn’t match. Please try again."
+    },
+    "picturePin": {
+      "progress": "{count, number} of {total, number} pictures chosen",
+      "delete": "Delete",
+      "pictures": {
+        "sun": "Sun",
+        "moon": "Moon",
+        "star": "Star",
+        "heart": "Heart",
+        "cloud": "Cloud",
+        "flower": "Flower",
+        "fish": "Fish",
+        "leaf": "Leaf",
+        "drop": "Raindrop"
+      }
+    },
+    "settings": {
+      "groups": {
+        "sound": "Sound",
+        "play": "Play",
+        "reading": "Reading and seeing"
+      },
+      "sound": "Sound effects",
+      "music": "Music",
+      "voice": "Spoken instructions",
+      "timers": "Timers in challenges",
+      "reducedMotion": "Reduce motion",
+      "textSize": "Text size",
+      "highContrast": "High contrast",
+      "dyslexiaFont": "Dyslexia-friendly font"
+    }
+  },
+  "child": {
+    "title": "Learnofun",
+    "placeholder": {
+      "body": "{count, plural, one {# game is} other {# games are}} on the way."
+    },
+    "profiles": {
+      "title": "Who’s playing?"
+    },
+    "play": {
+      "stage": "Game",
+      "pause": "Pause",
+      "hint": "Hint",
+      "leave": "Back to my games",
+      "menu": {
+        "title": "Paused",
+        "continue": "Keep playing",
+        "settings": "Settings"
+      },
+      "settings": {
+        "title": "Settings",
+        "done": "Done"
+      },
+      "error": {
+        "title": "This game stopped working",
+        "body": "Let’s go back and choose another game."
+      },
+      "break": {
+        "title": "Time for a stretch",
+        "body": "You have played for a while. Stretch, then choose.",
+        "offeredBody": "Let’s take a little break. Stretch, then choose.",
+        "keepPlaying": "Keep playing",
+        "stop": "Stop for now"
+      }
+    },
+    "timeUp": {
+      "title": "That’s all for today",
+      "body": "Well played, {nickname}. Come back tomorrow for more.",
+      "back": "Back to Today"
+    },
+    "picker": {
+      "grownUps": "Grown-ups",
+      "pinTitle": "{nickname}’s picture PIN",
+      "pinPrompt": "Tap your three pictures.",
+      "pinWrong": "That’s not it. Try again.",
+      "pinHelp": "That’s not it. Ask a grown-up to help.",
+      "pinUnavailable": "We can’t check the picture PIN right now. Please try again in a moment."
+    },
+    "today": {
+      "title": "Today",
+      "greeting": "Hi, {nickname}!",
+      "switchPlayer": "Switch player",
+      "grownUps": "Grown-ups",
+      "library": "All games",
+      "empty": "Nothing new today. Have a look at all the games!"
+    },
+    "library": {
+      "title": "All games",
+      "back": "Back to Today",
+      "empty": "There are no games to play yet."
+    },
+    "settings": {
+      "title": "Settings for {nickname}",
+      "parentDashboard": "Open the parent dashboard",
+      "done": "Done",
+      "pin": {
+        "title": "Picture PIN",
+        "on": "{nickname} has a picture PIN. It is asked for before the profile opens.",
+        "off": "{nickname} has no picture PIN.",
+        "add": "Add a picture PIN",
+        "change": "Change the picture PIN",
+        "remove": "Remove the picture PIN",
+        "choose": "Choose three pictures.",
+        "confirm": "Choose the same three pictures again.",
+        "mismatch": "Those were different. Let’s start again.",
+        "saved": "Picture PIN saved.",
+        "removed": "Picture PIN removed.",
+        "padLabel": "New picture PIN",
+        "cancel": "Cancel"
+      },
+      "time": {
+        "title": "Time today",
+        "played": "{nickname} has played {played, plural, one {# minute} other {# minutes}} of {allowed, plural, one {# minute} other {# minutes}} today.",
+        "allow": "Allow {minutes, plural, one {# more minute} other {# more minutes}} today",
+        "allowed": "{nickname} can play {minutes, plural, one {# more minute} other {# more minutes}} today."
+      }
+    }
+  },
+  "parent": {
+    "title": "Learnofun for families",
+    "wordmark": "Learnofun",
+    "login": {
+      "title": "Sign in to Learnofun for families",
+      "mockNote": "This is the sign-in for trying out the dashboard: choose an account to sign in as. There is no password yet.",
+      "accounts": "Choose who to sign in as"
+    },
+    "account": {
+      "signedInAs": "Signed in as {name}",
+      "signOut": "Sign out"
+    },
+    "family": {
+      "switch": "Family",
+      "name": "{owner}’s family"
+    },
+    "nav": {
+      "label": "Dashboard",
+      "home": "Overview",
+      "plan": "Plan"
+    },
+    "home": {
+      "title": "Overview",
+      "noChildren": "No children yet. Add a child to get started."
+    },
+    "children": {
+      "title": "Your children",
+      "add": "Add a child",
+      "limit": "Your plan includes up to {count, plural, one {# child} other {# children}}.",
+      "seePlan": "See what your plan includes",
+      "edit": "Edit profile",
+      "editFor": "Edit profile for {nickname}",
+      "age": "Age {age}",
+      "learning": "Goals and time",
+      "learningFor": "Goals and time for {nickname}",
+      "progress": "Progress",
+      "progressFor": "Progress for {nickname}",
+      "history": "Sessions",
+      "historyFor": "Sessions for {nickname}"
+    },
+    "profile": {
+      "addTitle": "Add a child",
+      "editTitle": "Edit {nickname}’s profile",
+      "nickname": {
+        "label": "Nickname",
+        "hint": "A nickname is enough. It need not be your child’s real name."
+      },
+      "birth": {
+        "legend": "Birth month and year",
+        "hint": "We ask only for the month and year, to suit activities to your child’s age.",
+        "month": "Month",
+        "year": "Year",
+        "choose": "Choose"
+      },
+      "learningLanguage": {
+        "label": "Learning language",
+        "hint": "The language your child’s activities are in."
+      },
+      "grade": {
+        "label": "School year (optional)",
+        "notSet": "Not set"
+      },
+      "avatar": {
+        "label": "Picture",
+        "hint": "Your child finds their profile by this picture."
+      },
+      "add": "Add child",
+      "save": "Save changes",
+      "cancel": "Cancel",
+      "saved": "{nickname}’s profile is saved.",
+      "saveFailed": "We couldn’t save the profile. Try again in a moment.",
+      "notFound": "We can’t find that child in this family.",
+      "notAllowed": "Only the family’s owner or a guardian can add children or change their profiles.",
+      "back": "Back to the overview",
+      "errors": {
+        "nicknameMissing": "Enter a nickname.",
+        "nicknameTooLong": "Use {max} characters or fewer.",
+        "birthMissing": "Choose the month and the year.",
+        "ageOutOfRange": "Learnofun has activities for ages {min} to {max} for now."
+      }
+    },
+    "learning": {
+      "title": "Goals and time for {nickname}",
+      "saveFailed": "We couldn’t save that. Try again in a moment.",
+      "goal": {
+        "title": "Goal",
+        "hint": "Pin a focus, and Learnofun leans its suggestions towards it.",
+        "focus": "Focus on",
+        "none": "No focus",
+        "skill": "Skill (optional)",
+        "anySkill": "Any skill",
+        "endsOn": "Until (optional)",
+        "premium": "With the premium plan, you can also choose a particular skill and an end date.",
+        "save": "Save goal",
+        "saved": "Goal saved.",
+        "cleared": "Goal cleared."
+      },
+      "balance": {
+        "title": "Subject balance",
+        "hint": "How practice is shared between subjects. 0% pauses a subject.",
+        "total": "The shares add up to {total}. Make them add up to 100%.",
+        "save": "Save balance",
+        "saved": "Balance saved."
+      },
+      "time": {
+        "title": "Time",
+        "hint": "When the day’s play is used up, Learnofun stops calmly after the question on screen.",
+        "session": "Length of a session",
+        "daily": "Play a day",
+        "break": "Break reminder after",
+        "minutes": "{count, plural, one {# minute} other {# minutes}}",
+        "tooLong": "A session can’t be longer than the day’s play.",
+        "save": "Save time limits",
+        "saved": "Time limits saved."
+      }
+    },
+    "progress": {
+      "title": "{nickname}’s progress",
+      "today": {
+        "title": "Why these activities today",
+        "cards": {
+          "review": "Review",
+          "new": "New skill",
+          "free-choice": "Your choice"
+        }
+      },
+      "reasons": {
+        "frontierReady": "{nickname} is starting “{skill}”, building on “{related}”: {correct} of {total} first tries right over {sessions, plural, one {# session} other {# sessions}}.",
+        "frontierReadyPlain": "{nickname} is starting “{skill}”, building on “{related}”.",
+        "frontierStart": "{nickname} is starting “{skill}”, a first step.",
+        "reviewDue": "We’re revisiting “{skill}”. {nickname} mastered it on {date}, and a quick review helps it stick.",
+        "reviewDuePlain": "We’re revisiting “{skill}”: a quick review helps it stick.",
+        "prereqSupport": "“{related}” was tricky this week, so we’re practising “{skill}”, which it builds on.",
+        "parentGoal": "You asked us to focus on {focus}.",
+        "parentGoalPlain": "This follows a goal you set.",
+        "keepBuilding": "{nickname} is building “{skill}”: {correct} of {total} first tries right over {sessions, plural, one {# session} other {# sessions}} so far.",
+        "keepBuildingPlain": "{nickname} is building “{skill}”.",
+        "placementGap": "A short check showed “{skill}” is worth practising.",
+        "freeChoice": "A game {nickname} can choose freely."
+      },
+      "skills": {
+        "earlyHint": "“Early signal” means there aren’t enough first tries yet to judge: Learnofun waits for {firstTries} on at least {items} different questions.",
+        "evidence": "{correct} of {total} first tries right over {sessions, plural, one {# session} other {# sessions}}",
+        "early": "{total, plural, one {# first try} other {# first tries}} so far"
+      },
+      "summary": {
+        "count": "{count, plural, one {# skill} other {# skills}}",
+        "premium": "With the premium plan, you see every skill and the evidence for it."
+      }
+    },
+    "history": {
+      "title": "{nickname}’s sessions",
+      "empty": "No sessions yet.",
+      "week": "Week of {date}",
+      "status": {
+        "in-progress": "Playing now",
+        "completed": "Finished",
+        "ended-early": "Stopped early",
+        "interrupted": "Paused, and can carry on",
+        "expired": "Left unfinished"
+      },
+      "time": "{minutes, plural, =0 {Less than a minute} one {# minute} other {# minutes}} of play",
+      "firstTries": "{correct} of {attempted} first tries right",
+      "noAnswers": "No questions answered",
+      "eventually": "{correct} of {attempted} right in the end",
+      "supported": "{count, plural, one {# with a hint or a worked example} other {# with a hint or a worked example}}",
+      "credit": "Kept going: {count, plural, one {# right after a first miss} other {# right after a first miss}}",
+      "skipped": "{count, plural, one {# skipped} other {# skipped}}",
+      "unanswered": "{count, plural, one {# not answered} other {# not answered}}",
+      "questions": "Question by question",
+      "question": "Question {number}: {skill}",
+      "outcomes": {
+        "first-try": "Right first time",
+        "later-try": "Right after another try",
+        "with-hint": "Right with a hint",
+        "shown-how": "Shown how",
+        "not-yet": "Not yet",
+        "skipped": "Skipped",
+        "unanswered": "Not answered"
+      },
+      "premium": "With the premium plan, you also see every measure of each session, question by question."
+    },
+    "subjects": {
+      "mathematics": "Maths",
+      "literacy": "Reading and writing",
+      "logic": "Logic",
+      "coding": "Coding",
+      "science": "Science",
+      "arts": "Arts"
+    },
+    "plan": {
+      "title": "Your plan",
+      "includes": "What your plan includes",
+      "features": {
+        "children.max": "Children",
+        "activities.tier": "Activities",
+        "insights.detail": "Progress detail",
+        "digest.weekly": "Weekly summary",
+        "goals.custom": "Your own goals"
+      },
+      "values": {
+        "children": "Up to {count, plural, one {# child} other {# children}}",
+        "activities": {
+          "free": "The free activities",
+          "premium": "Every activity"
+        },
+        "insights": {
+          "basic": "The essentials",
+          "full": "Skill by skill, in full"
+        },
+        "on": "Included",
+        "off": "Not included"
+      },
+      "billingLater": "Changing your plan is not available yet."
+    }
+  },
+  "dev": {
+    "mock": {
+      "title": "Mock API",
+      "latency": "Speed",
+      "latencies": {
+        "none": "Normal",
+        "slow": "Slow"
+      },
+      "failure": "Failure",
+      "failures": {
+        "none": "None",
+        "offline": "Offline",
+        "server-error": "Server error"
+      },
+      "reset": "Reset mock data"
+    },
+    "localeSwitcher": {
+      "label": "Language",
+      "locales": {
+        "en": "English",
+        "en-XA": "Pseudo: long text",
+        "en-XB": "Pseudo: right to left"
+      }
+    },
+    "preview": {
+      "title": "UI kit preview",
+      "controls": {
+        "component": "Component",
+        "band": "Age band",
+        "theme": "Theme",
+        "reducedMotion": "Reduced motion",
+        "textSize": "Text size",
+        "dyslexiaFont": "Dyslexia-friendly font"
+      },
+      "components": {
+        "button": "Button",
+        "answer-tile": "Answer tile",
+        "activity-card": "Activity card",
+        "skill-status": "Skill status",
+        "card": "Card",
+        "avatar-picker": "Avatar picker",
+        "progress-trail": "Progress trail",
+        "dialog": "Dialog",
+        "toast": "Toast",
+        "feedback": "Feedback",
+        "celebration": "Celebration",
+        "parental-gate": "Parental gate",
+        "settings-panel": "Settings panel",
+        "picture-pin": "Picture PIN"
+      },
+      "bands": {
+        "early-years": "Ages 3–5",
+        "early-primary": "Ages 6–8",
+        "parent": "Parent dashboard"
+      },
+      "themes": {
+        "system": "Device setting",
+        "light": "Light",
+        "dark": "Dark",
+        "contrast": "High contrast"
+      },
+      "samples": {
+        "primaryAction": "Start",
+        "secondaryAction": "Not now",
+        "iconAction": "Get a hint",
+        "answerWord": "cat",
+        "activityReview": "Number bonds to 10",
+        "activityNew": "Hop to 20",
+        "activityChoice": "Tile Farm",
+        "feedbackCorrect": "You counted on from 7.",
+        "feedbackCorrectDetail": "7 + 5 = 12",
+        "feedbackTryAgain": "Nearly. Try one more hop.",
+        "feedbackTryAgainDetail": "Count the hops as you go.",
+        "feedbackHint": "Start at 7.",
+        "feedbackHintDetail": "Then hop 5 times along the line.",
+        "cardTitle": "Today’s plan",
+        "cardTitleShort": "Free choice",
+        "cardBody": "Three short activities, about ten minutes in all.",
+        "avatarLabel": "Choose your picture",
+        "openDialog": "Open the dialog",
+        "dialogTitle": "Time for a break?",
+        "dialogBody": "You have been playing for a while. A short break helps your brain.",
+        "takeBreak": "Take a break",
+        "keepGoing": "Keep going",
+        "showToast": "Show a message",
+        "toastSaved": "Settings saved",
+        "toastGoal": "Goal updated",
+        "continue": "Continue",
+        "openGate": "Open the gate",
+        "gatePassed": "The gate was passed.",
+        "gateCancelled": "The gate was closed without passing.",
+        "pinLabel": "Robin’s picture PIN",
+        "pinComplete": "All three pictures chosen."
+      }
+    },
+    "sandbox": {
+      "title": "Game sandbox",
+      "controls": {
+        "game": "Game",
+        "story": "Story",
+        "item": "Item",
+        "allItems": "All items",
+        "mode": "Mode"
+      },
+      "modes": {
+        "practice": "Practice",
+        "challenge": "Challenge"
+      },
+      "actions": {
+        "restart": "Restart",
+        "pause": "Pause",
+        "resume": "Resume",
+        "hint": "Hint",
+        "skip": "Skip item",
+        "end": "End session"
+      },
+      "stage": "Game",
+      "status": {
+        "loading": "Loading the game…",
+        "loadError": "The game could not be loaded: {message}",
+        "noGames": "No games are registered yet. Make one with npm run create-game.",
+        "noStory": "This game has no story for this age band.",
+        "playing": "Playing",
+        "paused": "Paused",
+        "completed": "Session complete",
+        "ended": "Session ended",
+        "failed": "The game stopped with an error"
+      },
+      "answer": {
+        "right": "Last answer: right",
+        "wrong": "Last answer: not right. Next: {support}"
+      },
+      "support": {
+        "none": "no support, and the session moves on",
+        "encouragement": "encouragement and another try",
+        "hint": "a hint and another try",
+        "worked-example": "a worked example, and the session moves on"
+      },
+      "log": {
+        "title": "Learning events",
+        "count": "{count, plural, =0 {No events yet} one {# event} other {# events}}",
+        "invalid": "Does not match the contract"
+      },
+      "problems": {
+        "title": "Problems",
+        "invalidEvent": "Event {sequence, number} ({type}) does not match the contract: {message}",
+        "undeclaredString": "The game used the message key {key}, which its manifest does not list.",
+        "undeclaredSignal": "The game sent the signal {name}, which its manifest does not list.",
+        "signalKind": "The game sent the signal {name} with the wrong kind of value. Its manifest says {expected}.",
+        "gameError": "The game stopped with an error: {message}"
+      }
+    }
+  },
+  "games": {
+    "demoChoice": {
+      "title": "Demo choice",
+      "instructions": "Choose the right answer.",
+      "answers": "Answers",
+      "hintCrossedOut": "Here’s a hint: one answer is crossed out.",
+      "hintLookAgain": "Here’s a hint: look at each answer again."
+    },
+    "hopLine": {
+      "title": "Hop Line",
+      "sum": "{start, number} + {hops, number}",
+      "sumAnswered": "{start, number} + {hops, number} = {sum, number}",
+      "instructions": "Start on {start, number}. {hops, plural, one {Hop # time} other {Hop # times}}. Where does the frog land?",
+      "line": "Frog on the number line",
+      "position": "Frog on {position, number}",
+      "positionHops": "Frog on {position, number}, {hops, plural, =0 {no hops yet} one {# hop} other {# hops}}",
+      "positionHopsBack": "Frog on {position, number}, {hops, plural, one {# hop back} other {# hops back}}",
+      "counter": "{hops, plural, =0 {No hops yet} one {# hop} other {# hops}}",
+      "counterBack": "{hops, plural, one {# hop back} other {# hops back}}",
+      "controls": "Frog controls",
+      "hop": "Hop",
+      "back": "Back",
+      "land": "Land",
+      "tryAgain": "Nearly! Count the hops again.",
+      "hint": "Make {hops, plural, one {# hop} other {# hops}}. Each footprint is one hop.",
+      "footprints": "{done, number} of {total, plural, one {# hop} other {# hops}} made",
+      "showMe": "Watch the frog hop from {start, number}.",
+      "showMeStep": "{position, number}",
+      "answer": "The frog lands on {sum, number}.",
+      "explanations": {
+        "counts-the-start": "The frog starts on {start, number}. Its first hop takes it to {next, number}.",
+        "extra-hop": "Count each hop once, and stop at {hops, number}.",
+        "goes-to-the-number": "{hops, plural, one {Hop # time} other {Hop # times}} from {start, number}. Don’t hop to {hops, number}.",
+        "hops-backwards": "Adding takes the frog forward, to bigger numbers."
+      }
+    },
+    "tenFrameCafe": {
+      "title": "Ten Frame Café",
+      "fruit": {
+        "apple": "{count, plural, one {# apple} other {# apples}}",
+        "pear": "{count, plural, one {# pear} other {# pears}}",
+        "lemon": "{count, plural, one {# lemon} other {# lemons}}",
+        "strawberry": "{count, plural, one {# strawberry} other {# strawberries}}"
+      },
+      "order": {
+        "fillTo": "{order}, please.",
+        "fillUp": "Fill the tray. It has {order} already.",
+        "makeTen": "{first} and {second}, in one box."
+      },
+      "instructions": {
+        "fillTo": "Tap Add for each one, then Serve.",
+        "fillUp": "Add until the tray is full, then Serve.",
+        "makeTen": "Fill the first tray, then count them all and Serve."
+      },
+      "trays": "Trays",
+      "trayCount": "{count, number} of 10",
+      "value": {
+        "fillTo": "{order} in the trays",
+        "fillUp": "Tray: {count, number} of 10",
+        "fillUpSpill": "Tray: {count, number} of 10, {spill, number} on the counter",
+        "makeTen": "First tray {first, number} of 10, second tray {second, number}. Altogether {total, number}."
+      },
+      "total": "Altogether: {total, number}",
+      "counter": "{count, number} on the counter",
+      "controls": "Café controls",
+      "add": "Add",
+      "takeAway": "Take away",
+      "move": "Move one",
+      "moveBack": "Move back",
+      "serve": "Serve",
+      "tryAgain": "Nearly! Count the fruit again.",
+      "hint": "Here’s a hint: the empty cells are outlined.",
+      "hintFill": "{missing, plural, one {Here’s a hint: # more fills the tray.} other {Here’s a hint: # more fill the tray.}}",
+      "hintMakeTen": "{missing, plural, one {Here’s a hint: # more fills the first tray.} other {Here’s a hint: # more fill the first tray.}}",
+      "hintSpill": "Here’s a hint: the tray is full. Take away the fruit on the counter.",
+      "showMe": "Watch: one at a time.",
+      "showMeStep": "{count, number}",
+      "sum": {
+        "fillTo": "{count, number}",
+        "fillToTen": "10 + {rest, number} = {count, number}",
+        "fillUp": "{shown, number} + {missing, number} = 10",
+        "makeTen": "{first, number} + {second, number} = {total, number}"
+      },
+      "answer": {
+        "fillTo": "That makes {count, number}.",
+        "fillToTen": "A full tray and {rest, number} more make {count, number}.",
+        "fillUp": "{shown, number} and {missing, number} make 10.",
+        "makeTen": "{first, number} + {moved, number} = 10, and {rest, number} more is {total, number}."
+      },
+      "explanations": {
+        "counts-one-twice": "Touch each fruit once as you count.",
+        "gives-the-part": "The tray has {shown, number}. How many more make 10?",
+        "counts-all": "Count only the fruit you added.",
+        "stops-at-ten": "One tray is full. What is left in the other?",
+        "counts-moved-twice": "{moved, plural, one {That one moved. Count it once.} other {Those # moved. Count them once.}}"
+      }
+    },
+    "tileFarm": {
+      "title": "Tile Farm",
+      "crop": {
+        "carrot": "{count, plural, one {# carrot} other {# carrots}}",
+        "cabbage": "{count, plural, one {# cabbage} other {# cabbages}}",
+        "sunflower": "{count, plural, one {# sunflower} other {# sunflowers}}"
+      },
+      "order": {
+        "equalGroups": "Plant {rows, plural, one {# row} other {# rows}} of {crop}.",
+        "array": "Fill the field: {rows, plural, one {# row} other {# rows}} and {columns, plural, one {# column} other {# columns}}."
+      },
+      "instructions": {
+        "equalGroups": "Plant, then count.",
+        "array": "Fill it, then count."
+      },
+      "field": "Field",
+      "value": "{rows, plural, one {# row} other {# rows}} of {length, number} planted. Counted: {count, number}.",
+      "counted": "Counted: {count, number}",
+      "runningTotal": "{total, number}",
+      "controls": "Farm controls",
+      "plant": "Plant a row",
+      "dig": "Dig up a row",
+      "addRow": "Add a row",
+      "addOne": "Add one",
+      "takeOne": "Take one",
+      "done": "Done",
+      "tryAgain": "Nearly! Count the rows again.",
+      "hint": "Here’s a hint: each row shows its total.",
+      "showMe": "Watch: a row at a time.",
+      "showMeStep": "{count, number}",
+      "sum": {
+        "more": "{sum} + {value, number}",
+        "groups": "{terms} = {total, number}",
+        "array": "{rows, plural, one {# row} other {# rows}} of {length, number} = {total, number}"
+      },
+      "list": {
+        "more": "{list}, {value, number}"
+      },
+      "answer": "{rows, plural, one {# row} other {# rows}} of {length, number} make {total, number}.",
+      "explanations": {
+        "adds-the-numbers": "{rows, plural, one {There is # row} other {There are # rows}}, and each row has {length, number}. Count every plant.",
+        "counts-one-row": "That is one row. Count all {rows, plural, one {# row} other {# rows}}.",
+        "counts-the-rows": "That is how many rows. How many plants are there?",
+        "skips-a-row": "Count each row once: {totals}."
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+/*
+ * Development-only Language menu. Developer tools are not for children, so they keep the
+ * Family small style in both worlds and stay out of the way of the page.
+ */
+.lf-dev-locale {
+  position: fixed;
+  inset-block-start: var(--space-2);
+  inset-inline-end: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--family-small-font-family);
+  font-size: var(--family-small-font-size);
+  font-weight: var(--family-small-font-weight);
+  line-height: var(--family-small-line-height);
+}
+
+.lf-dev-locale select {
+  font: inherit;
+}

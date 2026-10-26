@@ -1,0 +1,280 @@
+/*
+ * Generated from docs/design-system/tokens.json (version 1) by
+ * `npm run tokens -w @learnofun/ui-kit`. Do not edit: change tokens.json and run the script.
+ * A test fails when this file and tokens.json differ (ADR 0019).
+ */
+
+:root {
+  /* Type families */
+  --font-display: "Baloo 2", "Baloo Bhaijaan 2", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --font-read: Andika, "Readex Pro", system-ui, sans-serif;
+  --font-sans: "Readex Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Type styles, in rem (px ÷ 16), so the text-size setting scales them */
+  --play-hero-font-family: var(--font-display);
+  --play-hero-font-size: 2.75rem;
+  --play-hero-line-height: 3rem;
+  --play-hero-font-weight: 800;
+  --play-title-font-family: var(--font-display);
+  --play-title-font-size: 1.875rem;
+  --play-title-line-height: 2.25rem;
+  --play-title-font-weight: 700;
+  --play-label-font-family: var(--font-display);
+  --play-label-font-size: 1.375rem;
+  --play-label-line-height: 1.75rem;
+  --play-label-font-weight: 700;
+  --play-number-font-family: var(--font-display);
+  --play-number-font-size: 3.5rem;
+  --play-number-line-height: 3.75rem;
+  --play-number-font-weight: 800;
+  --read-early-font-family: var(--font-read);
+  --read-early-font-size: 1.875rem;
+  --read-early-line-height: 2.625rem;
+  --read-early-font-weight: 400;
+  --read-story-font-family: var(--font-read);
+  --read-story-font-size: 1.3125rem;
+  --read-story-line-height: 2rem;
+  --read-story-font-weight: 400;
+  --site-headline-font-family: var(--font-display);
+  --site-headline-font-size: 3.5rem;
+  --site-headline-line-height: 3.75rem;
+  --site-headline-font-weight: 800;
+  --site-headline-letter-spacing: -0.01em;
+  --family-title-font-family: var(--font-sans);
+  --family-title-font-size: 1.625rem;
+  --family-title-line-height: 2.125rem;
+  --family-title-font-weight: 600;
+  --family-heading-font-family: var(--font-sans);
+  --family-heading-font-size: 1.1875rem;
+  --family-heading-line-height: 1.75rem;
+  --family-heading-font-weight: 600;
+  --family-body-font-family: var(--font-sans);
+  --family-body-font-size: 1rem;
+  --family-body-line-height: 1.5rem;
+  --family-body-font-weight: 400;
+  --family-small-font-family: var(--font-sans);
+  --family-small-font-size: 0.875rem;
+  --family-small-line-height: 1.25rem;
+  --family-small-font-weight: 400;
+  --family-label-font-family: var(--font-sans);
+  --family-label-font-size: 0.75rem;
+  --family-label-line-height: 1rem;
+  --family-label-font-weight: 600;
+  --family-label-letter-spacing: 0.06em;
+  /* Spacing, radius and size */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+  --target-early: 64px;
+  --target-play: 56px;
+  --target-family: 44px;
+  --tile-min: 96px;
+  --measure: 65ch;
+}
+
+/* Colours and shadows. Light is the default. */
+
+:root,
+:root[data-theme='light'] {
+  --play-ground: #fff8ec;
+  --family-ground: #fcfbf8;
+  --surface-raised: #ffffff;
+  --surface-sunken: #f4eee2;
+  --line: #e2dacb;
+  --line-strong: #8e8673;
+  --ink: #1d2b53;
+  --ink-muted: #5a6382;
+  --sun: #ffc93c;
+  --coral: #ff6b6b;
+  --sky: #4cc9f0;
+  --leaf: #52b788;
+  --teal: #2a9d8f;
+  --navy: #1d2b53;
+  --on-bright: #1d2b53;
+  --on-navy: #ffffff;
+  --sun-soft: #fff1c4;
+  --sun-ink: #7a4e00;
+  --coral-soft: #ffe4e1;
+  --coral-ink: #a12c2b;
+  --sky-soft: #ddf4fc;
+  --sky-ink: #0b5d7f;
+  --leaf-soft: #def3e7;
+  --leaf-ink: #1d6a43;
+  --teal-soft: #d8f0ec;
+  --teal-ink: #16655c;
+  --action: #18756a;
+  --on-action: #ffffff;
+  --danger: #b42318;
+  --focus: #0b6e99;
+  --link: var(--action);
+  --shadow-sm: 0 1px 2px #1d2b5314, 0 2px 6px #1d2b5314;
+  --shadow-lg: 0 6px 12px #1d2b531a, 0 16px 32px -4px #1d2b532e;
+  --press-depth: 0 6px 0 #1d2b5338;
+  --focus-ring: 0 0 0 3px #fff8ec, 0 0 0 6px #0b6e99;
+}
+
+/* Without a chosen theme, the device's preferences choose. */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --play-ground: #141b36;
+    --family-ground: #10162b;
+    --surface-raised: #1e2748;
+    --surface-sunken: #0c1124;
+    --line: #36426c;
+    --line-strong: #7c88b3;
+    --ink: #f5f1e8;
+    --ink-muted: #b8bed3;
+    --sun: #ffcb47;
+    --coral: #ff7a7a;
+    --sky: #5cd0f2;
+    --leaf: #5fc394;
+    --teal: #3fb8a9;
+    --navy: #33457f;
+    --on-bright: #141b36;
+    --on-navy: #ffffff;
+    --sun-soft: #3b3012;
+    --sun-ink: #ffd66b;
+    --coral-soft: #43201f;
+    --coral-ink: #ffa7a3;
+    --sky-soft: #11344a;
+    --sky-ink: #8fddf8;
+    --leaf-soft: #16392a;
+    --leaf-ink: #8fddb4;
+    --teal-soft: #123a36;
+    --teal-ink: #8fddd2;
+    --action: #5ed3c3;
+    --on-action: #10162b;
+    --danger: #ff8a80;
+    --focus: #8fe3ff;
+    --link: var(--action);
+    --shadow-sm: 0 1px 3px #00000099;
+    --shadow-lg: 0 16px 32px -4px #000000cc;
+    --press-depth: 0 6px 0 #00000099;
+    --focus-ring: 0 0 0 3px #141b36, 0 0 0 6px #8fe3ff;
+  }
+  }
+
+@media (prefers-contrast: more) {
+  :root:not([data-theme]) {
+    --play-ground: #ffffff;
+    --family-ground: #ffffff;
+    --surface-raised: #ffffff;
+    --surface-sunken: #f2f2f2;
+    --line: #1d2b53;
+    --line-strong: #0b1230;
+    --ink: #0b1230;
+    --ink-muted: #283252;
+    --sun: #ffc93c;
+    --coral: #ff9090;
+    --sky: #4cc9f0;
+    --leaf: #52b788;
+    --teal: #2a9d8f;
+    --navy: #0b1230;
+    --on-bright: #0b1230;
+    --on-navy: #ffffff;
+    --sun-soft: #fff1c4;
+    --sun-ink: #4a2f00;
+    --coral-soft: #ffe4e1;
+    --coral-ink: #6b1615;
+    --sky-soft: #ddf4fc;
+    --sky-ink: #053a50;
+    --leaf-soft: #def3e7;
+    --leaf-ink: #0e4229;
+    --teal-soft: #d8f0ec;
+    --teal-ink: #0b423b;
+    --action: #0b423b;
+    --on-action: #ffffff;
+    --danger: #7a1009;
+    --focus: #0b1230;
+    --link: var(--action);
+    --shadow-sm: 0 0 0 2px #0b1230;
+    --shadow-lg: 0 0 0 2px #0b1230;
+    --press-depth: 0 6px 0 #0b1230;
+    --focus-ring: 0 0 0 3px #ffffff, 0 0 0 6px #0b1230;
+  }
+  }
+
+:root[data-theme='dark'] {
+  --play-ground: #141b36;
+  --family-ground: #10162b;
+  --surface-raised: #1e2748;
+  --surface-sunken: #0c1124;
+  --line: #36426c;
+  --line-strong: #7c88b3;
+  --ink: #f5f1e8;
+  --ink-muted: #b8bed3;
+  --sun: #ffcb47;
+  --coral: #ff7a7a;
+  --sky: #5cd0f2;
+  --leaf: #5fc394;
+  --teal: #3fb8a9;
+  --navy: #33457f;
+  --on-bright: #141b36;
+  --on-navy: #ffffff;
+  --sun-soft: #3b3012;
+  --sun-ink: #ffd66b;
+  --coral-soft: #43201f;
+  --coral-ink: #ffa7a3;
+  --sky-soft: #11344a;
+  --sky-ink: #8fddf8;
+  --leaf-soft: #16392a;
+  --leaf-ink: #8fddb4;
+  --teal-soft: #123a36;
+  --teal-ink: #8fddd2;
+  --action: #5ed3c3;
+  --on-action: #10162b;
+  --danger: #ff8a80;
+  --focus: #8fe3ff;
+  --link: var(--action);
+  --shadow-sm: 0 1px 3px #00000099;
+  --shadow-lg: 0 16px 32px -4px #000000cc;
+  --press-depth: 0 6px 0 #00000099;
+  --focus-ring: 0 0 0 3px #141b36, 0 0 0 6px #8fe3ff;
+}
+
+:root[data-theme='contrast'] {
+  --play-ground: #ffffff;
+  --family-ground: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-sunken: #f2f2f2;
+  --line: #1d2b53;
+  --line-strong: #0b1230;
+  --ink: #0b1230;
+  --ink-muted: #283252;
+  --sun: #ffc93c;
+  --coral: #ff9090;
+  --sky: #4cc9f0;
+  --leaf: #52b788;
+  --teal: #2a9d8f;
+  --navy: #0b1230;
+  --on-bright: #0b1230;
+  --on-navy: #ffffff;
+  --sun-soft: #fff1c4;
+  --sun-ink: #4a2f00;
+  --coral-soft: #ffe4e1;
+  --coral-ink: #6b1615;
+  --sky-soft: #ddf4fc;
+  --sky-ink: #053a50;
+  --leaf-soft: #def3e7;
+  --leaf-ink: #0e4229;
+  --teal-soft: #d8f0ec;
+  --teal-ink: #0b423b;
+  --action: #0b423b;
+  --on-action: #ffffff;
+  --danger: #7a1009;
+  --focus: #0b1230;
+  --link: var(--action);
+  --shadow-sm: 0 0 0 2px #0b1230;
+  --shadow-lg: 0 0 0 2px #0b1230;
+  --press-depth: 0 6px 0 #0b1230;
+  --focus-ring: 0 0 0 3px #ffffff, 0 0 0 6px #0b1230;
+}

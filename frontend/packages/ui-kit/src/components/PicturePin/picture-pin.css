@@ -1,0 +1,86 @@
+.lf-pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* Three slots that fill in as pictures are chosen: dashed while empty, solid once filled. */
+.lf-pin__entry {
+  display: flex;
+  gap: var(--ui-gap);
+}
+
+.lf-pin__slot {
+  display: grid;
+  place-items: center;
+  inline-size: var(--ui-target);
+  block-size: var(--ui-target);
+  border: var(--ui-line-width) dashed var(--line-strong);
+  border-radius: var(--ui-radius);
+  background-color: var(--surface-sunken);
+  color: var(--ink);
+}
+
+.lf-pin__slot--filled {
+  border-style: solid;
+  border-color: var(--ink);
+  background-color: var(--surface-raised);
+}
+
+.lf-pin__pad {
+  display: grid;
+  grid-template-columns: repeat(3, var(--ui-target));
+  gap: var(--ui-gap);
+}
+
+.lf-pin__picture,
+.lf-pin__delete {
+  display: grid;
+  place-items: center;
+  min-inline-size: var(--ui-target);
+  min-block-size: var(--ui-target);
+  padding: 0;
+  border: var(--ui-line-width) solid var(--line-strong);
+  border-radius: var(--ui-radius);
+  background-color: var(--surface-raised);
+  color: var(--ink);
+  cursor: pointer;
+  transition-property: transform, box-shadow;
+  transition-duration: var(--ui-duration-short);
+  transition-timing-function: var(--ui-easing);
+}
+
+.lf-pin__picture:focus-visible,
+.lf-pin__delete:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* In the Play world, the pad's keys are play pieces: on a ledge, and down 6px when pressed. */
+:root[data-band] .lf-pin__picture,
+:root[data-band] .lf-pin__delete {
+  box-shadow: var(--press-depth);
+}
+
+:root[data-band] .lf-pin__picture:active:not(:disabled),
+:root[data-band] .lf-pin__delete:active:not(:disabled) {
+  box-shadow: none;
+  transform: translateY(6px);
+}
+
+:root[data-band] .lf-pin__picture:focus-visible,
+:root[data-band] .lf-pin__delete:focus-visible {
+  box-shadow: var(--press-depth), var(--focus-ring);
+}
+
+.lf-pin__picture:disabled,
+.lf-pin__delete:disabled,
+:root[data-band] .lf-pin__picture:disabled,
+:root[data-band] .lf-pin__delete:disabled {
+  border-color: var(--ui-disabled-border);
+  background-color: var(--ui-disabled);
+  color: var(--ui-on-disabled);
+  box-shadow: none;
+  cursor: not-allowed;
+}

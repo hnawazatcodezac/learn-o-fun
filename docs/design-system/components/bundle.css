@@ -1,0 +1,82 @@
+@import url("https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Baloo+2:wght@500;700;800&family=Readex+Pro:wght@400;500;600&display=swap");
+
+/* Learnofun component specs. Every value comes from a token. */
+body { margin: 0; font-family: var(--font-sans); background: var(--play-ground); color: var(--ink); }
+.lf-stage { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-5); padding: var(--space-5); }
+.lf-stage.family { background: var(--family-ground); gap: var(--space-3); }
+.lf-col { display: flex; flex-direction: column; gap: var(--space-2); align-items: center; }
+.lf-caption { font-family: var(--font-sans); font-size: 13px; line-height: 16px; color: var(--ink-muted); }
+.lf-icon { width: 1em; height: 1em; flex: none; }
+
+/* Button */
+.lf-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); border: 2px solid transparent; cursor: pointer; font: inherit; text-decoration: none; }
+.lf-btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.lf-btn-play { min-height: var(--target-play); padding: 0 var(--space-6); border-radius: var(--radius-lg); font-family: var(--font-display); font-size: 22px; line-height: 28px; font-weight: 700; background: var(--sun); color: var(--on-bright); box-shadow: var(--press-depth); transition: transform 120ms ease-out, box-shadow 120ms ease-out; }
+.lf-btn-play.sky { background: var(--sky); }
+.lf-btn-play:active, .lf-btn-play.is-pressed { transform: translateY(6px); box-shadow: none; }
+.lf-btn-play:focus-visible { box-shadow: var(--press-depth), var(--focus-ring); }
+.lf-btn-family { min-height: var(--target-family); padding: 0 var(--space-5); border-radius: var(--radius-md); font-size: 16px; line-height: 24px; font-weight: 600; background: var(--action); color: var(--on-action); }
+.lf-btn-family.quiet { background: var(--surface-raised); color: var(--ink); border-color: var(--line-strong); }
+
+/* AnswerTile */
+.lf-tile { min-width: var(--tile-min); min-height: var(--tile-min); display: grid; place-items: center; padding: 0 var(--space-4); border-radius: var(--radius-lg); border: 3px solid var(--line-strong); background: var(--surface-raised); color: var(--ink); box-shadow: var(--press-depth); font-family: var(--font-display); font-size: 44px; line-height: 48px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.lf-tile.is-selected { background: var(--sky-soft); border-color: var(--sky-ink); }
+.lf-tile.is-correct { background: var(--leaf-soft); border-color: var(--leaf-ink); color: var(--leaf-ink); }
+.lf-tile.is-try { background: var(--sun-soft); border-color: var(--sun-ink); color: var(--sun-ink); }
+.lf-tile-state { display: inline-flex; align-items: center; gap: var(--space-1); font-family: var(--font-display); font-size: 16px; line-height: 20px; font-weight: 700; color: var(--ink-muted); }
+.lf-tile-state.correct { color: var(--leaf-ink); }
+.lf-tile-state.try { color: var(--sun-ink); }
+.lf-prompt { font-family: var(--font-display); font-size: 30px; line-height: 36px; font-weight: 700; color: var(--ink); margin-inline-end: var(--space-3); }
+
+/* ActivityCard */
+.lf-card { width: 232px; border-radius: var(--radius-lg); background: var(--surface-raised); box-shadow: var(--shadow-sm); overflow: hidden; border: 1px solid var(--line); }
+.lf-card-art { position: relative; height: 112px; overflow: hidden; }
+.lf-card-art.sun { background: var(--sun); }
+.lf-card-art.sky { background: var(--sky); }
+.lf-card-art.coral { background: var(--coral); }
+.lf-shape { position: absolute; display: block; }
+.lf-shape.disc { border-radius: var(--radius-full); }
+.lf-shape.pebble { border-radius: var(--radius-lg); }
+.lf-shape.leaf { background: var(--leaf); }
+.lf-shape.navy { background: var(--navy); }
+.lf-shape.soft { background: var(--surface-raised); }
+.lf-shape.sun { background: var(--sun); }
+.lf-card-body { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-4) var(--space-5) var(--space-5); }
+.lf-kicker { align-self: flex-start; display: inline-flex; align-items: center; gap: var(--space-1); padding: 2px 10px; border-radius: var(--radius-full); font-family: var(--font-display); font-size: 15px; line-height: 22px; font-weight: 700; }
+.lf-kicker.review { background: var(--coral-soft); color: var(--coral-ink); }
+.lf-kicker.new { background: var(--sun-soft); color: var(--sun-ink); }
+.lf-kicker.choice { background: var(--sky-soft); color: var(--sky-ink); }
+.lf-card-title { margin: 0; font-family: var(--font-display); font-size: 22px; line-height: 28px; font-weight: 700; color: var(--ink); }
+.lf-card-meta { font-family: var(--font-display); font-size: 16px; line-height: 20px; font-weight: 500; color: var(--ink-muted); }
+
+/* Feedback */
+.lf-feedback { display: flex; align-items: center; gap: var(--space-4); width: 100%; max-width: 560px; box-sizing: border-box; padding: var(--space-4) var(--space-5); border-radius: var(--radius-lg); font-family: var(--font-display); font-size: 22px; line-height: 28px; font-weight: 700; }
+.lf-feedback .lf-badge { width: 44px; height: 44px; border-radius: var(--radius-full); display: grid; place-items: center; flex: none; font-size: 26px; }
+.lf-feedback.correct { background: var(--leaf-soft); color: var(--leaf-ink); }
+.lf-feedback.correct .lf-badge { background: var(--leaf); color: var(--on-bright); }
+.lf-feedback.try { background: var(--sun-soft); color: var(--sun-ink); }
+.lf-feedback.try .lf-badge { background: var(--sun); color: var(--on-bright); }
+.lf-feedback.hint { background: var(--sky-soft); color: var(--sky-ink); }
+.lf-feedback.hint .lf-badge { background: var(--sky); color: var(--on-bright); }
+.lf-feedback small { display: block; font-size: 17px; line-height: 22px; font-weight: 500; color: var(--ink); }
+
+/* ProgressTrail */
+.lf-trail { display: flex; align-items: center; gap: var(--space-2); }
+.lf-step { width: 20px; height: 20px; border-radius: var(--radius-full); display: grid; place-items: center; box-sizing: border-box; }
+.lf-step.done { background: var(--leaf); color: var(--on-bright); font-size: 14px; }
+.lf-step.current { width: 32px; height: 32px; background: var(--sun); box-shadow: 0 0 0 4px var(--sun-soft); }
+.lf-step.next { border: 3px solid var(--line-strong); background: var(--surface-raised); }
+.lf-step.finish { width: 32px; height: 32px; background: var(--surface-raised); border: 3px solid var(--line-strong); color: var(--ink-muted); font-size: 18px; }
+.lf-trail-label { font-family: var(--font-display); font-size: 18px; line-height: 24px; font-weight: 700; color: var(--ink); margin-inline-start: var(--space-3); }
+
+/* SkillStatus */
+.lf-status { display: inline-flex; align-items: center; gap: 6px; min-height: 28px; padding: 0 12px 0 8px; border-radius: var(--radius-full); font-family: var(--font-sans); font-size: 14px; line-height: 20px; font-weight: 500; }
+.lf-status svg { width: 16px; height: 16px; }
+.lf-status.not-started { background: var(--surface-sunken); color: var(--ink-muted); }
+.lf-status.exploring { background: var(--sky-soft); color: var(--sky-ink); }
+.lf-status.building { background: var(--sun-soft); color: var(--sun-ink); }
+.lf-status.strong { background: var(--teal-soft); color: var(--teal-ink); }
+.lf-status.mastered { background: var(--leaf-soft); color: var(--leaf-ink); }
+.lf-status.review { background: var(--coral-soft); color: var(--coral-ink); }
+
+@media (prefers-reduced-motion: reduce) { .lf-btn-play { transition: none; } }

@@ -1,0 +1,50 @@
+.g-demo-choice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  text-align: center;
+}
+
+.g-demo-choice__instructions {
+  margin: 0;
+  color: var(--ink-muted);
+}
+
+.g-demo-choice__prompt {
+  margin: 0;
+  font-family: var(--play-number-font-family);
+  font-size: var(--play-number-font-size);
+  font-weight: var(--play-number-font-weight);
+  line-height: var(--play-number-line-height);
+}
+
+/* The answers are the UI kit's answer tiles (ADR 0020), space-5 apart as the spec asks. */
+.g-demo-choice__answers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--space-5);
+}
+
+.g-demo-choice__hint {
+  min-block-size: 1lh;
+  margin: 0;
+  font-family: var(--play-label-font-family);
+  font-size: var(--play-label-font-size);
+  font-weight: var(--play-label-font-weight);
+  line-height: var(--play-label-line-height);
+}
+
+/*
+ * On phones, three tiles space-5 apart are wider than the screen, so they wrap onto two rows; the
+ * game gives up its own padding to keep everything on screen (ADR 0012).
+ */
+@media (width < 30rem) {
+  .g-demo-choice {
+    gap: var(--space-3);
+    padding-block: 0;
+  }
+}

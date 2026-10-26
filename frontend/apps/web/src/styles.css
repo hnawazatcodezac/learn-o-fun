@@ -1,0 +1,256 @@
+.placeholder {
+  display: grid;
+  place-items: center;
+  min-block-size: 100dvh;
+  padding-inline: var(--space-4);
+}
+
+.placeholder__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.placeholder__shape {
+  flex: none;
+  inline-size: 6rem;
+  block-size: 6rem;
+}
+
+.placeholder__shape--child {
+  border-radius: 50%;
+  background-color: var(--sun);
+}
+
+.placeholder__title {
+  margin-block: 0 var(--space-2);
+  font-size: var(--ui-title-font-size);
+}
+
+.placeholder__body {
+  margin: 0;
+  color: var(--ink-muted);
+}
+
+.placeholder__section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-block-start: var(--space-6);
+}
+
+.placeholder__subtitle {
+  margin: 0;
+  font-size: var(--ui-heading-font-size);
+}
+
+.load-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  text-align: center;
+}
+
+.load-state p {
+  margin: 0;
+}
+
+.load-state__title {
+  font-weight: var(--ui-label-font-weight);
+}
+
+/* Who's playing? Each child is one large button: avatar above nickname. */
+.profile-picker {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.profile-picker__choice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  min-inline-size: calc(var(--ui-target) * 2);
+  padding: var(--space-3);
+  border: var(--ui-line-width) solid var(--line-strong);
+  border-radius: var(--ui-radius);
+  background-color: var(--surface-raised);
+  color: var(--ink);
+  font: inherit;
+  font-weight: var(--ui-label-font-weight);
+  cursor: pointer;
+}
+
+.profile-picker__choice:hover {
+  border-color: var(--ui-primary);
+}
+
+.profile-picker__choice:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.profile-picker__avatar {
+  inline-size: calc(var(--ui-target) * 1.5);
+  block-size: calc(var(--ui-target) * 1.5);
+}
+
+.pin-entry,
+.grown-up-settings,
+.grown-up-settings__pin,
+.grown-up-settings__time {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.pin-entry p,
+.grown-up-settings__pin p,
+.grown-up-settings__time p {
+  margin: 0;
+}
+
+.pin-entry__message {
+  font-weight: var(--ui-label-font-weight);
+}
+
+.grown-up-settings__heading {
+  margin: 0;
+  font-size: var(--ui-heading-font-size);
+}
+
+.grown-up-settings__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+/* A page in child mode: a bar with the child, then the page's own content. */
+.child-page {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100dvh;
+}
+
+.child-page__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding-block: var(--space-3);
+  padding-inline: var(--space-4);
+}
+
+.child-page__avatar {
+  inline-size: var(--ui-target);
+  block-size: var(--ui-target);
+}
+
+.child-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-inline-start: auto;
+}
+
+.child-page__main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  padding-block: var(--space-4);
+  padding-inline: var(--space-4);
+}
+
+.child-page__title {
+  margin: 0;
+  font-family: var(--play-title-font-family);
+  font-size: var(--play-title-font-size);
+  font-weight: var(--play-title-font-weight);
+  line-height: var(--play-title-line-height);
+}
+
+/* play-hero: one per screen, for the Today greeting (design system type). */
+.child-page__hero {
+  margin: 0;
+  font-family: var(--play-hero-font-family);
+  font-size: var(--play-hero-font-size);
+  font-weight: var(--play-hero-font-weight);
+  line-height: var(--play-hero-line-height);
+}
+
+/* Activity cards at the spec's 232px (its bundle.css; ADR 0019), centred, as many to a row as fit. */
+.child-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 14.5rem));
+  justify-content: center;
+  gap: var(--space-5);
+  inline-size: 100%;
+  max-inline-size: 56rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/*
+ * Development-only mock API controls (FRONTEND-KICKOFF step 5). Developer tools are not for
+ * children, so they keep the Family small style in both worlds.
+ */
+.dev-panel {
+  position: fixed;
+  inset-block-end: var(--space-2);
+  inset-inline-start: var(--space-2);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--ui-radius);
+  background-color: var(--surface-raised);
+  font-family: var(--family-small-font-family);
+  font-size: var(--family-small-font-size);
+  font-weight: var(--family-small-font-weight);
+  line-height: var(--family-small-line-height);
+}
+
+.dev-panel__control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.dev-panel select,
+.dev-panel button {
+  font: inherit;
+}
+
+/* The day's play is used up (ADR 0022): a calm message in place of the activities. */
+.time-up {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  max-inline-size: var(--measure);
+  text-align: center;
+}
+
+.time-up__title {
+  margin: 0;
+  font-family: var(--play-title-font-family);
+  font-size: var(--play-title-font-size);
+  font-weight: var(--play-title-font-weight);
+  line-height: var(--play-title-line-height);
+}
+
+.time-up__body {
+  margin: 0;
+}

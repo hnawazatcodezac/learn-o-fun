@@ -1,0 +1,63 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Learnofun</title>
+<style>
+  html, body { margin: 0; height: 100%; }
+  body { background: var(--play-ground); color: var(--ink); font-family: var(--font-sans); overflow: hidden; }
+  .cover { position: relative; height: 288px; overflow: hidden; }
+  .art { position: absolute; top: 0; left: 480px; width: 480px; height: 288px; overflow: hidden; }
+  .art svg { display: block; width: 480px; height: 288px; }
+  .sun { fill: var(--sun); }
+  .sky { fill: var(--sky); }
+  .coral { fill: var(--coral); }
+  .deep { fill: var(--ink); }
+  .leaf { fill: var(--leaf); }
+  .tick { fill: var(--ink); }
+  .hop { fill: none; stroke: var(--ink); stroke-width: 4; stroke-linecap: round; }
+  .blk { rx: var(--radius-lg); }
+  .words { position: absolute; left: var(--space-6); bottom: var(--space-6); max-width: 440px; }
+  .name { margin: 0; font-family: var(--font-display); font-size: 80px; line-height: .95; font-weight: 800; letter-spacing: -0.01em; color: var(--ink); }
+  .tag { margin: var(--space-2) 0 0 4px; font-size: 14px; line-height: 20px; color: var(--ink-muted); }
+</style>
+</head>
+<body>
+<div class="cover">
+<div class="art" aria-hidden="true">
+<svg viewBox="0 0 480 288" width="480" height="288">
+<!--
+  blocks      sun 160×240 slab bled off the top (the primary child fill, largest) · sky disc r=space-8 · coral pebble 128×64 · ink slab 160×192 bled off the right edge · leaf disc r=space-4 once, the landing spot (it means correct) — about 30% of 960×288
+  arrangement one tall sun slab with satellites; disc over pebble in the middle column; deep slab on the right; space-4 gutters
+  pattern     a literal motif, the number line from Hop Line, the first game: ten ink ticks at a space-7 pitch and five ink hop arcs (radius space-5) landing on the leaf disc
+  scales      sides in space-6 multiples; gutters space-4; tick pitch space-7; hop radius space-5; corners radius-lg
+-->
+<rect class="sun blk" x="24" y="-32" width="160" height="240" rx="24"/>
+<circle class="sky" cx="264" cy="88" r="64"/>
+<rect class="coral blk" x="200" y="168" width="128" height="64" rx="24"/>
+<rect class="deep blk" x="344" y="32" width="160" height="192" rx="24"/>
+<path class="hop" d="M72 268 A24 24 0 0 1 120 268"/>
+<path class="hop" d="M120 268 A24 24 0 0 1 168 268"/>
+<path class="hop" d="M168 268 A24 24 0 0 1 216 268"/>
+<path class="hop" d="M216 268 A24 24 0 0 1 264 268"/>
+<path class="hop" d="M264 268 A24 24 0 0 1 312 268"/>
+<circle class="tick" cx="24" cy="268" r="5"/>
+<circle class="tick" cx="72" cy="268" r="5"/>
+<circle class="tick" cx="120" cy="268" r="5"/>
+<circle class="tick" cx="168" cy="268" r="5"/>
+<circle class="tick" cx="216" cy="268" r="5"/>
+<circle class="tick" cx="264" cy="268" r="5"/>
+<circle class="tick" cx="360" cy="268" r="5"/>
+<circle class="tick" cx="408" cy="268" r="5"/>
+<circle class="tick" cx="456" cy="268" r="5"/>
+<circle class="leaf" cx="312" cy="268" r="16"/>
+</svg>
+</div>
+<div class="words">
+<h1 class="name">Learnofun</h1>
+<p class="tag">Games that grow with every child.</p>
+</div>
+</div>
+</body>
+</html>

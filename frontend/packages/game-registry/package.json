@@ -1,0 +1,25 @@
+{
+  "name": "@learnofun/game-registry",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@learnofun/game-demo-choice": "*",
+    "@learnofun/game-hop-line": "*",
+    "@learnofun/game-sdk": "*",
+    "@learnofun/game-ten-frame-cafe": "*",
+    "@learnofun/game-tile-farm": "*"
+  },
+  "devDependencies": {
+    "@learnofun/contracts": "*",
+    "vitest": "^5.0.5"
+  }
+}

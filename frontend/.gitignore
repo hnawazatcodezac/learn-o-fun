@@ -1,0 +1,14 @@
+node_modules/
+dist/
+dist-e2e/
+.next/
+out/
+out-e2e/
+next-env.d.ts
+coverage/
+playwright-report/
+test-results/
+.turbo/
+
+.env
+.env.*
