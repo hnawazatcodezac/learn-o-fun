@@ -25,11 +25,12 @@ export function MockControlsPanel() {
   };
 
   return (
-    <aside className="dev-panel" aria-label={t('dev.mock.title')}>
-      <div className="dev-panel__control">
+    <aside className="flex flex-wrap items-end gap-3" aria-label={t('dev.mock.title')}>
+      <div className="flex flex-col gap-1">
         <label htmlFor={latencyId}>{t('dev.mock.latency')}</label>
         <select
           id={latencyId}
+          className="font-inherit"
           value={controls.latency}
           onChange={(event) => {
             const latency = LATENCIES.find((value) => value === event.target.value);
@@ -43,10 +44,11 @@ export function MockControlsPanel() {
           ))}
         </select>
       </div>
-      <div className="dev-panel__control">
+      <div className="flex flex-col gap-1">
         <label htmlFor={failureId}>{t('dev.mock.failure')}</label>
         <select
           id={failureId}
+          className="font-inherit"
           value={controls.failure}
           onChange={(event) => {
             const failure = FAILURES.find((value) => value === event.target.value);
@@ -62,7 +64,7 @@ export function MockControlsPanel() {
       </div>
       <button
         type="button"
-        className="dev-panel__reset"
+        className="font-inherit"
         onClick={() => {
           clearMockState();
           window.location.reload();

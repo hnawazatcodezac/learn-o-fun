@@ -41,7 +41,9 @@ import {
   type ShellSession,
   type ShellSessionOptions,
 } from './session';
-import './game-shell.css';
+
+/** A dialog's content in the shell: a column, a line apart. */
+const MENU_CLASSES = 'flex flex-col gap-3 [&_p]:m-0';
 
 export interface GameShellProps {
   game: GameModule;
@@ -216,7 +218,7 @@ export function GameShell({
   };
   const leave = () => {
     sessionRef.current?.exit();
-    void navigate(exitTo);
+    navigate(exitTo);
   };
   const hint = () => {
     sessionRef.current?.hint();
@@ -266,12 +268,16 @@ export function GameShell({
   const completed = finishedWell(snapshot);
 
   return (
-    <div className="game-shell" data-testid="game-shell">
-      <header className="game-shell__bar">
+    // The game shell: a bar with pause, progress and hint above the game, which fills the rest. On
+    // phones, Pause and Hint show only their icons, with the trail's count between them and the
+    // trail itself on a row of its own, so the game keeps its room (ADR 0019). Their words stay as
+    // the buttons' names for screen readers.
+    <div className="flex flex-col min-block-dvh" data-testid="game-shell">
+      <header className="flex flex-wrap items-center gap-3 px-4 py-3 max-phone:grid max-phone:grid-cols-[auto_1fr_auto] max-phone:play:[&_.lf-button]:px-0 max-phone:play:[&_.lf-button]:inline-ui-target max-phone:[&_.lf-button\_\_label]:sr-only max-phone:[&>.lf-button:first-child]:col-start-1 max-phone:[&>.lf-button:first-child]:row-start-1 max-phone:[&>.lf-button:last-child:not(:first-child)]:col-start-3 max-phone:[&>.lf-button:last-child:not(:first-child)]:row-start-1">
         <Button variant="secondary" icon={<PauseIcon />} disabled={!playing} onClick={openMenu}>
           {t('child.play.pause')}
         </Button>
-        <div className="game-shell__progress">
+        <div className="shrink grow basis-ui-progress-basis min-inline-0 max-phone:contents max-phone:[&_.lf-trail]:contents max-phone:[&_.lf-trail\_\_count]:col-start-2 max-phone:[&_.lf-trail\_\_count]:row-start-1 max-phone:[&_.lf-trail\_\_count]:justify-self-center max-phone:[&_.lf-trail\_\_steps]:col-span-full max-phone:[&_.lf-trail\_\_steps]:row-start-2 max-phone:[&_.lf-trail\_\_steps]:justify-self-center">
           <ProgressTrail done={done} total={total} />
         </div>
         {mode === 'practice' && (
@@ -287,7 +293,7 @@ export function GameShell({
       </header>
       <main
         ref={stageRef}
-        className="game-shell__stage"
+        className="grid flex-1 place-items-center px-4 focus:outline-none [&[hidden]]:hidden"
         data-testid="game-stage"
         aria-label={t('child.play.stage')}
         tabIndex={-1}
@@ -307,7 +313,7 @@ export function GameShell({
         title={t('child.play.break.title')}
         onClose={() => sessionRef.current?.keepPlaying()}
       >
-        <div className="game-shell__menu">
+        <div className={MENU_CLASSES}>
           <p>
             {snapshot.breakOffered ? t('child.play.break.offeredBody') : t('child.play.break.body')}
           </p>
@@ -320,7 +326,7 @@ export function GameShell({
         </div>
       </Dialog>
       <Dialog open={menu === 'menu'} title={t('child.play.menu.title')} onClose={keepPlaying}>
-        <div className="game-shell__menu">
+        <div className={MENU_CLASSES}>
           <Button onClick={keepPlaying}>{t('child.play.menu.continue')}</Button>
           <Button variant="secondary" onClick={openSettings}>
             {t('child.play.menu.settings')}
@@ -343,7 +349,7 @@ export function GameShell({
         title={t('child.play.settings.title')}
         onClose={backToMenu}
       >
-        <div className="game-shell__menu">
+        <div className={MENU_CLASSES}>
           <SettingsPanel value={settings} onChange={setSettings} />
           <Button onClick={backToMenu}>{t('child.play.settings.done')}</Button>
         </div>

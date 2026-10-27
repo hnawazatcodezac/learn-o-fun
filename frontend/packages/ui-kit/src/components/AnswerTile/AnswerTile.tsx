@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import { cn } from '../../cn';
 import { useI18n } from '../../i18n/useI18n';
 
 /** The states of an answer tile (docs/design-system/components/AnswerTile). */
@@ -15,13 +16,21 @@ export type AnswerTileState = (typeof ANSWER_TILE_STATES)[number];
 /** A number in play-number, or a word in read-early. */
 export type AnswerTileContent = 'number' | 'word';
 
-/** The modifier class for each state; DOM games use the same names (ADR 0020). */
-const STATE_CLASS: Record<AnswerTileState, string> = {
+/**
+ * The modifier classes for each content and state; DOM games use the same names (ADR 0020), and
+ * ui-kit's tailwind.css styles them.
+ */
+const CONTENT_CLASSES: Record<AnswerTileContent, string> = {
+  number: 'lf-answer--number',
+  word: 'lf-answer--word',
+};
+
+const STATE_CLASSES: Record<AnswerTileState, string> = {
   default: '',
-  selected: ' lf-answer--selected',
-  correct: ' lf-answer--correct',
-  tryAgain: ' lf-answer--try-again',
-  ruledOut: ' lf-answer--ruled-out',
+  selected: 'lf-answer--selected',
+  correct: 'lf-answer--correct',
+  tryAgain: 'lf-answer--try-again',
+  ruledOut: 'lf-answer--ruled-out',
 };
 
 export interface AnswerTileProps extends Omit<
@@ -56,7 +65,7 @@ export function AnswerTile({
         : undefined;
 
   return (
-    <div className={`lf-answer lf-answer--${content}${STATE_CLASS[state]}`}>
+    <div className={cn('lf-answer', CONTENT_CLASSES[content], STATE_CLASSES[state])}>
       <button
         {...rest}
         type={type}

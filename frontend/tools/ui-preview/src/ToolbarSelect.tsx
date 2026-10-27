@@ -16,10 +16,11 @@ export function ToolbarSelect<T extends string>({
   const id = useId();
 
   return (
-    <div className="preview-control">
+    <div className="flex flex-col gap-1">
       <label htmlFor={id}>{label}</label>
       <select
         id={id}
+        className="font-inherit text-size-family-body min-block-ui-tool-control min-inline-ui-tool-menu"
         value={value}
         onChange={(event) => {
           const next = options.find((option) => option.value === event.target.value);

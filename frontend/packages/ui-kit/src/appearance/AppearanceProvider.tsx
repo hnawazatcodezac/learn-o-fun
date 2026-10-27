@@ -1,11 +1,5 @@
 import { TEXT_SCALES, type ExperienceBand, type TextScale } from '@learnofun/contracts';
-import { IconContext } from '@phosphor-icons/react/dist/lib/context';
-import type { IconProps } from '@phosphor-icons/react/dist/lib/types';
 import { useLayoutEffect, type ReactNode } from 'react';
-
-/** Phosphor icons are Bold in the Play world and Regular in the Family world (ADR 0019). */
-const PLAY_ICONS: IconProps = { color: 'currentColor', size: '1em', weight: 'bold' };
-const FAMILY_ICONS: IconProps = { color: 'currentColor', size: '1em', weight: 'regular' };
 
 export const THEMES = ['system', 'light', 'dark', 'contrast'] as const;
 export type Theme = (typeof THEMES)[number];
@@ -49,8 +43,8 @@ export function appearanceAttributes({
 }
 
 /**
- * Applies the band, theme and settings to `<html>`, where the design tokens read them, and gives
- * the icons inside it their world's weight.
+ * Applies the band, theme and settings to `<html>`, where the design tokens read them, so every
+ * component, icons included, takes its world's look from there.
  */
 export function AppearanceProvider({
   children,
@@ -67,9 +61,5 @@ export function AppearanceProvider({
     }
   }, [band, theme, reducedMotion, textScale, font]);
 
-  return (
-    <IconContext.Provider value={band === undefined ? FAMILY_ICONS : PLAY_ICONS}>
-      {children}
-    </IconContext.Provider>
-  );
+  return children;
 }

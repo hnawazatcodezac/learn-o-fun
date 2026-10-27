@@ -28,6 +28,14 @@ export async function passGate(page: Page) {
   await keypad.getByRole('button', { name: 'Done' }).click();
 }
 
+/** Opens the development panel in the corner, unless it is open already (FRONTEND-KICKOFF 15b). */
+export async function openDevTools(page: Page) {
+  const panel = page.getByTestId('dev-tools');
+  if (!(await panel.evaluate((details) => (details as HTMLDetailsElement).open))) {
+    await page.getByTestId('dev-tools-toggle').click();
+  }
+}
+
 /** Makes a child the one playing on this device, as the profile picker does (ADR 0018). */
 export async function playAs(page: Page, childId: string) {
   await page.addInitScript((id) => {

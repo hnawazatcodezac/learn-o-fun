@@ -15,28 +15,36 @@ export function EventLog({ events }: { events: readonly LoggedEvent[] }) {
   }, [events.length]);
 
   return (
-    <section className="sandbox-panel" aria-labelledby={headingId}>
-      <h2 id={headingId} className="sandbox-panel__title">
+    <section className="flex flex-col gap-2 text-size-family-body" aria-labelledby={headingId}>
+      <h2 id={headingId} className="m-0 text-size-family-heading">
         {t('dev.sandbox.log.title')}
       </h2>
-      <p className="sandbox-panel__note">{t('dev.sandbox.log.count', { count: events.length })}</p>
-      <ol ref={listRef} className="sandbox-log" data-testid="event-log">
+      <p className="m-0 text-ink-muted">{t('dev.sandbox.log.count', { count: events.length })}</p>
+      <ol
+        ref={listRef}
+        className="m-0 list-none overflow-auto p-0 text-size-family-small max-block-ui-tool-log"
+        data-testid="event-log"
+      >
         {events.map(({ event, invalid }) => (
           <li
             key={event.id}
-            className="sandbox-log__entry"
+            className="border-be border-line-strong data-invalid:border-s-4 data-invalid:border-s-sun data-invalid:ps-2"
             data-event-type={event.type}
             data-invalid={invalid === undefined ? undefined : 'true'}
           >
             <details>
-              <summary>
-                <span className="sandbox-log__sequence">{format.number(event.sequence)}</span>
+              <summary className="flex cursor-pointer items-baseline gap-3 py-2">
+                <span className="text-end text-ink-muted min-inline-ui-tool-number">
+                  {format.number(event.sequence)}
+                </span>
                 <code dir="ltr">{event.type}</code>
                 {invalid !== undefined && (
-                  <strong className="sandbox-log__invalid">{t('dev.sandbox.log.invalid')}</strong>
+                  <strong className="text-ink">{t('dev.sandbox.log.invalid')}</strong>
                 )}
               </summary>
-              <pre dir="ltr">{JSON.stringify(event, null, 2)}</pre>
+              <pre dir="ltr" className="m-0 overflow-x-auto pbe-2 whitespace-pre">
+                {JSON.stringify(event, null, 2)}
+              </pre>
             </details>
           </li>
         ))}

@@ -45,6 +45,7 @@ for (const area of AREAS) {
       const heading = page.getByRole('heading', { level: 1 });
       expect(await leftEdge(start)).toBeLessThan(await leftEdge(end));
 
+      await openDevTools(page);
       await page.getByLabel('Language').selectOption('en-XB');
 
       await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');

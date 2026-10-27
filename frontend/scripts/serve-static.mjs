@@ -1,13 +1,15 @@
 // Serves a static export, as a static host would, for the Playwright suites and `npm run preview`
 // (ADR 0041, ADR 0042): /today is today.html, / is index.html, and an unknown address gets
-// 404.html with status 404. Usage: node scripts/serve-static.mjs <folder> [--port <n>]
+// 404.html with status 404. Usage: node scripts/serve-static.mjs <folder> [--port <n>]. The last
+// --port wins, so `npm run preview -- --port <n>` serves an app on another port.
 import { createReadStream, statSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { extname, join, normalize, resolve, sep } from 'node:path';
+import { URL } from 'node:url';
 
 const args = process.argv.slice(2);
 const root = resolve(args.find((arg) => !arg.startsWith('--')) ?? 'out');
-const portFlag = args.indexOf('--port');
+const portFlag = args.lastIndexOf('--port');
 const port = Number(portFlag >= 0 ? args[portFlag + 1] : 4173);
 
 const TYPES = {

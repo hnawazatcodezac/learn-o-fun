@@ -54,10 +54,16 @@ test.describe('failure modes from the development panel', () => {
     await page.goto('/');
     await expect(page.getByText('Robin')).toBeVisible();
 
+    await openDevTools(page);
+
     await page.getByLabel('Failure').selectOption('server-error');
 
-    await expect(page.getByRole('alert')).toContainText('We can’t reach Learnofun right now');
+    await expect(
+      page.getByRole('alert').filter({ hasText: 'We can’t reach Learnofun right now' }),
+    ).toBeVisible();
     await expect(page.getByRole('button', { name: 'Try again' })).toBeVisible();
+
+    await openDevTools(page);
 
     await page.getByLabel('Failure').selectOption('none');
     await expect(page.getByText('Robin')).toBeVisible();
@@ -67,20 +73,24 @@ test.describe('failure modes from the development panel', () => {
     await page.goto('/parent/login');
     await expect(page.getByRole('button', { name: 'Sam' })).toBeVisible();
 
-    // The switch reloads the page, and a development build loads the parent area module by
-    // module, which is slow while every suite runs at once. Wait for the page, then check it.
+    // The switch reloads the page. Wait for the page, then check it.
+    await openDevTools(page);
     await Promise.all([
       page.waitForEvent('load'),
       page.getByLabel('Failure').selectOption('offline'),
     ]);
     await expect(page.getByTestId('parent-login')).toBeVisible({ timeout: 30_000 });
 
-    await expect(page.getByRole('alert')).toContainText('We can’t reach Learnofun right now');
+    await expect(
+      page.getByRole('alert').filter({ hasText: 'We can’t reach Learnofun right now' }),
+    ).toBeVisible();
     expect((await call(page, 'GET', '/catalog').catch(() => ({ status: 0 }))).status).toBe(0);
   });
 
   test('slow shows the loading state first', async ({ page }) => {
     await page.goto('/');
+
+    await openDevTools(page);
 
     await page.getByLabel('Speed').selectOption('slow');
 
@@ -129,6 +139,7 @@ test('reset restores the data file', async ({ page }) => {
     body: { settings: { textScale: 1.5 } },
   });
 
+  await openDevTools(page);
   await page.getByRole('button', { name: 'Reset mock data' }).click();
   await expect(page.getByText('Robin')).toBeVisible();
 

@@ -3,6 +3,7 @@ import { Card, useI18n } from '@learnofun/ui-kit';
 import { useEffect } from 'react';
 import { LoadState } from '../shared/LoadState';
 import { useFamily } from './use-family';
+import { HINT_CLASSES, TITLE_CLASSES } from './classes';
 
 /** Each feature key, and how its value reads (plan 9). Code reads keys, never plan names. */
 const FEATURES = [
@@ -50,19 +51,22 @@ export function PlanPage() {
 
   return (
     <>
-      <h1 className="parent-page__title">{title}</h1>
+      <h1 className={TITLE_CLASSES}>{title}</h1>
       <LoadState result={family}>
         {({ entitlements }) => (
           <Card title={t('parent.plan.includes')}>
-            <dl className="parent-plan" data-testid="plan-features">
+            <dl className="m-0 flex flex-col gap-2" data-testid="plan-features">
               {FEATURES.map((key) => (
-                <div key={key} className="parent-plan__row">
-                  <dt>{t(`parent.plan.features.${key}`)}</dt>
-                  <dd>{valueText(t, entitlements.features, key)}</dd>
+                <div
+                  key={key}
+                  className="flex flex-wrap justify-between gap-3 border-be border-line py-2"
+                >
+                  <dt className="font-label">{t(`parent.plan.features.${key}`)}</dt>
+                  <dd className="m-0">{valueText(t, entitlements.features, key)}</dd>
                 </div>
               ))}
             </dl>
-            <p className="parent-plan__note">{t('parent.plan.billingLater')}</p>
+            <p className={HINT_CLASSES}>{t('parent.plan.billingLater')}</p>
           </Card>
         )}
       </LoadState>

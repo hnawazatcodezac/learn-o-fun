@@ -30,6 +30,10 @@ import { RequireChild } from './RequireChild';
 import { childApi } from './sync';
 import { TimeUp } from './TimeUp';
 
+/** Activity cards at the spec's 232px (its bundle.css; ADR 0019), centred, as many to a row as fit. */
+const CARDS_CLASSES =
+  'm-0 grid inline-full max-inline-ui-cards list-none grid-cols-[repeat(auto-fit,minmax(0,var(--ui-activity-card-width)))] justify-center gap-5 p-0';
+
 /** The design system's name for each kind of Today card. */
 const CARD_KIND: Record<TodayCard, ActivityCardKind> = {
   review: 'review',
@@ -86,7 +90,7 @@ function TodayScreen({ snapshot }: { snapshot: ChildSnapshot }) {
                 });
               if (cards.length === 0) return <p>{t('child.today.empty')}</p>;
               return (
-                <ul className="child-cards">
+                <ul className={CARDS_CLASSES}>
                   {cards.map(({ card, activity }) => (
                     <li key={card.id}>
                       <PlayCard
@@ -103,7 +107,7 @@ function TodayScreen({ snapshot }: { snapshot: ChildSnapshot }) {
           <Button
             variant="secondary"
             onClick={() => {
-              void navigate('/library');
+              navigate('/library');
             }}
           >
             {t('child.today.library')}
@@ -128,7 +132,7 @@ function LibraryScreen({ snapshot }: { snapshot: ChildSnapshot }) {
             const activities = playableActivities(data, playOptions(snapshot));
             if (activities.length === 0) return <p>{t('child.library.empty')}</p>;
             return (
-              <ul className="child-cards">
+              <ul className={CARDS_CLASSES}>
                 {activities.map((activity) => (
                   <li key={activity.id}>
                     <PlayCard activity={activity} />
@@ -142,7 +146,7 @@ function LibraryScreen({ snapshot }: { snapshot: ChildSnapshot }) {
       <Button
         variant="secondary"
         onClick={() => {
-          void navigate('/today');
+          navigate('/today');
         }}
       >
         {t('child.library.back')}
@@ -176,7 +180,7 @@ function PlayCard({
           activity: activity.id,
           ...(skillId ? { skill: skillId } : {}),
         });
-        void navigate(`/play?${query.toString()}`);
+        navigate(`/play?${query.toString()}`);
       }}
     />
   );
@@ -214,17 +218,18 @@ function ChildPage({
 
   return (
     <ChildScreen band={DEFAULT_BAND}>
-      <div className="child-page" data-testid={testId}>
-        <header className="child-page__bar">
-          <span className="child-page__avatar">
+      {/* A page in child mode: a bar with the child, then the page's own content. */}
+      <div className="flex flex-col min-block-dvh" data-testid={testId}>
+        <header className="flex flex-wrap items-center gap-3 px-4 py-3">
+          <span className="block-ui-target inline-ui-target">
             <Avatar id={isAvatarId(avatarId) ? avatarId : AVATARS[0]} />
           </span>
-          <div className="child-page__actions">
+          <div className="ms-auto flex flex-wrap gap-2">
             <Button
               variant="secondary"
               onClick={() => {
                 leave();
-                void navigate('/');
+                navigate('/');
               }}
             >
               {t('child.today.switchPlayer')}
@@ -239,11 +244,12 @@ function ChildPage({
             </Button>
           </div>
         </header>
-        <main className="child-page__main">
+        <main className="flex flex-col items-center gap-5 p-4">
           {greeting === undefined ? (
-            <h1 className="child-page__title">{title}</h1>
+            <h1 className="m-0 font-display text-play-title">{title}</h1>
           ) : (
-            <h1 className="child-page__hero">{greeting}</h1>
+            // play-hero: one per screen, for the Today greeting (design system type).
+            <h1 className="m-0 font-display text-play-hero">{greeting}</h1>
           )}
           {children}
         </main>

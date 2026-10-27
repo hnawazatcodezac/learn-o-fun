@@ -8,6 +8,7 @@ import { useNavigate, useQueryParam, useSearchParams } from '../../shared/naviga
 import { useApi } from '../../api/useApi';
 import { LoadState } from '../../shared/LoadState';
 import { NotFound } from '../../shared/NotFound';
+import { PLACEHOLDER_CLASSES } from '../../shared/page-classes';
 import { useChildMode } from '../child-mode';
 import { ChildScreen } from '../ChildScreen';
 import { DEFAULT_BAND } from '../config';
@@ -109,11 +110,11 @@ function TimeUpScreen({ nickname }: { nickname: string }) {
 
   return (
     <ChildScreen band={DEFAULT_BAND}>
-      <main className="placeholder">
+      <main className={PLACEHOLDER_CLASSES}>
         <TimeUp nickname={nickname}>
           <Button
             onClick={() => {
-              void navigate(EXIT_TO);
+              navigate(EXIT_TO);
             }}
           >
             {t('child.timeUp.back')}
@@ -144,7 +145,7 @@ function ActivityFinder({ snapshot }: { snapshot: ChildSnapshot }) {
   if (result.status !== 'ready' || !result.data.playable) {
     return (
       <ChildScreen band={DEFAULT_BAND}>
-        <main className="placeholder">
+        <main className={PLACEHOLDER_CLASSES}>
           <LoadState result={result}>{() => null}</LoadState>
         </main>
       </ChildScreen>

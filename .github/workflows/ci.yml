@@ -1,0 +1,101 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TURBO_TELEMETRY_DISABLED: 1
+  NEXT_TELEMETRY_DISABLED: 1
+
+# The frontend workspace is in frontend/ (ADR 0003); every command runs there.
+defaults:
+  run:
+    working-directory: frontend
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+
+      - name: Lint and format check
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Learner simulator gates (plan 4.6, ADR 0031)
+        run: npm run sim
+
+      - name: Build
+        run: npm run build
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser tests (each suite builds the app it tests, ADR 0041)
+        run: npm run e2e
+
+      - name: Upload Playwright traces
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-results
+          path: |
+            frontend/apps/*/test-results/
+            frontend/tools/*/test-results/
+            frontend/packages/games/*/test-results/
+          retention-days: 7
+
+  visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # The same image `npm run visual` uses locally, so screenshots match (ADR 0006). Keep the tag
+    # equal to the @playwright/test version in package-lock.json.
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+
+      - name: Screenshot tests
+        working-directory: frontend/tools/ui-preview
+        run: npx playwright test --project=visual
+        env:
+          LEARNOFUN_SCREENSHOTS: '1'
+
+      - name: Upload screenshot differences
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-differences
+          path: frontend/tools/ui-preview/test-results/
+          retention-days: 7

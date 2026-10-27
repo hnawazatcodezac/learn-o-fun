@@ -1,7 +1,6 @@
 import type { PlacementItem } from '@learnofun/contracts';
 import type { GameModule, GradeResult, SupportLevel } from '@learnofun/game-sdk';
 import { EXPLAINED_MISCONCEPTIONS, manifest } from './manifest';
-import './game.css';
 
 type Line = Extract<PlacementItem['surface'], { kind: 'line' }> & { start: number };
 
@@ -24,6 +23,77 @@ const SCENE = {
 
 /** How long the worked "show me" and the Challenge answer stay on each step, in milliseconds. */
 const TIMING = { showMeHop: 600, showMeEnd: 2000, reveal: 1500, tick: 50 } as const;
+
+/*
+ * The game's look: Tailwind utilities on the design system's theme (ADR 0043), beside the
+ * g-hop-line hooks that tests find elements by. SVG sizes are in the scene's own units, which
+ * scale with the line's width, so the drawing's widths, dashes and text sizes are its attributes.
+ */
+const CONTAINER_CLASSES =
+  'g-hop-line flex inline-full flex-col items-center gap-3 px-1 py-3 text-center';
+
+/** Every numeral in a maths game is in the display face (design system README). */
+const SUM_CLASSES = 'g-hop-line__sum m-0 font-display text-play-number';
+
+const INSTRUCTIONS_CLASSES = 'g-hop-line__instructions m-0 text-ink-muted';
+
+const COUNTER_CLASSES = 'g-hop-line__counter m-0 min-block-lh font-display text-play-label';
+
+const MESSAGE_CLASSES = 'g-hop-line__message m-0 min-block-lh font-display text-play-label';
+
+/** The number line: one keyboard control, the full width of the game up to a comfortable size. */
+const TRACK_CLASSES =
+  'g-hop-line__track inline-full max-inline-ui-scene cursor-default rounded-ui focus-visible:shadow-focus-ring focus-visible:outline-none';
+
+const SCENE_CLASSES = 'block inline-full block-auto';
+
+const LINE_CLASSES = {
+  axis: 'g-hop-line__axis stroke-ink stroke-3',
+  tick: 'g-hop-line__tick stroke-ink stroke-2',
+  labelledTick: 'g-hop-line__tick g-hop-line__tick--labelled stroke-ink stroke-3',
+  label: 'g-hop-line__label fill-ink font-display',
+  markedLabel: 'g-hop-line__label g-hop-line__label--marked fill-ink font-display font-label',
+  // The start has a solid outline and the answer a dashed one: not colour alone.
+  start: 'g-hop-line__marker g-hop-line__marker--start fill-none stroke-ink stroke-2',
+  answer: 'g-hop-line__marker g-hop-line__marker--answer fill-none stroke-ink stroke-2',
+  arc: 'g-hop-line__arc fill-none stroke-ink stroke-3',
+  arcNumber: 'g-hop-line__arc-number fill-ink-muted font-display',
+};
+
+/** A placeholder frog, until the art is made. Its hop follows the motion setting. */
+const FROG_CLASSES = {
+  frog: 'g-hop-line__frog cursor-pointer transition-transform duration-ui-medium',
+  body: 'g-hop-line__frog-body fill-ui-primary stroke-ink stroke-2',
+  eye: 'g-hop-line__frog-eye fill-surface-raised stroke-ink stroke-2',
+  pupil: 'g-hop-line__frog-pupil fill-ink',
+};
+
+/** The hint's footprints: outlined for hops still to make, filled once made. */
+const FOOTPRINTS_CLASSES =
+  'g-hop-line__footprints flex flex-wrap justify-center gap-2 [&[hidden]]:hidden';
+
+const FOOTPRINT_CLASSES = {
+  toMake:
+    'g-hop-line__footprint inline-ui-footprint-x block-ui-footprint-y rounded-ui-footprint border-2 border-ink',
+  made: 'g-hop-line__footprint g-hop-line__footprint--made inline-ui-footprint-x block-ui-footprint-y rounded-ui-footprint border-2 border-ink bg-ink',
+};
+
+/** On phones, the controls share one row in equal columns, so long labels never wrap the row. */
+const CONTROLS_CLASSES =
+  'g-hop-line__controls flex flex-wrap justify-center gap-3 max-phone:grid max-phone:inline-full max-phone:auto-cols-fr max-phone:grid-flow-col';
+
+/** Play buttons sit on a ledge; pressed, they move down 6px and the ledge disappears. */
+const BUTTON_CLASSES =
+  'min-block-ui-target min-inline-ui-target cursor-pointer rounded-ui border-2 border-ui-secondary-border px-5 font-display text-play-label shadow-press-depth transition-[translate,box-shadow] enabled:active:translate-y-ui-press enabled:active:shadow-none focus-visible:shadow-with-focus-press-depth focus-visible:outline-none disabled:cursor-default disabled:border-ui-disabled-border disabled:bg-ui-disabled disabled:text-ui-on-disabled disabled:shadow-none max-phone:px-2';
+
+const BUTTON_COLOUR_CLASSES = {
+  secondary: 'bg-ui-secondary text-ui-on-secondary',
+  primary: 'bg-ui-primary text-ui-on-primary',
+};
+
+/** SVG text in the scene's own units: the numbers, and the hops' numbers above them. */
+const LABEL_TEXT = { 'font-size': 30, 'font-weight': 700 } as const;
+const ARC_TEXT = { 'font-size': 18, 'font-weight': 700 } as const;
 
 const isExplained = (id: string | undefined): id is (typeof EXPLAINED_MISCONCEPTIONS)[number] =>
   EXPLAINED_MISCONCEPTIONS.some((known) => known === id);
@@ -51,18 +121,22 @@ export const game: GameModule = {
       return created;
     };
     const button = (key: string, onPress: () => void, modifier: string) => {
-      const created = element('button', `g-hop-line__button g-hop-line__button--${modifier}`);
+      const colours = modifier === 'land' ? 'primary' : 'secondary';
+      const created = element(
+        'button',
+        `g-hop-line__button g-hop-line__button--${modifier} ${BUTTON_CLASSES} ${BUTTON_COLOUR_CLASSES[colours]}`,
+      );
       created.type = 'button';
       created.textContent = ctx.t(key);
       created.addEventListener('click', onPress);
       return created;
     };
 
-    const container = element('div', 'g-hop-line');
-    const sum = element('p', 'g-hop-line__sum');
-    const instructions = element('p', 'g-hop-line__instructions');
+    const container = element('div', CONTAINER_CLASSES);
+    const sum = element('p', SUM_CLASSES);
+    const instructions = element('p', INSTRUCTIONS_CLASSES);
     // The number line is one control: arrow keys hop, Enter lands (BRIEF.md, accessibility).
-    const track = element('div', 'g-hop-line__track');
+    const track = element('div', TRACK_CLASSES);
     track.setAttribute('role', 'slider');
     track.setAttribute('aria-label', ctx.t('games.hopLine.line'));
     track.setAttribute('aria-orientation', 'horizontal');
@@ -70,29 +144,30 @@ export const game: GameModule = {
     track.dir = 'ltr';
     track.tabIndex = 0;
     const scene = svg('svg', {
+      class: SCENE_CLASSES,
       viewBox: `0 0 ${String(SCENE.width)} ${String(SCENE.height)}`,
       'aria-hidden': 'true',
       focusable: 'false',
     });
     const staticLayer = svg('g', {});
     const hopLayer = svg('g', {});
-    const frog = svg('g', { class: 'g-hop-line__frog' });
+    const frog = svg('g', { class: FROG_CLASSES.frog });
     frog.append(
-      svg('ellipse', { class: 'g-hop-line__frog-body', cx: 0, cy: 0, rx: 22, ry: 16 }),
-      svg('circle', { class: 'g-hop-line__frog-eye', cx: -9, cy: -14, r: 6 }),
-      svg('circle', { class: 'g-hop-line__frog-eye', cx: 9, cy: -14, r: 6 }),
-      svg('circle', { class: 'g-hop-line__frog-pupil', cx: -9, cy: -14, r: 2.5 }),
-      svg('circle', { class: 'g-hop-line__frog-pupil', cx: 9, cy: -14, r: 2.5 }),
+      svg('ellipse', { class: FROG_CLASSES.body, cx: 0, cy: 0, rx: 22, ry: 16 }),
+      svg('circle', { class: FROG_CLASSES.eye, cx: -9, cy: -14, r: 6 }),
+      svg('circle', { class: FROG_CLASSES.eye, cx: 9, cy: -14, r: 6 }),
+      svg('circle', { class: FROG_CLASSES.pupil, cx: -9, cy: -14, r: 2.5 }),
+      svg('circle', { class: FROG_CLASSES.pupil, cx: 9, cy: -14, r: 2.5 }),
     );
     scene.append(staticLayer, hopLayer, frog);
     track.append(scene);
-    const counter = element('p', 'g-hop-line__counter');
+    const counter = element('p', COUNTER_CLASSES);
     counter.hidden = ctx.mode === 'challenge';
-    const footprints = element('div', 'g-hop-line__footprints');
+    const footprints = element('div', FOOTPRINTS_CLASSES);
     footprints.setAttribute('role', 'img');
-    const message = element('p', 'g-hop-line__message');
+    const message = element('p', MESSAGE_CLASSES);
     message.setAttribute('role', 'status');
-    const controls = element('div', 'g-hop-line__controls');
+    const controls = element('div', CONTROLS_CLASSES);
     controls.setAttribute('role', 'group');
     controls.setAttribute('aria-label', ctx.t('games.hopLine.controls'));
     container.append(sum, instructions, track, counter, footprints, message, controls);
@@ -135,7 +210,8 @@ export const game: GameModule = {
       const every = hinted ? 1 : line.labelEvery;
       staticLayer.append(
         svg('line', {
-          class: 'g-hop-line__axis',
+          class: LINE_CLASSES.axis,
+          'stroke-linecap': 'round',
           x1: xOf(line.min),
           x2: xOf(line.max),
           y1: SCENE.lineY,
@@ -148,7 +224,8 @@ export const game: GameModule = {
         const x = xOf(value);
         staticLayer.append(
           svg('line', {
-            class: `g-hop-line__tick${labelled ? ' g-hop-line__tick--labelled' : ''}`,
+            class: labelled ? LINE_CLASSES.labelledTick : LINE_CLASSES.tick,
+            'stroke-linecap': 'round',
             x1: x,
             x2: x,
             y1: SCENE.lineY - SCENE.tickHalf,
@@ -158,7 +235,8 @@ export const game: GameModule = {
         if (!labelled) continue;
         const marked = value === line.start || value === shownAnswer;
         const label = svg('text', {
-          class: `g-hop-line__label${marked ? ' g-hop-line__label--marked' : ''}`,
+          class: marked ? LINE_CLASSES.markedLabel : LINE_CLASSES.label,
+          ...LABEL_TEXT,
           x,
           y: SCENE.labelY,
           'text-anchor': 'middle',
@@ -170,7 +248,8 @@ export const game: GameModule = {
           const half = (SCENE.width - 2 * SCENE.margin) / (line.max - line.min) / 2;
           staticLayer.append(
             svg('rect', {
-              class: `g-hop-line__marker g-hop-line__marker--${outline}`,
+              class: LINE_CLASSES[outline],
+              ...(outline === 'answer' ? { 'stroke-dasharray': '6 4' } : {}),
               x: x - half + SCENE.labelPadding / 2,
               y: SCENE.labelY - 30,
               width: 2 * half - SCENE.labelPadding,
@@ -195,12 +274,14 @@ export const game: GameModule = {
         const apex = base - SCENE.arcRise;
         hopLayer.append(
           svg('path', {
-            class: 'g-hop-line__arc',
+            class: LINE_CLASSES.arc,
+            'stroke-linecap': 'round',
             d: `M ${String(from)} ${String(base)} Q ${String((from + to) / 2)} ${String(apex - SCENE.arcRise)} ${String(to)} ${String(base)}`,
           }),
         );
         const number = svg('text', {
-          class: 'g-hop-line__arc-number',
+          class: LINE_CLASSES.arcNumber,
+          ...ARC_TEXT,
           x: (from + to) / 2,
           y: apex - 6,
           'text-anchor': 'middle',
@@ -236,10 +317,7 @@ export const game: GameModule = {
       );
       footprints.replaceChildren(
         ...Array.from({ length: needed }, (_, index) =>
-          element(
-            'span',
-            `g-hop-line__footprint${index < done ? ' g-hop-line__footprint--made' : ''}`,
-          ),
+          element('span', index < done ? FOOTPRINT_CLASSES.made : FOOTPRINT_CLASSES.toMake),
         ),
       );
       updateControls();

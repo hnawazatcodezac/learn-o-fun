@@ -1,13 +1,13 @@
 import { createI18n } from '@learnofun/i18n';
-import { renderToString } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { I18nProvider } from '../../i18n/I18nProvider';
 import { PicturePinPad } from './PicturePinPad';
+import { renderMarkup } from '../../test/markup';
 
 const noop = () => undefined;
 
 function render(value: Parameters<typeof PicturePinPad>[0]['value']) {
-  return renderToString(
+  return renderMarkup(
     <I18nProvider i18n={createI18n('en')}>
       <PicturePinPad value={value} onChange={noop} label="Ari’s picture PIN" />
     </I18nProvider>,

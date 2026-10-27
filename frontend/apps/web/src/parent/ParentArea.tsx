@@ -3,7 +3,6 @@
 import { AppearanceProvider } from '@learnofun/ui-kit';
 import type { ReactNode } from 'react';
 import { ParentSessionProvider } from './parent-session';
-import './parent.css';
 
 /**
  * The parent dashboard under /parent. It is for adults, so it has no experience band: the Family

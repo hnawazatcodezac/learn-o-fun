@@ -9,6 +9,7 @@ This is a fresh build. Never copy, port, or imitate code from the earlier Learno
 - Product and technical plan: `docs/plan.md`. Read the section that covers your task before starting. If a request conflicts with the plan, stop and ask.
 - Game catalog and game brief template: `docs/game-library.md`.
 - Design system: `docs/design-system/README.md` and `tokens.json`. Use its tokens by name; never invent colours, fonts or sizes.
+- Screen designs: `learnofun-design/`, one HTML export each for the child app, the parent dashboard, sign-up and the website. They are the reference for how every screen looks and behaves, wherever they agree with the plan and the ADRs (ADR 0044). Since 2026-10-27 everything is built in this design: never the old look. Icons are the designs' own (ADR 0045).
 - Architecture decisions: `docs/decisions/`. Write an ADR (copy `0000-template.md`) when you make or change a significant decision.
 - First sessions and prompts: `docs/FRONTEND-KICKOFF.md`.
 
@@ -22,7 +23,7 @@ Web frontend only. Follow docs/FRONTEND-KICKOFF.md. Do not build apps/api, apps/
 - `apps/web` (child area at `/`, parent dashboard at `/parent`; ADR 0007) and the future `apps/site`: Next.js (App Router) and React (ADR 0042). `apps/web` is a static export of client components; Next.js is never the backend. `apps/studio`: React + Vite. `apps/api` + `apps/worker`: Node + Fastify. PostgreSQL.
 - Styling: Tailwind CSS v4, its theme generated from `docs/design-system/tokens.json`, with only design-system values (ADR 0043).
 - next-intl with ICU messages for translations, Serwist for the service worker, MSW in the browser for mock data, `next/font` with local font files.
-- Moving to Next.js and Tailwind is FRONTEND-KICKOFF step 1, reopened; until it is done, `apps/web` still runs on Vite and plain CSS, as the Commands below describe.
+- Moving to Next.js and Tailwind is FRONTEND-KICKOFF step 1, reopened: `apps/web` runs on Next.js since 1a, and the UI preview and the game sandbox since 1b; ui-kit, the web app, the games and the tools' own pages are on Tailwind since 1b–1e; and translations are on use-intl, next-intl's core, since 1f.
 - Games: DOM/SVG for UI-like games, PixiJS for scene-heavy games, Rive for character animation.
 - Contracts: Zod schemas in `packages/contracts`; OpenAPI and typed clients are generated from them.
 - Tests: Vitest (unit), fast-check (property), Playwright (E2E and visual), Testcontainers PostgreSQL (integration).
@@ -34,8 +35,8 @@ frontend/      web frontend workspace (ADR 0003); run npm commands here
   apps/        web: child area at / (src/child) · parent dashboard at /parent (src/parent)
   packages/    contracts · learning-core · game-sdk · games/<game-id> · ui-kit · i18n · mock-api
   tools/       ui-preview · game-sandbox · simulator
-  .github/     CI workflow
 docs/          plan.md · game-library.md · FRONTEND-KICKOFF.md · KICKOFF.md · decisions/
+.github/       CI workflow, running in frontend/ (ADR 0003)
 ```
 
 Outside the current scope (plan 2.6): apps `studio`, `api`, `worker`; packages `content`, `config`; tool `content-cli`. Where they live is decided when backend work starts. The landing site is `frontend/apps/site`, from FRONTEND-KICKOFF step 18 (ADR 0039).
@@ -46,15 +47,16 @@ Run from `frontend/`:
 
 - Install: `npm install`, then `npx playwright install chromium` once for the smoke tests
 - Dev: `npm run dev`, then http://localhost:5173 (child area: who's playing, then `/today` and `/library`) and http://localhost:5173/parent (parent dashboard: sign in as Sam, in two families, or Alex, in one). In the mock data, Ari has the picture PIN sun, fish, star; Robin has none
-- Play an activity from the catalog, sending its events to the mock API: http://localhost:5173/play/hop-line-add-within-20 (`?mode=challenge` for Challenge)
-- Play any game's stories in the game shell (development only): http://localhost:5173/play/dev/hop-line, with `?story=`, `?mode=challenge` and `?seed=`
-- On a tablet or phone on the same network: `npm run dev:lan`, then open the Wi-Fi "Network" address Vite prints (plain HTTP; the mock API answers from inside the page, ADR 0017)
-- Build: `npm run build` (includes the mock API until a backend exists; `VITE_API_MODE=live npm run build` leaves it out, ADR 0011). The build is an installable PWA whose service worker caches the whole app and serves MSW's worker too (ADR 0024); see it with `npm run preview -w @learnofun/web`, then http://localhost:4173. The development server has no caching. Placeholder app icons: `npm run icons -w @learnofun/web`
+- Play an activity from the catalog, sending its events to the mock API: http://localhost:5173/play?activity=hop-line-add-within-20 (`&mode=challenge` for Challenge)
+- Play any game's stories in the game shell (development tools only): http://localhost:5173/play/dev?game=hop-line, with `&story=`, `&mode=challenge` and `&seed=`
+- On a tablet or phone on the same network: `npm run dev:lan`, then open this computer's Wi-Fi address on port 5173 (plain HTTP; the mock API answers from inside the page, ADR 0017)
+- Build: `npm run build`, a Next.js static export in `apps/web/out` (includes the mock API until a backend exists; with `NEXT_PUBLIC_API_MODE=live` it leaves it out, ADR 0011). The build is an installable PWA whose Serwist service worker caches the whole app and serves MSW's worker too (ADR 0024, ADR 0042); see it with `npm run preview -w @learnofun/web`, then http://localhost:4173. The development server has no caching. Placeholder app icons: `npm run icons -w @learnofun/web`
 - Mock data: one file, `frontend/packages/mock-api/src/data/mock-data.json`. In development, the panel in the bottom corner switches the mock API to slow, offline or server error, and resets its saved state
 - Pseudo-locales (development only): the Language menu in the corner, or `?locale=en-XA` (long accented text) and `?locale=en-XB` (right to left)
 - Lint (ESLint with boundary, purity and UI-text rules; Stylelint for logical CSS; then Prettier check): `npm run lint`; fix formatting with `npm run format`
-- Typecheck / unit tests / Playwright tests (including WCAG 2.2 AA checks): `npm run typecheck`, `npm test`, `npm run e2e` (each suite builds the app it tests and serves it with `vite preview` on a port of its own, never reusing a running server; the web app's is a test build with the development tools, its PWA tests a production build; ADR 0041)
+- Typecheck / unit tests / Playwright tests (including WCAG 2.2 AA checks): `npm run typecheck`, `npm test`, `npm run e2e` (each suite builds the app it tests and serves the build on a port of its own, never reusing a running server; the web app's is a test build with the development tools, its PWA tests a production build; ADR 0041, ADR 0042)
 - UI kit preview: `npm run dev:ui`, then http://localhost:5175
+- Design tokens and fonts: after changing `docs/design-system/tokens.json`, run `npm run tokens -w @learnofun/ui-kit` (the CSS variables and the Tailwind theme); after changing the font list, `npm run fonts -w @learnofun/ui-kit` (each Next.js app's `src/app/fonts.ts`). Tests fail while either is out of date
 - Game sandbox (any game, story, item, band, locale and theme, with the learning-event log and live reload): `npm run dev:sandbox`, then http://localhost:5176
 - Screenshot tests (Docker Desktop must be running; ADR 0006): `npm run visual`; after an intended visual change, `npm run visual -- --update-snapshots` and review the images
 - New game: `npm run create-game -- <game-id> [--name "Display name"]` (scaffolds `packages/games/<game-id>`, registers it, adds its strings)

@@ -2,8 +2,9 @@ import type { ParentSessionResponse } from '@learnofun/contracts';
 import { Button, useI18n } from '@learnofun/ui-kit';
 import { useId, type ReactNode } from 'react';
 import { LoadState } from '../shared/LoadState';
-import { Navigate, NavLink, useLocation, useNavigate } from '../shared/navigation';
+import { Navigate, NavLink, useLocation } from '../shared/navigation';
 import { useParentSession } from './parent-session';
+import { CONTROL_CLASSES, PAGE_CLASSES, WORDMARK_CLASSES } from './classes';
 
 /** The dashboard's pages, in the order of its navigation. */
 const PAGES = [
@@ -37,18 +38,18 @@ export function ParentLayout({ children }: { children: ReactNode }) {
 
 function SignedIn({ session, children }: { session: ParentSessionResponse; children: ReactNode }) {
   const { t } = useI18n();
-  const navigate = useNavigate();
   const { familyId, chooseFamily, signOut } = useParentSession();
   const switcherId = useId();
 
   return (
-    <div className="parent-shell" data-testid="parent-root">
-      <header className="parent-header">
-        <p className="parent-wordmark">{t('parent.wordmark')}</p>
+    <div className="flex flex-col min-block-dvh [&_a]:text-action" data-testid="parent-root">
+      <header className="flex flex-wrap items-center gap-4 border-be border-line bg-surface-raised px-5 py-3">
+        <p className={WORDMARK_CLASSES}>{t('parent.wordmark')}</p>
         {session.families.length > 1 && (
-          <div className="parent-header__family">
+          <div className="flex flex-wrap items-center gap-2">
             <label htmlFor={switcherId}>{t('parent.family.switch')}</label>
             <select
+              className={CONTROL_CLASSES}
               id={switcherId}
               value={familyId}
               onChange={(event) => {
@@ -63,30 +64,34 @@ function SignedIn({ session, children }: { session: ParentSessionResponse; child
             </select>
           </div>
         )}
-        <div className="parent-header__account">
+        <div className="ms-auto flex flex-wrap items-center gap-2 text-ink-muted">
           <span>{t('parent.account.signedInAs', { name: session.account.displayName })}</span>
           <Button
             variant="secondary"
             onClick={() => {
-              void signOut().then(() => navigate('/parent/login'));
+              void signOut();
             }}
           >
             {t('parent.account.signOut')}
           </Button>
         </div>
       </header>
-      <nav className="parent-nav" aria-label={t('parent.nav.label')}>
-        <ul>
+      <nav aria-label={t('parent.nav.label')}>
+        <ul className="m-0 flex list-none flex-wrap gap-2 px-5 py-2">
           {PAGES.map((page) => (
             <li key={page.to}>
-              <NavLink to={page.to} end={page.end} className="parent-nav__link">
+              <NavLink
+                to={page.to}
+                end={page.end}
+                className="inline-flex items-center rounded-md px-3 font-label text-action no-underline min-block-target-family hover:underline aria-[current=page]:bg-ui-selected aria-[current=page]:text-ui-on-selected aria-[current=page]:underline aria-[current=page]:underline-offset-[0.2em]"
+              >
                 {t(page.key)}
               </NavLink>
             </li>
           ))}
         </ul>
       </nav>
-      <main className="parent-page">{children}</main>
+      <main className={PAGE_CLASSES}>{children}</main>
     </div>
   );
 }

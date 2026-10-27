@@ -4,6 +4,11 @@ export default {
   ignoreFiles: [
     '**/node_modules/**',
     '**/dist/**',
+    '**/dist-e2e/**',
+    // Next.js's build and its static exports (ADR 0042), as in eslint.config.js.
+    '**/.next/**',
+    '**/out/**',
+    '**/out-e2e/**',
     '**/coverage/**',
     '**/playwright-report/**',
     '**/test-results/**',

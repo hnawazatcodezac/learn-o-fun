@@ -41,7 +41,7 @@ describe.each(games)('$id', (game) => {
   });
 
   it('has every string its manifest lists in the English catalog', () => {
-    const missing = manifest.strings.filter((key) => !catalog.exists(key));
+    const missing = manifest.strings.filter((key) => !catalog.has(key));
     expect(missing).toEqual([]);
   });
 

@@ -31,8 +31,9 @@ test.describe('the mock sign-in (ADR 0025)', () => {
     await page.goto('/parent');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Overview');
 
+    // Signed out, the layout sends the parent to the sign-in, to come back to the same page.
     await page.getByRole('button', { name: 'Sign out' }).click();
-    await expect(page).toHaveURL('/parent/login');
+    await expect(page).toHaveURL('/parent/login?next=%2Fparent');
     await page.goto('/parent');
     await expect(page).toHaveURL('/parent/login?next=%2Fparent');
   });

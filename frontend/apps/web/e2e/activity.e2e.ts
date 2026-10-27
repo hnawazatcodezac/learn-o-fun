@@ -102,7 +102,7 @@ test('always ends on a success: an easy item follows a last item that went wrong
   page,
 }) => {
   const api = watchApi(page);
-  await page.goto(`${ACTIVITY}?mode=challenge`);
+  await page.goto(`${ACTIVITY}&mode=challenge`);
 
   // Challenge takes one answer per item: the last core item is answered wrongly.
   for (let done = 0; done < PLANNED - 1; done += 1) await answerRight(page);
@@ -118,7 +118,7 @@ test('always ends on a success: an easy item follows a last item that went wrong
 
 test('plays Challenge when asked, with no hint button', async ({ page }) => {
   const api = watchApi(page);
-  await page.goto(`${ACTIVITY}?mode=challenge`);
+  await page.goto(`${ACTIVITY}&mode=challenge`);
 
   await expect(page.getByRole('slider')).toBeFocused();
   await expect(page.getByRole('button', { name: 'Hint' })).toHaveCount(0);

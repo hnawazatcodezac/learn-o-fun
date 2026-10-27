@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { renderTokensCss, TOKENS_CSS, TOKENS_JSON } from './tokens.mjs';
+import { renderTokensCss, TOKENS_CSS, TOKENS_JSON, withSizedFallback } from './tokens.mjs';
 
 const tokens = JSON.parse(readFileSync(TOKENS_JSON, 'utf8'));
 const css = readFileSync(TOKENS_CSS, 'utf8');
@@ -63,7 +63,7 @@ describe('the design tokens (ADR 0019)', () => {
   it('carry every type style, with pixel sizes in rem at 16px to the rem', () => {
     const root = declarations(':root');
     for (const [name, stack] of Object.entries(tokens.type.families)) {
-      expect(root[`--font-${name}`]).toBe(stack);
+      expect(root[`--font-${name}`]).toBe(withSizedFallback(stack));
     }
     for (const group of tokens.type.groups) {
       for (const style of group.styles) {

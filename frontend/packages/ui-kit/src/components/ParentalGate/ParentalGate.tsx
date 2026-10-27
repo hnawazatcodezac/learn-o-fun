@@ -1,8 +1,10 @@
 import { useId, useState } from 'react';
 import type { GateMode } from '../../appearance/bands';
+import { cn } from '../../cn';
 import { useI18n } from '../../i18n/useI18n';
 import { Dialog } from '../Dialog/Dialog';
 import { DeleteIcon } from '../icons';
+import { DISABLED_CLASSES, FOCUS_CLASSES, PLAY_PIECE_CLASSES } from '../pieces';
 import { isGateAnswer, makeGateQuestion, type GateFactor } from './question';
 
 /** The catalog key for each factor written as a word, such as "seven". */
@@ -19,6 +21,22 @@ const NUMBER_WORDS = {
 const ANSWER_DIGITS = 2;
 const PIN_DIGITS = 4;
 const KEYPAD_DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
+
+const GATE_CLASSES = 'lf-gate flex flex-col gap-3 [&>p]:m-0';
+
+const PROMPT_CLASSES = 'lf-gate__prompt font-ui-heading text-ui-heading';
+
+const ENTRY_CLASSES =
+  'lf-gate__entry flex min-block-ui-target items-center justify-center gap-3 rounded-ui border-2 border-line-strong bg-surface-sunken font-ui-title text-size-ui-title tabular-nums';
+
+const MESSAGE_CLASSES = 'lf-gate__message font-label text-ink';
+
+/** In the Play world, the keys are play pieces. */
+const KEY_CLASSES = cn(
+  'lf-keypad__key grid cursor-pointer place-items-center rounded-ui border-2 border-line-strong bg-surface-raised p-0 font-ui-label text-ui-label text-ink min-block-ui-target',
+  PLAY_PIECE_CLASSES,
+  FOCUS_CLASSES,
+);
 
 interface GateBaseProps {
   open: boolean;
@@ -73,19 +91,19 @@ function ChallengeGate({ random, onPass }: { random: () => number; onPass: () =>
   };
 
   return (
-    <div className="lf-gate">
+    <div className={GATE_CLASSES}>
       <p>{t('ui.gate.intro')}</p>
-      <p id={questionId} className="lf-gate__prompt">
+      <p id={questionId} className={PROMPT_CLASSES}>
         {t('ui.gate.question', {
           a: t(NUMBER_WORDS[question.a]),
           b: t(NUMBER_WORDS[question.b]),
         })}
       </p>
-      <output className="lf-gate__entry" aria-labelledby={questionId}>
+      <output className={ENTRY_CLASSES} aria-labelledby={questionId}>
         {entry === '' ? null : format.number(Number(entry))}
       </output>
       {wrong && (
-        <p role="alert" className="lf-gate__message">
+        <p role="alert" className={MESSAGE_CLASSES}>
           {t('ui.gate.wrong')}
         </p>
       )}
@@ -126,21 +144,24 @@ function PinGate({
   };
 
   return (
-    <div className="lf-gate">
-      <p className="lf-gate__prompt">{t('ui.gate.pinPrompt')}</p>
+    <div className={GATE_CLASSES}>
+      <p className={PROMPT_CLASSES}>{t('ui.gate.pinPrompt')}</p>
       <output
-        className="lf-gate__entry lf-gate__entry--pin"
+        className={cn(ENTRY_CLASSES, 'lf-gate__entry--pin')}
         aria-label={t('ui.gate.pinEntered', { count: entry.length })}
       >
         {Array.from({ length: PIN_DIGITS }, (_, index) => (
           <span
             key={index}
-            className={`lf-gate__dot${index < entry.length ? ' lf-gate__dot--filled' : ''}`}
+            className={cn(
+              'lf-gate__dot rounded-full border-2 border-ink block-4 inline-4',
+              index < entry.length && 'lf-gate__dot--filled bg-ink',
+            )}
           />
         ))}
       </output>
       {wrong && (
-        <p role="alert" className="lf-gate__message">
+        <p role="alert" className={MESSAGE_CLASSES}>
           {t('ui.gate.pinWrong')}
         </p>
       )}
@@ -174,7 +195,7 @@ function Keypad({ onDigit, onDelete, onSubmit, canSubmit }: KeypadProps) {
     <button
       key={digit}
       type="button"
-      className="lf-keypad__key"
+      className={KEY_CLASSES}
       onClick={() => {
         onDigit(digit);
       }}
@@ -184,11 +205,16 @@ function Keypad({ onDigit, onDelete, onSubmit, canSubmit }: KeypadProps) {
   );
 
   return (
-    <div className="lf-keypad" role="group" aria-label={t('ui.gate.keypad')} dir="ltr">
+    <div
+      className="lf-keypad grid grid-cols-3 gap-ui-gap"
+      role="group"
+      aria-label={t('ui.gate.keypad')}
+      dir="ltr"
+    >
       {KEYPAD_DIGITS.map(digitKey)}
       <button
         type="button"
-        className="lf-keypad__key"
+        className={KEY_CLASSES}
         aria-label={t('ui.gate.delete')}
         onClick={onDelete}
       >
@@ -197,7 +223,11 @@ function Keypad({ onDigit, onDelete, onSubmit, canSubmit }: KeypadProps) {
       {digitKey(0)}
       <button
         type="button"
-        className="lf-keypad__key lf-keypad__key--submit"
+        className={cn(
+          KEY_CLASSES,
+          'lf-keypad__key--submit border-transparent bg-ui-primary text-ui-on-primary',
+          DISABLED_CLASSES,
+        )}
         disabled={!canSubmit}
         onClick={onSubmit}
       >

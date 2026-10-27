@@ -6,6 +6,7 @@ import { useQueryParam, useSearchParams } from '../../shared/navigation';
 import { useApi } from '../../api/useApi';
 import { LoadState } from '../../shared/LoadState';
 import { NotFound } from '../../shared/NotFound';
+import { PLACEHOLDER_CLASSES } from '../../shared/page-classes';
 import { ChildScreen } from '../ChildScreen';
 import { DEFAULT_BAND } from '../config';
 import { recordDevEvents } from './dev-events';
@@ -45,7 +46,7 @@ export function DevPlay() {
   if (result.status !== 'ready') {
     return (
       <ChildScreen band={DEFAULT_BAND}>
-        <main className="placeholder">
+        <main className={PLACEHOLDER_CLASSES}>
           <LoadState result={result}>{() => null}</LoadState>
         </main>
       </ChildScreen>

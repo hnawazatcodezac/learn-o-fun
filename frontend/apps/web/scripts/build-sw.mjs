@@ -24,10 +24,11 @@ const { count, size, warnings } = await injectManifest({
   swSrc: swDest,
   swDest,
   globDirectory: outDir,
-  // Every page and its data for Next.js's router (.txt), and the fonts for Latin text.
+  // Every page and its data for Next.js's router (.txt), and the fonts for Latin text: next/font
+  // keeps the files' names, such as baloo_2_latin_500_normal and baloo_2_latin_ext_500_normal.
   globPatterns: [
     '**/*.{js,css,html,png,svg,txt,webmanifest}',
-    '_next/static/media/*-latin-*.woff2',
+    '_next/static/media/*_latin_*.woff2',
   ],
   // MSW's worker comes into this one by importScripts, so it is fetched, not precached.
   globIgnores: ['sw.js', 'mockServiceWorker.js'],

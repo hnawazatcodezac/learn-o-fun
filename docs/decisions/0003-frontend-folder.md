@@ -1,6 +1,6 @@
 # 0003. Keep the web frontend in its own `frontend/` folder
 
-- Status: accepted
+- Status: accepted; the workflow moved to the root on 2026-10-27 (see below)
 - Date: 2026-10-20
 - Plan section: 2.6 (repository layout)
 
@@ -23,3 +23,4 @@ Option 2. npm commands run from `frontend/`, and the path patterns in `.claude/r
 - GitHub Actions reads workflows only from `.github/workflows` at the repository root, so `frontend/.github/workflows/ci.yml` runs only if `frontend/` is the root of its own repository. If the repository root is the project folder instead, move `.github/` to the root and set `defaults.run.working-directory: frontend` and `cache-dependency-path: frontend/package-lock.json`.
 - `contracts` and `learning-core` are meant to be shared with the server (plan 2.3), and now live under `frontend/packages`. When backend work starts, decide whether the backend joins this workspace or those packages move somewhere both can use.
 - Revisit when git is set up and when backend work starts.
+- 2026-10-27, FRONTEND-KICKOFF 1g: git was set up with the project folder as the repository's root, so the workflow is `.github/workflows/ci.yml` at the root, running every command in `frontend/` (`defaults.run.working-directory`, with `frontend/package-lock.json` for the npm cache).

@@ -1,0 +1,9 @@
+/*
+ * The web app's styles (ADR 0043): ui-kit's base (fonts, tokens, worlds) in a low layer, then
+ * Tailwind's utilities on the design-system theme, which win over it. Nothing else of Tailwind's
+ * is imported: no default theme. Each area's own stylesheet, unlayered, is imported where it is used.
+ */
+@layer theme, base, components, utilities;
+@import '@learnofun/ui-kit/styles.css' layer(base);
+@import 'tailwindcss/utilities.css' layer(utilities);
+@import '@learnofun/ui-kit/tailwind.css';

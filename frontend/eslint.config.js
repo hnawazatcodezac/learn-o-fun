@@ -1,6 +1,7 @@
 import { builtinModules } from 'node:module';
 import js from '@eslint/js';
 import { defineConfig, globalIgnores } from 'eslint/config';
+import betterTailwind from 'eslint-plugin-better-tailwindcss';
 import { createNodeResolver, importX } from 'eslint-plugin-import-x';
 import reactHooks from 'eslint-plugin-react-hooks';
 import tseslint from 'typescript-eslint';
@@ -179,6 +180,33 @@ const uiTextConfig = {
   },
 };
 
+// Tailwind (ADR 0043). An arbitrary value for a colour, spacing, radius, shadow, size or type, such
+// as bg-[#fff] or p-[13px], or an arbitrary property such as [color:red], with any variants before
+// it (.claude/rules/frontend.md, rule 9). Physical directions are enforce-logical-properties' job.
+const ARBITRARY_VALUE = String.raw`^(?:[^:]+:)*!?-?(?:\[[\w-]+:.+\]|(?:bg|text|border(?:-[xytbse]|-b[se])?|outline|ring|ring-offset|fill|stroke|decoration|accent|caret|shadow|inset-shadow|drop-shadow|rounded(?:-[a-z]+)?|font|leading|tracking|p(?:[xytbse]|b[se])?|m(?:[xytbse]|b[se])?|gap(?:-[xy])?|space-[xy]|inset(?:-[xyse]|-b[se])?|top|bottom|start|end|left|right|(?:min-|max-)?(?:w|h|inline|block)|size|basis|translate-[xy]|scroll-[mp](?:[xytbse]|b[se])?|indent)-\[.+\])$`;
+
+// Where the Tailwind rules look for classes: className, cn() and clsx(), and variables named for
+// classes, such as a component's map of variants, KIND_CLASSES.
+const tailwindSettings = {
+  'better-tailwindcss': {
+    entryPoint: 'apps/web/src/app/globals.css',
+    selectors: [
+      { kind: 'attribute', name: '^class(?:Name)?$' },
+      { kind: 'attribute', name: '^class(?:Name)?$', match: [{ type: 'strings' }] },
+      {
+        kind: 'callee',
+        name: '^(?:cn|clsx)$',
+        match: [{ type: 'strings' }, { type: 'objectKeys' }],
+      },
+      {
+        kind: 'variable',
+        name: '^(?:classNames?|classes|[A-Za-z]*Classes|[A-Z_]*CLASSES)$',
+        match: [{ type: 'strings' }, { type: 'objectValues' }],
+      },
+    ],
+  },
+};
+
 export default defineConfig([
   globalIgnores([
     '**/dist/',
@@ -238,6 +266,7 @@ export default defineConfig([
           includeTypes: true,
           devDependencies: [
             '**/*.test.{ts,tsx}',
+            '**/src/test/**',
             '**/*.sim.ts',
             '**/e2e/**',
             '**/*.config.ts',
@@ -247,6 +276,56 @@ export default defineConfig([
       ],
       'import-x/no-relative-packages': 'error',
     },
+  },
+  {
+    // Only design-system values, in logical directions (.claude/rules/frontend.md, rules 9 and 10).
+    name: 'tailwind',
+    files: ['**/*.{ts,tsx}'],
+    plugins: { 'better-tailwindcss': betterTailwind },
+    settings: tailwindSettings,
+    rules: {
+      'better-tailwindcss/enforce-logical-properties': 'error',
+      'better-tailwindcss/no-restricted-classes': [
+        'error',
+        {
+          restrict: [
+            {
+              pattern: ARBITRARY_VALUE,
+              message:
+                'Use a design-system value, not an arbitrary one (.claude/rules/frontend.md, rule 9).',
+            },
+          ],
+        },
+      ],
+      'better-tailwindcss/no-duplicate-classes': 'error',
+      // Classes spliced into a string break when the class-order plugin trims it: use cn().
+      'better-tailwindcss/no-concatenated-classes': 'error',
+      'better-tailwindcss/no-conflicting-classes': 'error',
+    },
+  },
+  {
+    // Code rebuilt with Tailwind uses only classes the theme has, besides the hooks that tests find
+    // elements by: ui-kit's lf- classes, and four in the parent dashboard. Each part joins as it is
+    // rebuilt (FRONTEND-KICKOFF 1c-1e).
+    name: 'tailwind-known-classes',
+    files: ['packages/ui-kit/src/**/*.{ts,tsx}', 'apps/web/src/**/*.{ts,tsx}'],
+    plugins: { 'better-tailwindcss': betterTailwind },
+    settings: tailwindSettings,
+    rules: {
+      'better-tailwindcss/no-unknown-classes': [
+        'error',
+        { ignore: ['^lf-', '^parent-(field__error|skills__skill|reasons__card|session)$'] },
+      ],
+    },
+  },
+  {
+    // The games' DOM (FRONTEND-KICKOFF 1e): only the theme's classes, besides each game's g- hooks
+    // and the UI kit's answer tiles (ADR 0020).
+    name: 'tailwind-known-classes-games',
+    files: ['packages/games/*/src/**/*.ts'],
+    plugins: { 'better-tailwindcss': betterTailwind },
+    settings: tailwindSettings,
+    rules: { 'better-tailwindcss/no-unknown-classes': ['error', { ignore: ['^g-', '^lf-'] }] },
   },
   ...boundaryConfigs,
   purityConfig,

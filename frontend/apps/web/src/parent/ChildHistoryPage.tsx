@@ -15,6 +15,15 @@ import { useApi } from '../api/useApi';
 import { LoadState } from '../shared/LoadState';
 import { weekOf } from './profile-form';
 import { useFamily } from './use-family';
+import {
+  COLUMN_LIST_CLASSES,
+  HEADING_CLASSES,
+  HINT_CLASSES,
+  SECTION_CLASSES,
+  SESSION_CARD_CLASSES,
+  STRAND_TITLE_CLASSES,
+  TITLE_CLASSES,
+} from './classes';
 
 type Translate = ReturnType<typeof useI18n>['t'];
 
@@ -71,7 +80,7 @@ export function ChildHistoryPage() {
         if (!child) {
           return (
             <>
-              <h1 className="parent-page__title">{t('parent.profile.notFound')}</h1>
+              <h1 className={TITLE_CLASSES}>{t('parent.profile.notFound')}</h1>
               <p>
                 <Link to="/parent">{t('parent.profile.back')}</Link>
               </p>
@@ -108,7 +117,7 @@ function History({
 
   return (
     <>
-      <h1 className="parent-page__title">{title}</h1>
+      <h1 className={TITLE_CLASSES}>{title}</h1>
       <LoadState result={data}>
         {([history, catalog]) => (
           <HistoryView history={history} catalog={catalog} timeZone={family.family.timeZone} />
@@ -137,7 +146,7 @@ function HistoryView({
   return (
     <>
       {history.detail === 'basic' && (
-        <p className="parent-field__hint">
+        <p className={HINT_CLASSES}>
           {t('parent.history.premium')}{' '}
           <Link to="/parent/plan">{t('parent.children.seePlan')}</Link>
         </p>
@@ -175,11 +184,11 @@ function Week({
 }) {
   const id = useId();
   return (
-    <section className="parent-section" aria-labelledby={id}>
-      <h2 className="parent-page__heading" id={id}>
+    <section className={SECTION_CLASSES} aria-labelledby={id}>
+      <h2 className={HEADING_CLASSES} id={id}>
         {title}
       </h2>
-      <ul className="parent-reasons">
+      <ul className={COLUMN_LIST_CLASSES}>
         {sessions.map((session) => (
           <Session key={session.id} session={session} catalog={catalog} timeZone={timeZone} />
         ))}
@@ -206,11 +215,11 @@ function Session({
   const { detail, attempted } = session;
 
   return (
-    <li className="parent-reasons__card parent-session">
-      <h3 className="parent-strand__title">
+    <li className={SESSION_CARD_CLASSES}>
+      <h3 className={STRAND_TITLE_CLASSES}>
         {activity ? localizeContent(activity.title, locale) : session.activityId}
       </h3>
-      <p className="parent-reasons__kind">
+      <p className={HINT_CLASSES}>
         {format.date(new Date(session.startedAt), {
           weekday: 'long',
           day: 'numeric',
@@ -220,7 +229,7 @@ function Session({
           timeZone,
         })}
       </p>
-      <ul className="parent-session__measures">
+      <ul className="m-0 flex list-none flex-wrap gap-x-4 gap-y-1 p-0">
         <li>{statusText(t, session.status)}</li>
         <li>{t('parent.history.time', { minutes: Math.round(session.timeOnTaskSeconds / 60) })}</li>
         <li>
@@ -247,9 +256,11 @@ function Session({
         )}
       </ul>
       {detail && detail.items.length > 0 && (
-        <details className="parent-session__questions">
-          <summary>{t('parent.history.questions')}</summary>
-          <ol>
+        <details>
+          <summary className="cursor-pointer font-label text-action min-block-target-family">
+            {t('parent.history.questions')}
+          </summary>
+          <ol className="m-0 flex list-none flex-col gap-1 p-0">
             {detail.items.map((item, index) => (
               <li key={item.itemId}>
                 <span>
@@ -258,7 +269,7 @@ function Session({
                     skill: skillTitle(item.skillIds[0]),
                   })}
                 </span>{' '}
-                <span className="parent-session__outcome">{outcomeText(t, item.outcome)}</span>
+                <span className="text-ink-muted">{outcomeText(t, item.outcome)}</span>
               </li>
             ))}
           </ol>

@@ -1,8 +1,8 @@
-import '@learnofun/ui-kit/styles.css';
+import './globals.css';
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
+import { FONT_FALLBACKS } from './fonts';
 import { AppProviders } from '../shared/AppProviders';
-import '../styles.css';
 import { colour } from './design-tokens';
 
 export const metadata: Metadata = {
@@ -26,7 +26,7 @@ export const viewport: Viewport = {
  */
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" dir="ltr">
+    <html lang="en" dir="ltr" style={FONT_FALLBACKS}>
       <body>
         <AppProviders>{children}</AppProviders>
       </body>

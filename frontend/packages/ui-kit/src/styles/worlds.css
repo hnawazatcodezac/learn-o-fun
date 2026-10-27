@@ -17,7 +17,7 @@
   --ui-radius: var(--radius-md);
   --ui-gap: var(--space-2);
   --ui-card-padding: var(--space-4);
-  /* Phosphor Regular at 20px for parents (design system README). */
+  /* Icons at 20px for parents (design system README, ADR 0045). */
   --ui-icon-size: 1.25rem;
   /*
    * A chosen option, in both worlds, takes AnswerTile's selected state: the design system's only
@@ -56,6 +56,75 @@
   --ui-line-width: 2px;
   --ui-tile-line-width: 3px;
 
+  /*
+   * Component sizes the specs' bundle.css gives and the READMEs leave open, and a pressed piece's
+   * 6px from the README (ADR 0019). The Tailwind theme names them `ui-*` (ADR 0043).
+   */
+  --ui-press-offset: 6px;
+  --ui-chip-padding-block: 0.125rem;
+  --ui-chip-padding-inline: 0.625rem;
+  --ui-card-art-height: 7rem;
+  --ui-trail-dot: 1.25rem;
+  --ui-feedback-badge: 2.75rem;
+  --ui-feedback-width: 35rem;
+  --ui-status-height: 1.75rem;
+  --ui-status-gap: 0.375rem;
+  --ui-second-line-weight: 500;
+  /* Layout sizes the team chose for dialogs, toasts, the settings panel and the burst. */
+  --ui-dialog-width: min(32rem, calc(100% - 2 * var(--space-4)));
+  --ui-dialog-max-height: calc(100% - 2 * var(--space-4));
+  --ui-toast-width: min(24rem, calc(100% - 2 * var(--space-5)));
+  --ui-settings-width: 32rem;
+  --ui-burst-top: calc(var(--ui-card-padding) + var(--space-8) / 2);
+  /*
+   * The apps' layouts, as the team chose them: activity cards at the spec's 232px, four to a row
+   * at most; the placeholder shape; the profile buttons, from the touch target; the game bar's
+   * progress; and the Family page, the reading measure with its padding.
+   */
+  --ui-activity-card-width: 14.5rem;
+  --ui-cards-width: 56rem;
+  --ui-placeholder-shape: 6rem;
+  --ui-profile-choice: calc(var(--ui-target) * 2);
+  --ui-profile-avatar: calc(var(--ui-target) * 1.5);
+  --ui-progress-basis: 10rem;
+  --ui-family-page-width: calc(var(--measure) + 2 * var(--space-5));
+  /* Until a logo exists, the name in display at weight 800 (design system README). */
+  --ui-wordmark-weight: 800;
+  /* A numeral set in another style's size, at the numerals' weight (design system README). */
+  --ui-number-weight: var(--play-number-font-weight);
+  /*
+   * The games' scenes, as the team chose them: Hop Line's number line and Ten Frame Café's trays
+   * up to a comfortable width, Tile Farm's field and its wide layout, the trays and the counter
+   * beside them, the scenes' heights on short screens, and the hint's footprints in Hop Line.
+   */
+  --ui-scene-width: 48rem;
+  --ui-field-width: 40rem;
+  --ui-wide-scene-width: 64rem;
+  --ui-tray-basis: 18rem;
+  --ui-counter-basis: 10rem;
+  --ui-tray-height: 18vh;
+  --ui-field-height: 34vh;
+  --ui-wide-field-height: 50vh;
+  --ui-phone-field-height: 20vh;
+  --ui-footprint-width: 1rem;
+  --ui-footprint-height: 1.25rem;
+  --ui-footprint-radius: 50% 50% 45% 45%;
+  /*
+   * The developer tools' own layout, as the team chose it: their menus and checkboxes, in rem so
+   * they follow the text size, the UI preview's grid of examples, and the game sandbox's stage,
+   * side panels and event log.
+   */
+  --ui-tool-menu-width: 10rem;
+  --ui-tool-control-height: 2.75rem;
+  --ui-tool-check-size: 1.5rem;
+  --ui-preview-cell: 18rem;
+  --ui-preview-width: 60rem;
+  --ui-tool-stage-height: 20rem;
+  --ui-tool-side-min: 18rem;
+  --ui-tool-side-max: 28rem;
+  --ui-tool-log-height: 70vb;
+  --ui-tool-number-width: 2ch;
+
   /* Motion: transitions of 150 to 250ms that ease out; celebrations end by 1.2 seconds. */
   --ui-duration-short: 150ms;
   --ui-duration-medium: 250ms;
@@ -76,7 +145,7 @@
   --ui-radius: var(--radius-lg);
   --ui-gap: var(--space-3);
   --ui-card-padding: var(--space-5);
-  /* Phosphor Bold at 28px in the child app (design system README). */
+  /* Icons at 28px in the child app (design system README, ADR 0045). */
   --ui-icon-size: 1.75rem;
 
   /* Child-facing text is never smaller than 20px. */

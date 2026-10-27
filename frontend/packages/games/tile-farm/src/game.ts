@@ -1,7 +1,6 @@
 import type { FieldScene } from '@learnofun/contracts';
 import type { GameModule, GradeResult, SupportLevel } from '@learnofun/game-sdk';
 import { CROPS, EXPLAINED_MISCONCEPTIONS, manifest } from './manifest';
-import './game.css';
 
 const SVG = 'http://www.w3.org/2000/svg';
 
@@ -35,6 +34,80 @@ interface Order {
   answer: number;
 }
 
+/*
+ * The game's look: Tailwind utilities on the design system's theme (ADR 0043), beside the
+ * g-tile-farm hooks that tests find elements by. SVG sizes are in the field's own units, which
+ * scale with its width, so the drawing's widths and dashes are its attributes. On wide, short
+ * screens (landscape:wide:) the field sits beside the message and the controls; on phones,
+ * everything sits closer and the field is shorter, to leave room for the controls.
+ */
+const CONTAINER_CLASSES =
+  'g-tile-farm flex inline-full flex-col items-center gap-3 px-1 py-3 text-center max-phone:gap-2 max-phone:py-1 landscape:wide:grid landscape:wide:max-inline-ui-wide-scene landscape:wide:grid-cols-2 landscape:wide:gap-x-5';
+
+/** The order, and once answered the order as numbers, in the display face (design system README). */
+const ORDER_CLASSES =
+  'g-tile-farm__order m-0 font-display text-play-label landscape:wide:col-span-full landscape:wide:row-start-1';
+
+/** Reading text at the story size, so the instructions leave room for the field. */
+const INSTRUCTIONS_CLASSES =
+  'g-tile-farm__instructions m-0 text-size-read-story leading-read-story text-ink-muted landscape:wide:col-span-full landscape:wide:row-start-2';
+
+/** The field: one keyboard control. The child never has to hit a single plot (BRIEF.md). */
+const FIELD_CLASSES =
+  'g-tile-farm__field flex inline-full max-inline-ui-field justify-center rounded-ui border-2 border-ui-secondary-border bg-surface-raised p-2 focus-visible:shadow-focus-ring focus-visible:outline-none max-phone:p-1 landscape:wide:col-start-1 landscape:wide:row-start-3 landscape:wide:row-end-5 landscape:wide:max-inline-none landscape:wide:self-center';
+
+const FIELD_SCENE_CLASSES =
+  'block inline-full block-auto max-block-ui-field-height max-phone:max-block-ui-phone-field-height landscape:wide:max-block-ui-wide-field-height';
+
+const MESSAGE_CLASSES =
+  'g-tile-farm__message m-0 min-block-lh font-display text-play-label landscape:wide:col-start-2 landscape:wide:row-start-3 landscape:wide:self-end';
+
+/** Every numeral in a maths game is in the display face. The counter sits beside Done. */
+const COUNT_CLASSES =
+  'g-tile-farm__count col-span-4 m-0 self-center font-display text-play-title font-number';
+
+/*
+ * Six columns: planting shares the first row, counting the second, and the counter and Done the
+ * third. In Challenge, without Add a row, Take one and Add one share the second row.
+ */
+const CONTROLS_CLASSES =
+  'grid inline-full max-inline-ui-field grid-cols-6 gap-3 max-phone:gap-2 landscape:wide:col-start-2 landscape:wide:row-start-4 landscape:wide:self-start';
+
+const SCENE_CLASSES = {
+  soil: 'g-tile-farm__soil fill-surface-sunken',
+  plot: 'g-tile-farm__plot fill-surface-sunken stroke-ink-muted stroke-2',
+  // An array's outline and its empty plots are dashed: not colour alone.
+  emptyPlot:
+    'g-tile-farm__plot g-tile-farm__plot--empty fill-surface-raised stroke-ink-muted stroke-2',
+  outline: 'g-tile-farm__outline fill-none stroke-ink stroke-3',
+  tick: 'g-tile-farm__tick fill-none stroke-ink stroke-5',
+  // The hint's running totals, dimmed until the row is counted, when its tick appears too.
+  total: 'g-tile-farm__total fill-ink font-display font-number',
+  dimTotal: 'g-tile-farm__total g-tile-farm__total--dim fill-ink-muted font-display font-number',
+};
+
+/** Placeholder plants, a distinct shape each, until the art is made. */
+const PLANT_CLASSES = {
+  shape: 'fill-ui-primary stroke-ink stroke-2',
+  stem: 'fill-none stroke-ink stroke-3',
+};
+
+/** Play buttons sit on a ledge; pressed, they move down 6px and the ledge disappears. */
+const BUTTON_CLASSES =
+  'min-block-ui-target min-inline-ui-target cursor-pointer rounded-ui border-2 border-ui-secondary-border px-5 font-display text-play-label shadow-press-depth transition-[translate,box-shadow] enabled:active:translate-y-ui-press enabled:active:shadow-none focus-visible:shadow-with-focus-press-depth focus-visible:outline-none disabled:cursor-default disabled:border-ui-disabled-border disabled:bg-ui-disabled disabled:text-ui-on-disabled disabled:shadow-none max-phone:px-1';
+
+const BUTTON_COLOUR_CLASSES = {
+  secondary: 'bg-ui-secondary text-ui-on-secondary',
+  primary: 'bg-ui-primary text-ui-on-primary',
+};
+
+const BUTTON_SPAN_CLASSES = { third: 'col-span-2', half: 'col-span-3' };
+
+/** The drawing's dashes and line ends, in the field's own units. */
+const OUTLINE_DASHES = { 'stroke-dasharray': '8 6' } as const;
+const PLOT_DASHES = { 'stroke-dasharray': '6 4' } as const;
+const ROUND = { 'stroke-linecap': 'round', 'stroke-linejoin': 'round' } as const;
+
 /**
  * Tile Farm (BRIEF.md): a farmer asks for crops in rows. The child plants a whole row at a time,
  * so the groups are equal, then counts the plants on the farm's counter, which starts at nothing:
@@ -59,31 +132,41 @@ export const game: GameModule = {
       return created;
     };
     const button = (key: string, onPress: () => void, modifier: string) => {
-      const created = element('button', `g-tile-farm__button g-tile-farm__button--${modifier}`);
+      const colours = modifier === 'done' ? 'primary' : 'secondary';
+      const halfRow =
+        modifier === 'dig' ||
+        modifier === 'plant' ||
+        (!byRows && (modifier === 'take-one' || modifier === 'add-one'));
+      const created = element(
+        'button',
+        `g-tile-farm__button g-tile-farm__button--${modifier} ${BUTTON_CLASSES} ${BUTTON_COLOUR_CLASSES[colours]} ${BUTTON_SPAN_CLASSES[halfRow ? 'half' : 'third']}`,
+      );
       created.type = 'button';
       created.textContent = ctx.t(key);
       created.addEventListener('click', onPress);
       return created;
     };
 
-    const container = element('div', 'g-tile-farm');
-    const order = element('p', 'g-tile-farm__order');
-    const instructions = element('p', 'g-tile-farm__instructions');
+    const container = element('div', CONTAINER_CLASSES);
+    const order = element('p', ORDER_CLASSES);
+    const instructions = element('p', INSTRUCTIONS_CLASSES);
     // The field is one control (BRIEF.md, accessibility): Up plants a row, Down digs one up,
     // Right adds a row to the count, + and − count single plants, and Enter gives the count.
-    const field = element('div', 'g-tile-farm__field');
+    const field = element('div', FIELD_CLASSES);
     field.setAttribute('role', 'spinbutton');
     field.setAttribute('aria-label', ctx.t('games.tileFarm.field'));
     field.tabIndex = 0;
-    const count = element('p', 'g-tile-farm__count');
-    const message = element('p', 'g-tile-farm__message');
+    const count = element('p', COUNT_CLASSES);
+    const message = element('p', MESSAGE_CLASSES);
     message.setAttribute('role', 'status');
-    const controls = element('div', 'g-tile-farm__controls');
-    controls.setAttribute('role', 'group');
-    controls.setAttribute('aria-label', ctx.t('games.tileFarm.controls'));
     // Challenge counts single plants only: the child counts, or knows the fact (BRIEF.md).
     const byRows = ctx.mode === 'practice';
-    if (!byRows) controls.classList.add('g-tile-farm__controls--by-ones');
+    const controls = element(
+      'div',
+      `g-tile-farm__controls${byRows ? '' : ' g-tile-farm__controls--by-ones'} ${CONTROLS_CLASSES}`,
+    );
+    controls.setAttribute('role', 'group');
+    controls.setAttribute('aria-label', ctx.t('games.tileFarm.controls'));
     container.append(order, instructions, field, message, controls);
     root.append(container);
 
@@ -130,10 +213,12 @@ export const game: GameModule = {
       const shapes: Record<Crop, () => SVGElement[]> = {
         carrot: () => [
           svg('path', {
+            class: PLANT_CLASSES.shape,
             d: path('M', cx - r, cy - r / 2, 'L', cx + r, cy - r / 2, 'L', cx, cy + r, 'Z'),
           }),
           svg('path', {
-            class: 'stem',
+            class: PLANT_CLASSES.stem,
+            'stroke-linecap': 'round',
             d: path(
               'M',
               cx,
@@ -150,17 +235,21 @@ export const game: GameModule = {
             ),
           }),
         ],
-        cabbage: () => [svg('circle', { cx, cy, r }), svg('circle', { cx, cy, r: r / 2 })],
+        cabbage: () => [
+          svg('circle', { class: PLANT_CLASSES.shape, cx, cy, r }),
+          svg('circle', { class: PLANT_CLASSES.shape, cx, cy, r: r / 2 }),
+        ],
         sunflower: () => [
           ...Array.from({ length: PETALS }, (_, petal) => {
             const angle = (2 * Math.PI * petal) / PETALS;
             return svg('circle', {
+              class: PLANT_CLASSES.shape,
               cx: cx + 0.7 * r * Math.cos(angle),
               cy: cy + 0.7 * r * Math.sin(angle),
               r: r / 3,
             });
           }),
-          svg('circle', { cx, cy, r: r / 2 }),
+          svg('circle', { class: PLANT_CLASSES.shape, cx, cy, r: r / 2 }),
         ],
       };
       group.append(...shapes[crop]());
@@ -179,7 +268,10 @@ export const game: GameModule = {
       // Rows fill from the start side, so the field mirrors in right-to-left text (BRIEF.md).
       const mirrored = getComputedStyle(field).direction === 'rtl';
       const x = (start: number, size = 0) => (mirrored ? width - start - size : start);
+      // The game mirrors the field itself in right-to-left text, so the SVG's own text stays put.
       const scene = svg('svg', {
+        class: FIELD_SCENE_CLASSES,
+        direction: 'ltr',
         viewBox: `0 0 ${String(width)} ${String(height)}`,
         'aria-hidden': 'true',
         focusable: 'false',
@@ -189,7 +281,8 @@ export const game: GameModule = {
         const outlineWidth = plotsWidth - PLOT.gap;
         scene.append(
           svg('rect', {
-            class: 'g-tile-farm__outline',
+            class: SCENE_CLASSES.outline,
+            ...OUTLINE_DASHES,
             x: x(PLOT.gap / 2, outlineWidth),
             y: PLOT.gap / 2,
             width: outlineWidth,
@@ -207,7 +300,7 @@ export const game: GameModule = {
           const soilWidth = plotsWidth - 2 * PLOT.gap;
           scene.append(
             svg('rect', {
-              class: 'g-tile-farm__soil',
+              class: SCENE_CLASSES.soil,
               x: x(PLOT.gap, soilWidth),
               y: top,
               width: soilWidth,
@@ -221,8 +314,9 @@ export const game: GameModule = {
           const left = x(PLOT.gap + column * step, PLOT.size);
           scene.append(
             svg('rect', {
-              class:
-                row < planted ? 'g-tile-farm__plot' : 'g-tile-farm__plot g-tile-farm__plot--empty',
+              ...(row < planted
+                ? { class: SCENE_CLASSES.plot }
+                : { class: SCENE_CLASSES.emptyPlot, ...PLOT_DASHES }),
               x: left,
               y: top,
               width: PLOT.size,
@@ -238,7 +332,8 @@ export const game: GameModule = {
           const left = x(plotsWidth, END.tick);
           scene.append(
             svg('path', {
-              class: 'g-tile-farm__tick',
+              class: SCENE_CLASSES.tick,
+              ...ROUND,
               d: path(
                 'M',
                 left + 4,
@@ -256,8 +351,7 @@ export const game: GameModule = {
         if (hinted) {
           // The hint: each row's running total at its end, dimmed until it is counted.
           const label = svg('text', {
-            class:
-              row < ticked ? 'g-tile-farm__total' : 'g-tile-farm__total g-tile-farm__total--dim',
+            class: row < ticked ? SCENE_CLASSES.total : SCENE_CLASSES.dimTotal,
             x: x(plotsWidth + END.tick + END.gap),
             y: middle,
             'dominant-baseline': 'central',

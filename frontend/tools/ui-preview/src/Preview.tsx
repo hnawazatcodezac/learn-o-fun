@@ -7,6 +7,11 @@ import { PreviewContext } from './PreviewContext';
 import { PREVIEWS } from './previews';
 import { ToolbarSelect } from './ToolbarSelect';
 
+/** A checkbox and its words, as tall as the toolbar's menus. */
+const TOGGLE_CLASSES = 'flex min-block-ui-tool-control items-center gap-2';
+
+const CHECKBOX_CLASSES = 'm-0 inline-ui-tool-check block-ui-tool-check';
+
 const PREVIEW_LOCALES = [...LOCALES, ...PSEUDO_LOCALES];
 
 export function Preview() {
@@ -33,7 +38,10 @@ export function Preview() {
       textScale={params.textScale}
       font={params.font}
     >
-      <header className="preview-toolbar" hidden={!params.showToolbar}>
+      <header
+        className="flex flex-wrap items-end gap-4 border-be border-line-strong bg-surface-raised px-5 py-3 text-size-ui-small [&[hidden]]:hidden"
+        hidden={!params.showToolbar}
+      >
         <ToolbarSelect
           label={t('dev.preview.controls.component')}
           value={params.component}
@@ -83,9 +91,10 @@ export function Preview() {
             update({ textScale: TEXT_SCALES.find((scale) => String(scale) === value) ?? 1 });
           }}
         />
-        <label className="preview-toggle">
+        <label className={TOGGLE_CLASSES}>
           <input
             type="checkbox"
+            className={CHECKBOX_CLASSES}
             checked={params.font === 'dyslexia'}
             onChange={(event) => {
               update({ font: event.target.checked ? 'dyslexia' : 'default' });
@@ -93,9 +102,10 @@ export function Preview() {
           />
           {t('dev.preview.controls.dyslexiaFont')}
         </label>
-        <label className="preview-toggle">
+        <label className={TOGGLE_CLASSES}>
           <input
             type="checkbox"
+            className={CHECKBOX_CLASSES}
             checked={params.reducedMotion}
             onChange={(event) => {
               update({ reducedMotion: event.target.checked });
@@ -104,8 +114,10 @@ export function Preview() {
           {t('dev.preview.controls.reducedMotion')}
         </label>
       </header>
-      <main className="preview-stage" data-testid="preview-stage">
-        <h1 className="preview-stage__title">{t(`dev.preview.components.${params.component}`)}</h1>
+      <main className="px-5 py-6" data-testid="preview-stage">
+        <h1 className="mbs-0 mbe-5 text-size-ui-title">
+          {t(`dev.preview.components.${params.component}`)}
+        </h1>
         <PreviewContext value={{ params, update }}>
           {/* Remount on a locale change, so previews holding text in state show the new locale. */}
           <Component key={locale} />

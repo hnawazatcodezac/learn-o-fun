@@ -18,6 +18,20 @@ import { LoadState } from '../shared/LoadState';
 import { canManageChildren, dateIn } from './profile-form';
 import { subjectName } from './subject-name';
 import { useFamily } from './use-family';
+import {
+  ACTIONS_CLASSES,
+  CONTROL_CLASSES,
+  ERROR_CLASSES,
+  FIELD_CLASSES,
+  FIELD_PART_CLASSES,
+  FIELD_ROW_CLASSES,
+  FORM_CLASSES,
+  HEADING_CLASSES,
+  HINT_CLASSES,
+  RADIO_CLASSES,
+  SECTION_CLASSES,
+  TITLE_CLASSES,
+} from './classes';
 
 /**
  * /parent/child/learning?id=<child>: a child's goal, subject balance and time limits
@@ -35,7 +49,7 @@ export function ChildLearningPage() {
         if (!child || !canManageChildren(data.role)) {
           return (
             <>
-              <h1 className="parent-page__title">{t('parent.profile.notFound')}</h1>
+              <h1 className={TITLE_CLASSES}>{t('parent.profile.notFound')}</h1>
               <p>
                 <Link to="/parent">{t('parent.profile.back')}</Link>
               </p>
@@ -65,7 +79,7 @@ function Learning({ family, childId }: { family: FamilyResponse; childId: string
 
   return (
     <>
-      <h1 className="parent-page__title">{title}</h1>
+      <h1 className={TITLE_CLASSES}>{title}</h1>
       {learning ? (
         <>
           <GoalSection family={family} learning={learning} onSaved={setLatest} />
@@ -113,12 +127,12 @@ function Section({
     onSubmit();
   };
   return (
-    <section className="parent-section" aria-labelledby={`${id}-title`}>
-      <h2 className="parent-page__heading" id={`${id}-title`}>
+    <section className={SECTION_CLASSES} aria-labelledby={`${id}-title`}>
+      <h2 className={HEADING_CLASSES} id={`${id}-title`}>
         {title}
       </h2>
-      {hint && <p className="parent-field__hint">{hint}</p>}
-      <form className="parent-form" noValidate onSubmit={submit}>
+      {hint && <p className={HINT_CLASSES}>{hint}</p>}
+      <form className={FORM_CLASSES} noValidate onSubmit={submit}>
         {children}
         {problem && <FieldMessage id={`${id}-problem`}>{problem}</FieldMessage>}
         {failed && (
@@ -126,9 +140,9 @@ function Section({
             {t('parent.learning.saveFailed')}
           </FieldMessage>
         )}
-        <div className="parent-form__actions">
+        <div className={ACTIONS_CLASSES}>
           <Button type="submit">{saveLabel}</Button>
-          <p role="status" className="parent-section__saved">
+          <p role="status" className="text-ink-muted">
             {saved}
           </p>
         </div>
@@ -139,7 +153,7 @@ function Section({
 
 function FieldMessage({ id, role, children }: { id: string; role?: 'alert'; children: ReactNode }) {
   return (
-    <p id={id} role={role} className="parent-field__error">
+    <p id={id} role={role} className={ERROR_CLASSES}>
       <WarningIcon />
       <span>{children}</span>
     </p>
@@ -212,13 +226,14 @@ function GoalSection({ family, learning, onSaved }: SectionProps & { family: Fam
       failed={failed}
       onSubmit={submit}
     >
-      <fieldset className="parent-field">
+      <fieldset className={FIELD_CLASSES}>
         <legend>{t('parent.learning.goal.focus')}</legend>
-        <div className="parent-choices">
+        <div className="flex flex-wrap gap-3">
           {(['', ...subjects] as const).map((option) => (
-            <label key={option} className="parent-choice">
+            <label key={option} className="inline-flex items-center gap-2 min-block-target-family">
               <input
                 type="radio"
+                className={RADIO_CLASSES}
                 name={`${id}-focus`}
                 value={option}
                 checked={subject === option}
@@ -235,9 +250,10 @@ function GoalSection({ family, learning, onSaved }: SectionProps & { family: Fam
       {custom ? (
         subject !== '' && (
           <>
-            <div className="parent-field">
+            <div className={FIELD_CLASSES}>
               <label htmlFor={`${id}-skill`}>{t('parent.learning.goal.skill')}</label>
               <select
+                className={CONTROL_CLASSES}
                 id={`${id}-skill`}
                 value={skillId}
                 onChange={(event) => {
@@ -252,11 +268,12 @@ function GoalSection({ family, learning, onSaved }: SectionProps & { family: Fam
                 ))}
               </select>
             </div>
-            <div className="parent-field">
+            <div className={FIELD_CLASSES}>
               <label htmlFor={`${id}-ends`}>{t('parent.learning.goal.endsOn')}</label>
               <input
                 id={`${id}-ends`}
                 type="date"
+                className={CONTROL_CLASSES}
                 value={endsOn}
                 min={today}
                 onChange={(event) => {
@@ -267,7 +284,7 @@ function GoalSection({ family, learning, onSaved }: SectionProps & { family: Fam
           </>
         )
       ) : (
-        <p className="parent-field__hint">
+        <p className={HINT_CLASSES}>
           {t('parent.learning.goal.premium')}{' '}
           <Link to="/parent/plan">{t('parent.children.seePlan')}</Link>
         </p>
@@ -316,11 +333,12 @@ function BalanceSection({ familyId, learning, onSaved }: SectionProps & { family
       problem={problem}
       onSubmit={submit}
     >
-      <div className="parent-field__row">
+      <div className={FIELD_ROW_CLASSES}>
         {shares.map((share) => (
-          <div key={share.subjectId} className="parent-field__part">
+          <div key={share.subjectId} className={FIELD_PART_CLASSES}>
             <label htmlFor={`${id}-${share.subjectId}`}>{subjectName(t, share.subjectId)}</label>
             <select
+              className={CONTROL_CLASSES}
               id={`${id}-${share.subjectId}`}
               value={share.percent}
               onChange={(event) => {
@@ -359,9 +377,10 @@ function TimeSection({ familyId, learning, onSaved }: SectionProps & { familyId:
   };
 
   const menu = (key: keyof TimeLimits, label: string, steps: readonly number[]) => (
-    <div className="parent-field__part">
+    <div className={FIELD_PART_CLASSES}>
       <label htmlFor={`${id}-${key}`}>{label}</label>
       <select
+        className={CONTROL_CLASSES}
         id={`${id}-${key}`}
         value={limits[key]}
         onChange={(event) => {
@@ -387,7 +406,7 @@ function TimeSection({ familyId, learning, onSaved }: SectionProps & { familyId:
       problem={problem}
       onSubmit={submit}
     >
-      <div className="parent-field__row">
+      <div className={FIELD_ROW_CLASSES}>
         {menu('sessionMinutes', t('parent.learning.time.session'), SESSION_MINUTE_STEPS)}
         {menu('dailyLimitMinutes', t('parent.learning.time.daily'), DAILY_LIMIT_STEPS)}
         {menu('breakReminderMinutes', t('parent.learning.time.break'), BREAK_REMINDER_STEPS)}

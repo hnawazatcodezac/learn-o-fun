@@ -7,8 +7,10 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { cn } from '../../cn';
 import { useI18n } from '../../i18n/useI18n';
 import { CloseIcon } from '../icons';
+import { FOCUS_CLASSES, ICON_BUTTON_CLASSES } from '../pieces';
 
 /** How long a toast stays before hiding itself. Hover or keyboard focus pauses it. */
 export const TOAST_DURATION_MS = 8000;
@@ -57,7 +59,10 @@ export function ToastProvider({
   return (
     <ToastContext.Provider value={show}>
       {children}
-      <div className="lf-toast-region" role="status">
+      <div
+        className="lf-toast-region fixed inset-e-5 inset-be-5 z-10 flex flex-col items-end gap-3 max-inline-ui-toast"
+        role="status"
+      >
         {toasts.map((toast) => (
           <Toast
             key={toast.id}
@@ -107,18 +112,19 @@ function Toast({ id, message, durationMs, onDismiss }: ToastProps) {
     setPaused(false);
   };
 
+  // A toast floats on shadow-lg. It fades in, and rises only when motion is allowed.
   return (
     <div
-      className="lf-toast"
+      className="lf-toast flex animate-ui-toast items-center gap-3 rounded-ui bg-surface-raised py-2 ps-4 pe-2 text-ink shadow-lg"
       onMouseEnter={pause}
       onMouseLeave={resume}
       onFocus={pause}
       onBlur={resume}
     >
-      <p className="lf-toast__message">{message}</p>
+      <p className="lf-toast__message m-0">{message}</p>
       <button
         type="button"
-        className="lf-toast__close"
+        className={cn('lf-toast__close', ICON_BUTTON_CLASSES, FOCUS_CLASSES)}
         aria-label={t('ui.toast.close')}
         onClick={() => {
           onDismiss(id);

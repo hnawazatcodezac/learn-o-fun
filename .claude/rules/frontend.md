@@ -37,10 +37,10 @@ Plan sections 7 and 8 apply.
    - radii: `rounded-sm`, `rounded-md`, `rounded-lg` and `rounded-full` equal the radius tokens;
    - shadows: `shadow-sm`, `shadow-lg`, `shadow-press-depth` and `shadow-focus-ring`;
    - fonts: `font-display`, `font-read` and `font-sans`;
-   - sizes: `min-h-target-early`, `min-h-target-play`, `min-h-target-family` and `size-tile-min`;
+   - sizes, in logical directions (rule 10): `min-block-target-early`, `min-block-target-play`, `min-block-target-family`, and `inline-tile-min block-tile-min`;
    - one utility per type style: `text-play-hero`, `text-read-early`, `text-family-body` and the rest.
 9. No arbitrary values for colours, spacing, radii, shadows or font sizes (for example `bg-[#fff]` or `p-[13px]`). A lint rule enforces this.
-10. Right-to-left support: use logical utilities only (`ms-`, `me-`, `ps-`, `pe-`, `start-`, `end-`, `text-start`, `text-end`). A lint rule bans the physical ones (`ml-`, `mr-`, `pl-`, `pr-`, `left-`, `right-`, `text-left`, `text-right`). This replaces the physical-CSS-property rule for Tailwind code.
+10. Right-to-left support: use logical utilities only (`ms-`, `me-`, `ps-`, `pe-`, `start-`, `end-`, `text-start`, `text-end`, and for block direction and sizes `mbs-`, `pbe-`, `inset-bs-`, `inline-`, `block-`, `min-block-`, `max-inline-`). A lint rule bans the physical ones (`ml-`, `mr-`, `pl-`, `pr-`, `left-`, `right-`, `text-left`, `text-right`, and `mt-`, `pb-`, `top-`, `w-`, `h-`, `size-`, `min-h-`, `max-w-`). This replaces the physical-CSS-property rule for Tailwind code.
 11. Every interactive element gets the focus-ring shadow on keyboard focus (`focus-visible:shadow-focus-ring`). Respect reduced motion with `motion-safe:` and `motion-reduce:`.
 12. Tailwind's source scanning includes `packages/ui-kit` and `packages/games`. Use `clsx` with `tailwind-merge` for conditional classes in `ui-kit`, and `prettier-plugin-tailwindcss` for class order.
 13. The plain CSS in `docs/design-system/components/bundle.css` is a visual reference only. Rebuild the components with Tailwind; do not copy its class names. PixiJS canvases are not styled with Tailwind; only the DOM around them is.

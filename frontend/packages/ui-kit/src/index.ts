@@ -49,7 +49,47 @@ export { SettingsPanel, type SettingsPanelProps } from './components/SettingsPan
 export { SkillStatus, type SkillStatusProps } from './components/SkillStatus/SkillStatus';
 export { appearanceFromSettings } from './components/SettingsPanel/settings';
 export { DEFAULT_PLAY_SETTINGS, type PlaySettings } from '@learnofun/contracts';
-export { HintIcon, PauseIcon, WarningIcon } from './components/icons';
+// Learnofun's own icons, as the screen designs draw them (ADR 0045).
+export {
+  BackIcon,
+  BanIcon,
+  BlendIcon,
+  BookIcon,
+  CheckIcon,
+  ChevronDownIcon,
+  ClockIcon,
+  CloseIcon,
+  DeleteIcon,
+  DownloadIcon,
+  GamesIcon,
+  HintIcon,
+  HomeIcon,
+  KeyIcon,
+  LockIcon,
+  NextIcon,
+  NoChatIcon,
+  NoPurchaseIcon,
+  PauseIcon,
+  PlayIcon,
+  PlusIcon,
+  PrinterIcon,
+  RetryIcon,
+  ShieldCheckIcon,
+  ShieldIcon,
+  SignInIcon,
+  SignOutIcon,
+  SoundIcon,
+  SoundOffIcon,
+  SpeakerIcon,
+  SproutIcon,
+  StarIcon,
+  StarOutlineIcon,
+  StickerIcon,
+  TapIcon,
+  UserIcon,
+  WarningIcon,
+  type IconProps,
+} from './components/icons';
 export { Switch, type SwitchProps } from './components/Switch/Switch';
 export {
   TOAST_DURATION_MS,

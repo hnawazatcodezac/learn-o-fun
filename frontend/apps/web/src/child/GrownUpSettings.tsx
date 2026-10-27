@@ -5,6 +5,13 @@ import { useNavigate } from '../shared/navigation';
 import { api } from '../api/client';
 import { useChildMode } from './child-mode';
 
+/** A part of the settings, a line apart. */
+const SECTION_CLASSES = 'flex flex-col gap-3 [&_p]:m-0';
+
+const HEADING_CLASSES = 'm-0 text-size-ui-heading';
+
+const ACTIONS_CLASSES = 'flex flex-wrap gap-3';
+
 /**
  * A child's settings, for a grown-up who has passed the parental gate: play settings, the
  * picture PIN (ADR 0018), more time today (ADR 0022) and the way to the parent dashboard.
@@ -26,15 +33,15 @@ export function GrownUpSettings({
     <Dialog open={open} title={t('child.settings.title', { nickname })} onClose={onClose}>
       {/* Mounted only while open, so the picture PIN steps start fresh each time. */}
       {open && (
-        <div className="grown-up-settings">
+        <div className="flex flex-col gap-3">
           <SettingsPanel value={settings} onChange={setSettings} />
           <TimeTodaySettings nickname={nickname} />
           <PicturePinSettings nickname={nickname} />
-          <div className="grown-up-settings__actions">
+          <div className={ACTIONS_CLASSES}>
             <Button
               variant="secondary"
               onClick={() => {
-                void navigate('/parent');
+                navigate('/parent');
               }}
             >
               {t('child.settings.parentDashboard')}
@@ -77,8 +84,8 @@ function TimeTodaySettings({ nickname }: { nickname: string }) {
   };
 
   return (
-    <section className="grown-up-settings__time" aria-labelledby={headingId}>
-      <h3 id={headingId} className="grown-up-settings__heading">
+    <section className={SECTION_CLASSES} aria-labelledby={headingId}>
+      <h3 id={headingId} className={HEADING_CLASSES}>
         {t('child.settings.time.title')}
       </h3>
       <p>
@@ -93,7 +100,7 @@ function TimeTodaySettings({ nickname }: { nickname: string }) {
           ? null
           : t('child.settings.time.allowed', { nickname, minutes: allowed })}
       </p>
-      <div className="grown-up-settings__actions">
+      <div className={ACTIONS_CLASSES}>
         <Button variant="secondary" disabled={sending} onClick={allow}>
           {t('child.settings.time.allow', { minutes })}
         </Button>
@@ -139,15 +146,15 @@ function PicturePinSettings({ nickname }: { nickname: string }) {
   };
 
   return (
-    <section className="grown-up-settings__pin" aria-labelledby={headingId}>
-      <h3 id={headingId} className="grown-up-settings__heading">
+    <section className={SECTION_CLASSES} aria-labelledby={headingId}>
+      <h3 id={headingId} className={HEADING_CLASSES}>
         {t('child.settings.pin.title')}
       </h3>
       {message && <p role="status">{message}</p>}
       {step.kind === 'view' ? (
         <>
           <p>{t(hasPin ? 'child.settings.pin.on' : 'child.settings.pin.off', { nickname })}</p>
-          <div className="grown-up-settings__actions">
+          <div className={ACTIONS_CLASSES}>
             <Button variant="secondary" onClick={start}>
               {t(hasPin ? 'child.settings.pin.change' : 'child.settings.pin.add')}
             </Button>

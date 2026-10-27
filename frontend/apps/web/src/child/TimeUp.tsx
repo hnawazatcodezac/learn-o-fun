@@ -9,9 +9,12 @@ export function TimeUp({ nickname, children }: { nickname: string; children?: Re
   const { t } = useI18n();
 
   return (
-    <section className="time-up" data-testid="time-up">
-      <h2 className="time-up__title">{t('child.timeUp.title')}</h2>
-      <p className="time-up__body">{t('child.timeUp.body', { nickname })}</p>
+    <section
+      className="flex flex-col items-center gap-3 text-center max-inline-measure"
+      data-testid="time-up"
+    >
+      <h2 className="m-0 font-display text-play-title">{t('child.timeUp.title')}</h2>
+      <p className="m-0">{t('child.timeUp.body', { nickname })}</p>
       {children}
     </section>
   );

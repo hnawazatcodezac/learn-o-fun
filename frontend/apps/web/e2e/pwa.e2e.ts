@@ -75,19 +75,30 @@ test('caches every game’s bundle with the app, not only the ones opened', asyn
   await controlled(page);
 
   const cached = await page.evaluate(async () => {
-    const urls: string[] = [];
+    const entries: { url: string; script: string }[] = [];
     for (const name of await caches.keys()) {
       const cache = await caches.open(name);
-      urls.push(...(await cache.keys()).map((entry) => entry.url));
+      for (const request of await cache.keys()) {
+        const response = request.url.includes('.js') ? await cache.match(request) : undefined;
+        entries.push({ url: request.url, script: response ? await response.text() : '' });
+      }
     }
-    return urls;
+    return entries;
   });
-  expect(cached.some((url) => /\/index\.html/.test(url))).toBe(true);
-  // Each game's package is its own bundle (src-*.js): Hop Line and the demo game.
-  expect(
-    cached.filter((url) => /\/assets\/src-[\w-]+\.js$/.test(url)).length,
-  ).toBeGreaterThanOrEqual(2);
-  expect(cached.some((url) => /\.woff2/.test(url))).toBe(true);
+  expect(cached.some(({ url }) => /\/index\.html/.test(url))).toBe(true);
+  // Every game's own code is cached, wherever the build puts it: a message key only it uses.
+  for (const key of [
+    'games.demoChoice.hintCrossedOut',
+    'games.hopLine.line',
+    'games.tenFrameCafe.trays',
+    'games.tileFarm.field',
+  ]) {
+    expect(
+      cached.some(({ script }) => script.includes(key)),
+      key,
+    ).toBe(true);
+  }
+  expect(cached.some(({ url }) => /\.woff2/.test(url))).toBe(true);
 });
 
 test('leaves out the development tools that the test build keeps (ADR 0041)', async ({ page }) => {
@@ -97,6 +108,7 @@ test('leaves out the development tools that the test build keeps (ADR 0041)', as
   await expect(page.getByText('Hi, Robin!')).toBeVisible();
   await expect(page.getByRole('combobox', { name: 'Language' })).toHaveCount(0);
   await expect(page.getByRole('complementary', { name: 'Mock API' })).toHaveCount(0);
+  await expect(page.getByTestId('dev-tools')).toHaveCount(0);
 
   // The game stories route does not exist.
   await page.goto('/play/dev?game=hop-line');

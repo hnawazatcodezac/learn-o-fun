@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { cn } from '../../cn';
 
 /**
  * Placeholder avatars: simple shapes, each in its own colour, so shape as well as colour tells
@@ -15,6 +16,16 @@ export const AVATARS = [
 
 export type AvatarId = (typeof AVATARS)[number];
 
+/** Each avatar's brand fill. Each has its own shape too, so none is told apart by colour (ADR 0019). */
+const FILL_CLASSES: Record<AvatarId, string> = {
+  'orange-circle': 'lf-avatar--orange-circle fill-sun',
+  'blue-square': 'lf-avatar--blue-square fill-sky',
+  'green-triangle': 'lf-avatar--green-triangle fill-leaf',
+  'purple-star': 'lf-avatar--purple-star fill-navy',
+  'pink-heart': 'lf-avatar--pink-heart fill-coral',
+  'teal-diamond': 'lf-avatar--teal-diamond fill-teal',
+};
+
 const SHAPES: Record<AvatarId, ReactNode> = {
   'orange-circle': <circle cx="24" cy="24" r="17" />,
   'blue-square': <rect x="8" y="8" width="32" height="32" rx="6" />,
@@ -30,8 +41,9 @@ const SHAPES: Record<AvatarId, ReactNode> = {
 export function Avatar({ id }: { id: AvatarId }) {
   return (
     <svg
-      className={`lf-avatar lf-avatar--${id}`}
+      className={cn('lf-avatar stroke-ink stroke-2 block-full inline-full', FILL_CLASSES[id])}
       viewBox="0 0 48 48"
+      strokeLinejoin="round"
       aria-hidden="true"
       focusable="false"
     >

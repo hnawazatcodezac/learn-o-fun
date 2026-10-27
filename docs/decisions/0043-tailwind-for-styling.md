@@ -25,10 +25,10 @@ The first option.
   - radii: `rounded-sm`, `rounded-md`, `rounded-lg` and `rounded-full`;
   - shadows: `shadow-sm`, `shadow-lg`, `shadow-press-depth` and `shadow-focus-ring`;
   - fonts: `font-display`, `font-read` and `font-sans`;
-  - sizes: `min-h-target-early`, `min-h-target-play`, `min-h-target-family` and `size-tile-min`;
+  - sizes, in logical directions: `min-block-target-early`, `min-block-target-play`, `min-block-target-family`, and `inline-tile-min block-tile-min`;
   - one utility per type style: `text-play-hero`, `text-read-early`, `text-family-body` and the rest.
 - No arbitrary values for colours, spacing, radii, shadows or font sizes, such as `bg-[#fff]` or `p-[13px]`; a lint rule enforces it.
-- Logical utilities only (`ms-`, `me-`, `ps-`, `pe-`, `start-`, `end-`, `text-start`, `text-end`); a lint rule bans the physical ones (`ml-`, `mr-`, `pl-`, `pr-`, `left-`, `right-`, `text-left`, `text-right`). In Tailwind code this replaces the rule on physical CSS properties, which still holds for any plain CSS left.
+- Logical utilities only (`ms-`, `me-`, `ps-`, `pe-`, `start-`, `end-`, `text-start`, `text-end`, and for block direction and sizes `mbs-`, `pbe-`, `inset-bs-`, `inline-`, `block-`, `min-block-`, `max-inline-`); a lint rule bans the physical ones (`ml-`, `mr-`, `pl-`, `pr-`, `left-`, `right-`, `text-left`, `text-right`, and `mt-`, `pb-`, `top-`, `w-`, `h-`, `size-`, `min-h-`, `max-w-`). The sizes joined the list in step 1c, when the lint turned out to ban them too: the old plain CSS was logical for sizes as well. In Tailwind code this replaces the rule on physical CSS properties, which still holds for any plain CSS left.
 - Every interactive element shows `focus-visible:shadow-focus-ring` on keyboard focus; motion respects `motion-safe:` and `motion-reduce:`.
 - Source scanning includes `packages/ui-kit` and `packages/games`. `ui-kit` builds conditional classes with `clsx` and `tailwind-merge`, and `prettier-plugin-tailwindcss` orders classes.
 - `docs/design-system/components/bundle.css` is a visual reference only: components are rebuilt with Tailwind, without its class names. PixiJS canvases are not styled with Tailwind; only the DOM around them is.

@@ -1,0 +1,204 @@
+/*
+ * ui-kit's part of every app's Tailwind (ADR 0043): import it in the app's one CSS entry, after
+ * Tailwind's utilities. It brings the generated theme, the folders whose classes Tailwind must
+ * find, the variants for the worlds and bands, and the few classes that are not single utilities.
+ */
+@import './theme.css';
+
+/* The components here, and the games' DOM (.claude/rules/frontend.md, rule 12). */
+@source '../';
+@source '../../../games';
+
+/* The Play world, any page with an experience band, and the band for ages 3 to 5 (worlds.css). */
+@custom-variant play (&:where([data-band], [data-band] *));
+@custom-variant early-years (&:where([data-band='early-years'], [data-band='early-years'] *));
+
+/* The worlds' motion, which reduced motion turns to nothing (worlds.css). */
+@utility duration-ui-short {
+  --tw-duration: var(--ui-duration-short);
+  transition-duration: var(--ui-duration-short);
+}
+
+@utility duration-ui-medium {
+  --tw-duration: var(--ui-duration-medium);
+  transition-duration: var(--ui-duration-medium);
+}
+
+/*
+ * A button or field that takes its text from its parent, as `font: inherit` does. Written out in
+ * longhands, so it sorts before the type utilities, and a size or weight beside it wins.
+ */
+@utility font-inherit {
+  font-family: inherit;
+  font-size: inherit;
+  font-style: inherit;
+  font-variant: inherit;
+  font-weight: inherit;
+  font-stretch: inherit;
+  line-height: inherit;
+}
+
+/* A type style's size alone, with the line height and weight inherited. */
+@utility text-size-* {
+  font-size: --value(--text-*);
+}
+
+/* A shadow token and the focus ring together, as a play piece on its ledge shows keyboard focus. */
+@utility shadow-with-focus-* {
+  box-shadow: --value(--shadow-*), var(--focus-ring);
+}
+
+/* Entrances: a fade, and movement only while motion is allowed (the durations go to 0). */
+@utility animate-ui-dialog {
+  animation:
+    lf-fade-in var(--ui-duration-fade) var(--ui-easing),
+    lf-grow-slightly var(--ui-duration-medium) var(--ui-easing);
+}
+
+@utility animate-ui-toast {
+  animation:
+    lf-fade-in var(--ui-duration-fade) var(--ui-easing),
+    lf-rise-a-little var(--ui-duration-medium) var(--ui-easing);
+}
+
+@utility animate-ui-feedback {
+  animation:
+    lf-fade-in var(--ui-duration-fade) var(--ui-easing),
+    lf-rise var(--ui-duration-medium) var(--ui-easing);
+}
+
+@utility animate-ui-celebration {
+  animation:
+    lf-fade-in var(--ui-duration-fade) var(--ui-easing),
+    lf-grow var(--ui-duration-medium) var(--ui-easing);
+}
+
+/* A burst piece flies out and fades within 1.2 seconds, and not at all under reduced motion. */
+@utility animate-ui-burst {
+  animation: lf-burst var(--ui-celebration) var(--ui-easing) both;
+}
+
+@keyframes lf-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes lf-grow-slightly {
+  from {
+    transform: scale(0.96);
+  }
+}
+
+@keyframes lf-grow {
+  from {
+    transform: scale(0.9);
+  }
+}
+
+@keyframes lf-rise-a-little {
+  from {
+    transform: translateY(var(--space-2));
+  }
+}
+
+@keyframes lf-rise {
+  from {
+    transform: translateY(var(--space-3));
+  }
+}
+
+@keyframes lf-burst {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(calc(var(--space-8) * -1));
+  }
+}
+
+/*
+ * AnswerTile (docs/design-system/components/AnswerTile), as classes that the React AnswerTile and
+ * DOM games share (ADR 0020), built from the theme:
+ *
+ *   <div class="lf-answer lf-answer--number [lf-answer--correct]">
+ *     <button class="lf-answer__tile">12</button>
+ *     <span class="lf-answer__state">Correct</span>
+ *   </div>
+ *
+ * Modifiers: --number or --word for the content; --selected, --correct, --try-again or
+ * --ruled-out for the state. The state words come from the catalog (ui.answer.*).
+ */
+@layer components {
+  .lf-answer {
+    @apply flex flex-col items-center gap-2;
+  }
+
+  .lf-answer__tile {
+    @apply grid cursor-pointer place-items-center rounded-lg border-3 border-line-strong bg-surface-raised px-4 py-0 font-display text-play-number text-ink tabular-nums shadow-press-depth transition-[translate,box-shadow] min-block-tile-min min-inline-tile-min focus-visible:shadow-with-focus-press-depth focus-visible:outline-none enabled:active:translate-y-ui-press enabled:active:shadow-none disabled:cursor-default disabled:border-ui-disabled-border disabled:bg-ui-disabled disabled:text-ui-on-disabled disabled:shadow-none;
+  }
+
+  .lf-answer--word .lf-answer__tile {
+    @apply font-read text-read-early;
+  }
+
+  .lf-answer--selected .lf-answer__tile {
+    @apply border-sky-ink bg-sky-soft;
+  }
+
+  /* Correct and try again keep their colours while the tiles wait for the next item. */
+  .lf-answer--correct .lf-answer__tile {
+    @apply border-leaf-ink bg-leaf-soft text-leaf-ink disabled:border-leaf-ink disabled:bg-leaf-soft disabled:text-leaf-ink;
+  }
+
+  .lf-answer--try-again .lf-answer__tile {
+    @apply border-sun-ink bg-sun-soft text-sun-ink disabled:border-sun-ink disabled:bg-sun-soft disabled:text-sun-ink;
+  }
+
+  /* Ruled out by a hint: disabled, with a dashed edge and a line through, not colour alone. */
+  .lf-answer--ruled-out .lf-answer__tile {
+    @apply border-dashed line-through;
+  }
+
+  /*
+   * The state words, with an icon: a check for correct, a loop arrow for try again. They take no
+   * width, centred under the tile, so the row of tiles never moves when they appear.
+   */
+  .lf-answer__state {
+    @apply inline-flex items-center justify-center gap-1 font-display text-play-label whitespace-nowrap text-ink-muted inline-0;
+
+    /* One line high while empty, so the tiles do not move when the words appear. */
+    min-block-size: var(--play-label-line-height);
+  }
+
+  .lf-answer--correct .lf-answer__state {
+    @apply text-leaf-ink;
+  }
+
+  .lf-answer--try-again .lf-answer__state {
+    @apply text-sun-ink;
+  }
+
+  .lf-answer--correct .lf-answer__state::before,
+  .lf-answer--try-again .lf-answer__state::before {
+    @apply flex-none bg-current block-ui-icon inline-ui-icon;
+
+    content: '';
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+  }
+
+  .lf-answer--correct .lf-answer__state::before {
+    /* CheckIcon (ADR 0045) */
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E");
+  }
+
+  .lf-answer--try-again .lf-answer__state::before {
+    /* RetryIcon (ADR 0045) */
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12a8 8 0 1 1 2.3 5.7'/%3E%3Cpath d='M4 18v-6h6'/%3E%3C/svg%3E");
+  }
+}

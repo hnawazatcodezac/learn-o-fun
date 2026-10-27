@@ -2,6 +2,7 @@ import type { ChildSnapshot } from '@learnofun/contracts';
 import type { ReactNode } from 'react';
 import { LoadState } from '../shared/LoadState';
 import { Navigate } from '../shared/navigation';
+import { PLACEHOLDER_CLASSES } from '../shared/page-classes';
 import { useChildMode } from './child-mode';
 import { ChildScreen } from './ChildScreen';
 import { DEFAULT_BAND } from './config';
@@ -16,7 +17,7 @@ export function RequireChild({ children }: { children: (snapshot: ChildSnapshot)
   if (snapshot.status === 'ready' && snapshot.data) return children(snapshot.data);
   return (
     <ChildScreen band={DEFAULT_BAND}>
-      <main className="placeholder">
+      <main className={PLACEHOLDER_CLASSES}>
         <LoadState result={snapshot}>{() => null}</LoadState>
       </main>
     </ChildScreen>

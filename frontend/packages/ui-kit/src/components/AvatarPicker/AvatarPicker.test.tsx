@@ -1,13 +1,13 @@
 import { createI18n } from '@learnofun/i18n';
 import type { ReactNode } from 'react';
-import { renderToString } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { I18nProvider } from '../../i18n/I18nProvider';
 import { AVATARS, Avatar } from './Avatar';
 import { AvatarPicker } from './AvatarPicker';
+import { renderMarkup } from '../../test/markup';
 
 function render(node: ReactNode) {
-  return renderToString(<I18nProvider i18n={createI18n('en')}>{node}</I18nProvider>);
+  return renderMarkup(<I18nProvider i18n={createI18n('en')}>{node}</I18nProvider>);
 }
 
 const noop = () => undefined;
@@ -62,7 +62,7 @@ describe('AvatarPicker', () => {
 
 describe('Avatar', () => {
   it('is decorative, so whatever shows it supplies the name', () => {
-    expect(renderToString(<Avatar id="teal-diamond" />)).toMatch(
+    expect(renderMarkup(<Avatar id="teal-diamond" />)).toMatch(
       /^<svg class="lf-avatar lf-avatar--teal-diamond"[^>]*aria-hidden="true"/,
     );
   });

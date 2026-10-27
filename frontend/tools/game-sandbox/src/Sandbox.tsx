@@ -17,6 +17,21 @@ import { paramsToSearch, pickGame, readParams, selectStory, type SandboxParams }
 import { createRunStore, startRun, type Problem, type Run } from './run';
 import { ToolbarSelect } from './ToolbarSelect';
 
+/*
+ * The sandbox's own controls keep a fixed size, so only the game follows the age band. Below
+ * 60rem, the panels go under the game.
+ */
+const TOGGLE_CLASSES = 'flex min-block-ui-tool-control items-center gap-2';
+
+const CHECKBOX_CLASSES = 'm-0 inline-ui-tool-check block-ui-tool-check';
+
+const COLUMN_CLASSES = 'flex min-inline-0 flex-col gap-4';
+
+const PANEL_TITLE_CLASSES = 'm-0 text-size-family-heading';
+
+const BUTTON_CLASSES =
+  'min-block-ui-tool-control cursor-pointer rounded-ui border border-line-strong bg-surface-raised px-4 font-inherit text-ink focus-visible:shadow-focus-ring focus-visible:outline-none disabled:cursor-default disabled:bg-ui-disabled disabled:text-ui-on-disabled';
+
 const SANDBOX_LOCALES = [...LOCALES, ...PSEUDO_LOCALES];
 const ALL_ITEMS = '';
 
@@ -173,8 +188,8 @@ export function Sandbox() {
       textScale={params.textScale}
       font={params.font}
     >
-      <header className="sandbox-toolbar">
-        <h1 className="sandbox-toolbar__title">{title}</h1>
+      <header className="flex flex-wrap items-end gap-4 border-be border-line-strong bg-surface-raised px-5 py-3 text-size-family-body">
+        <h1 className="m-0 basis-full text-size-family-heading">{title}</h1>
         <ToolbarSelect
           label={t('dev.sandbox.controls.game')}
           value={gameId ?? ''}
@@ -258,9 +273,10 @@ export function Sandbox() {
             update({ textScale: TEXT_SCALES.find((scale) => String(scale) === value) ?? 1 });
           }}
         />
-        <label className="sandbox-toggle">
+        <label className={TOGGLE_CLASSES}>
           <input
             type="checkbox"
+            className={CHECKBOX_CLASSES}
             checked={params.font === 'dyslexia'}
             onChange={(event) => {
               update({ font: event.target.checked ? 'dyslexia' : 'default' });
@@ -268,9 +284,10 @@ export function Sandbox() {
           />
           {t('dev.preview.controls.dyslexiaFont')}
         </label>
-        <label className="sandbox-toggle">
+        <label className={TOGGLE_CLASSES}>
           <input
             type="checkbox"
+            className={CHECKBOX_CLASSES}
             checked={params.reducedMotion}
             onChange={(event) => {
               update({ reducedMotion: event.target.checked });
@@ -279,15 +296,15 @@ export function Sandbox() {
           {t('dev.preview.controls.reducedMotion')}
         </label>
       </header>
-      <main className="sandbox-main">
-        <section className="sandbox-play" aria-labelledby={stageId}>
-          <h2 id={stageId} className="sandbox-panel__title">
+      <main className="grid grid-cols-[minmax(0,1fr)_minmax(var(--ui-tool-side-min),var(--ui-tool-side-max))] gap-5 p-5 max-desktop:grid-cols-1">
+        <section className={COLUMN_CLASSES} aria-labelledby={stageId}>
+          <h2 id={stageId} className={PANEL_TITLE_CLASSES}>
             {t('dev.sandbox.stage')}
           </h2>
-          <div className="sandbox-actions">
+          <div className="flex flex-wrap gap-3 text-size-family-body">
             <button
               type="button"
-              className="sandbox-button"
+              className={BUTTON_CLASSES}
               onClick={() => {
                 setRestarts((count) => count + 1);
               }}
@@ -296,7 +313,7 @@ export function Sandbox() {
             </button>
             <button
               type="button"
-              className="sandbox-button"
+              className={BUTTON_CLASSES}
               disabled={!playing}
               onClick={() => {
                 controller()?.pause('backgrounded');
@@ -306,7 +323,7 @@ export function Sandbox() {
             </button>
             <button
               type="button"
-              className="sandbox-button"
+              className={BUTTON_CLASSES}
               disabled={!paused}
               onClick={() => {
                 controller()?.resume('backgrounded');
@@ -316,7 +333,7 @@ export function Sandbox() {
             </button>
             <button
               type="button"
-              className="sandbox-button"
+              className={BUTTON_CLASSES}
               disabled={!playing || !run.canHint}
               onClick={() => {
                 controller()?.hint();
@@ -326,7 +343,7 @@ export function Sandbox() {
             </button>
             <button
               type="button"
-              className="sandbox-button"
+              className={BUTTON_CLASSES}
               disabled={!playing}
               onClick={() => {
                 controller()?.skip();
@@ -336,7 +353,7 @@ export function Sandbox() {
             </button>
             <button
               type="button"
-              className="sandbox-button"
+              className={BUTTON_CLASSES}
               disabled={!playing && !paused}
               onClick={() => {
                 controller()?.end('child-left');
@@ -345,7 +362,11 @@ export function Sandbox() {
               {t('dev.sandbox.actions.end')}
             </button>
           </div>
-          <div role="status" className="sandbox-status" data-testid="sandbox-status">
+          <div
+            role="status"
+            className="text-size-family-body [&_p]:m-0"
+            data-testid="sandbox-status"
+          >
             <p>{status}</p>
             {answer && (
               <p data-testid="last-answer">
@@ -357,13 +378,20 @@ export function Sandbox() {
               </p>
             )}
           </div>
-          <div ref={stageRef} className="sandbox-stage" data-testid="sandbox-stage" />
+          <div
+            ref={stageRef}
+            className="rounded-ui border border-line-strong bg-surface-raised min-block-ui-tool-stage"
+            data-testid="sandbox-stage"
+          />
         </section>
-        <aside className="sandbox-side">
+        <aside className={COLUMN_CLASSES}>
           {run.problems.length > 0 && (
-            <section className="sandbox-panel sandbox-panel--problems" data-testid="problems">
-              <h2 className="sandbox-panel__title">{t('dev.sandbox.problems.title')}</h2>
-              <ul className="sandbox-problems">
+            <section
+              className="flex flex-col gap-2 rounded-ui border-2 border-sun px-4 py-3 text-size-family-body"
+              data-testid="problems"
+            >
+              <h2 className={PANEL_TITLE_CLASSES}>{t('dev.sandbox.problems.title')}</h2>
+              <ul className="m-0 ps-5">
                 {run.problems.map((problem, index) => (
                   // Problems are only ever added, so the index is stable.
                   <li key={index}>{problemText(problem)}</li>

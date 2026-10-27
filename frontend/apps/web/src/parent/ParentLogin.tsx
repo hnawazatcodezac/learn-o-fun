@@ -5,6 +5,13 @@ import { useApi } from '../api/useApi';
 import { LoadState } from '../shared/LoadState';
 import { useNavigate, useQueryParam } from '../shared/navigation';
 import { useParentSession } from './parent-session';
+import {
+  HEADING_CLASSES,
+  LOGIN_CLASSES,
+  TITLE_CLASSES,
+  WORDMARK_CLASSES,
+  WRAPPING_LIST_CLASSES,
+} from './classes';
 
 /**
  * /parent/login: the mock sign-in (ADR 0025). It lists the fixture accounts and signs in as the
@@ -31,7 +38,7 @@ export function ParentLogin() {
     setFailed(false);
     signIn(accountId).then(
       () => {
-        void navigate(next, { replace: true });
+        navigate(next, { replace: true });
       },
       () => {
         setFailed(true);
@@ -40,16 +47,16 @@ export function ParentLogin() {
   };
 
   return (
-    <main className="parent-login" data-testid="parent-login">
-      <p className="parent-wordmark">{t('parent.wordmark')}</p>
-      <h1 className="parent-page__title">{title}</h1>
+    <main className={LOGIN_CLASSES} data-testid="parent-login">
+      <p className={WORDMARK_CLASSES}>{t('parent.wordmark')}</p>
+      <h1 className={TITLE_CLASSES}>{title}</h1>
       <p>{t('parent.login.mockNote')}</p>
-      <h2 className="parent-page__heading" id={listId}>
+      <h2 className={HEADING_CLASSES} id={listId}>
         {t('parent.login.accounts')}
       </h2>
       <LoadState result={accounts}>
         {({ accounts: list }) => (
-          <ul className="parent-login__accounts" aria-labelledby={listId}>
+          <ul className={WRAPPING_LIST_CLASSES} aria-labelledby={listId}>
             {list.map((account) => (
               <li key={account.id}>
                 <Button

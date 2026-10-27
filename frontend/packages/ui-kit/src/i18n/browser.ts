@@ -10,6 +10,9 @@ export function createBrowserI18n({ allowPseudo }: { allowPseudo: boolean }): I1
     onMissingKey: (key, locale) => {
       console.warn(`Missing message "${key}" for locale ${locale}`);
     },
+    onError: (error) => {
+      console.error(error);
+    },
   });
 }
 

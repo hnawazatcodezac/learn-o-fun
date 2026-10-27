@@ -1,23 +1,33 @@
 import {
   createFormatters,
   createTranslate,
+  finishMessage,
   getDirection,
-  pickLocale,
   type AppLocale,
+  type Translate,
 } from '@learnofun/i18n';
-import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useContext, useMemo } from 'react';
+import { useTranslations } from 'use-intl';
+import { I18nContext } from './I18nProvider';
 
 /**
- * Translations, the current locale and direction, and `Intl` formatters for that locale.
- * `translate` takes keys known only at run time, such as a game's, and stays the same function
- * across locale changes.
+ * Translations, the current locale and direction, and `Intl` formatters for that locale, from
+ * use-intl (ADR 0042). `translate` takes keys known only at run time, such as a game's, and stays
+ * the same function across locale changes.
  */
 export function useI18n() {
-  const { t, i18n } = useTranslation();
-  const locale = pickLocale(i18n.language, { allowPseudo: true });
-  const format = useMemo(() => createFormatters({ locale }), [locale]);
+  const i18n = useContext(I18nContext);
+  if (!i18n) throw new Error('useI18n needs an I18nProvider around it');
+  // use-intl's translator changes with the locale, so the component renders again.
+  const translations = useTranslations();
+  const locale = i18n.locale;
+
+  const t = useMemo<Translate>(
+    () => (key, values) => finishMessage(translations(key, values), locale),
+    [translations, locale],
+  );
   const translate = useMemo(() => createTranslate(i18n), [i18n]);
+  const format = useMemo(() => createFormatters({ locale }), [locale]);
 
   return {
     t,
@@ -26,7 +36,7 @@ export function useI18n() {
     dir: getDirection(locale),
     format,
     changeLocale: (next: AppLocale) => {
-      void i18n.changeLanguage(next);
+      i18n.changeLocale(next);
     },
   };
 }

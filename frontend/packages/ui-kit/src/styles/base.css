@@ -16,26 +16,3 @@ body {
   outline: none;
   box-shadow: var(--focus-ring);
 }
-
-/* Hidden on screen, still read by screen readers. */
-.lf-visually-hidden {
-  position: absolute;
-  inline-size: 1px;
-  block-size: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-/* Phosphor icons at the world's size (ADR 0019). */
-.lf-icon {
-  display: block;
-  flex: none;
-  inline-size: var(--ui-icon-size);
-  block-size: var(--ui-icon-size);
-}
-
-/* Icons that point along the line of text, such as backspace, turn round right to left. */
-[dir='rtl'] .lf-icon--mirrored {
-  transform: scaleX(-1);
-}

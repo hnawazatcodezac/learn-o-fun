@@ -2,7 +2,7 @@
   "name": "{{package}}",
   "private": true,
   "type": "module",
-  "sideEffects": ["**/*.css"],
+  "sideEffects": false,
   "main": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
@@ -18,7 +18,6 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",
-    "vite": "^8.3.4",
     "vitest": "^5.0.5"
   }
 }

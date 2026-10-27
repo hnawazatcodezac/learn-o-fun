@@ -6,9 +6,9 @@
 
 :root {
   /* Type families */
-  --font-display: "Baloo 2", "Baloo Bhaijaan 2", "Arial Rounded MT Bold", system-ui, sans-serif;
-  --font-read: Andika, "Readex Pro", system-ui, sans-serif;
-  --font-sans: "Readex Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Baloo 2", "Baloo Bhaijaan 2", "Arial Rounded MT Bold", var(--font-fallback-baloo-2, system-ui), system-ui, sans-serif;
+  --font-read: Andika, "Readex Pro", var(--font-fallback-andika, system-ui), system-ui, sans-serif;
+  --font-sans: "Readex Pro", var(--font-fallback-readex-pro, system-ui), system-ui, -apple-system, "Segoe UI", sans-serif;
   /* Type styles, in rem (px ÷ 16), so the text-size setting scales them */
   --play-hero-font-family: var(--font-display);
   --play-hero-font-size: 2.75rem;
@@ -39,6 +39,10 @@
   --site-headline-line-height: 3.75rem;
   --site-headline-font-weight: 800;
   --site-headline-letter-spacing: -0.01em;
+  --site-title-font-family: var(--font-display);
+  --site-title-font-size: 2.5rem;
+  --site-title-line-height: 2.75rem;
+  --site-title-font-weight: 700;
   --family-title-font-family: var(--font-sans);
   --family-title-font-size: 1.625rem;
   --family-title-line-height: 2.125rem;

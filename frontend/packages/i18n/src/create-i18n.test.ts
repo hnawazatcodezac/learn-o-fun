@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createI18n } from './create-i18n';
+import type { AppLocale } from './locales';
 
 describe('createI18n', () => {
   it('translates a key from the English catalog', () => {
@@ -37,9 +38,11 @@ describe('createI18n', () => {
 
   it('falls back from a regional locale to its language', () => {
     const i18n = createI18n('en');
-    void i18n.changeLanguage('en-AE');
+    // A regional locale, as the app will have: its messages are its language's.
+    i18n.changeLocale('en-AE' as AppLocale);
 
     expect(i18n.t('parent.title')).toBe('Learnofun for families');
+    expect(i18n.settings.locale).toBe('en-AE');
   });
 
   it('reports a key missing from every locale and shows the key', () => {
@@ -63,8 +66,31 @@ describe('createI18n', () => {
 
   it('switches locale at runtime', () => {
     const i18n = createI18n('en');
-    void i18n.changeLanguage('en-XA');
+    const seen: string[] = [];
+    i18n.onLocaleChange((locale) => seen.push(locale));
+    i18n.changeLocale('en-XA');
 
     expect(i18n.t('child.title')).toMatch(/^\[Ļéåŕñöƒûñ ·+\]$/);
+    expect(i18n.locale).toBe('en-XA');
+    expect(seen).toEqual(['en-XA']);
+  });
+
+  it('says whether the catalog has a key', () => {
+    const i18n = createI18n('en');
+
+    expect(i18n.has('child.title')).toBe(true);
+    expect(i18n.has('child.notAKey')).toBe(false);
+    expect(i18n.has('child')).toBe(false);
+  });
+
+  it('reports a message it cannot format, such as one missing its value', () => {
+    const onError = vi.fn();
+    createI18n('en', { onError }).t('child.placeholder.body');
+
+    expect(onError).toHaveBeenCalledOnce();
+  });
+
+  it('formats pseudo-locales in English formats, for Intl', () => {
+    expect(createI18n('en-XA').settings.locale).toBe('en');
   });
 });

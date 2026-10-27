@@ -1,24 +1,12 @@
-/* Everything the apps need from ui-kit: import once as '@learnofun/ui-kit/styles.css'. */
-@import './fonts.css';
+/*
+ * Everything the apps need from ui-kit: import once as '@learnofun/ui-kit/styles.css'. The fonts
+ * come from each app's next/font module (src/app/fonts.ts, ADR 0042).
+ */
 /* Generated from docs/design-system/tokens.json: never edit it by hand (ADR 0019). */
 @import './tokens.css';
 @import './worlds.css';
 @import './base.css';
-@import '../components/Button/button.css';
-/* Shared with DOM games, which use its classes directly (ADR 0020). */
-@import '../components/AnswerTile/answer-tile.css';
-@import '../components/Card/card.css';
-@import '../components/ActivityCard/activity-card.css';
-@import '../components/AvatarPicker/avatar-picker.css';
-@import '../components/ProgressTrail/progress-trail.css';
-@import '../components/Dialog/dialog.css';
-@import '../components/Toast/toast.css';
-@import '../components/Feedback/feedback.css';
-@import '../components/Celebration/celebration.css';
-@import '../components/Switch/switch.css';
-@import '../components/SettingsPanel/settings-panel.css';
-@import '../components/ParentalGate/parental-gate.css';
-@import '../components/PicturePin/picture-pin.css';
-/* Parent dashboard only. */
-@import '../components/SkillStatus/skill-status.css';
-@import '../i18n/dev-locale-switcher.css';
+/*
+ * The components carry their own Tailwind utilities; tailwind.css brings the theme, the variants
+ * and the answer-tile classes that DOM games share (ADR 0043).
+ */

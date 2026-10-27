@@ -1,5 +1,14 @@
 export { localizeContent, type LocalizedContent } from './content';
-export { createI18n, type CreateI18nOptions, type I18n } from './create-i18n';
+export {
+  createI18n,
+  finishMessage,
+  type CreateI18nOptions,
+  type I18n,
+  type IntlSettings,
+  type MessageKey,
+  type Messages,
+  type Translate,
+} from './create-i18n';
 export {
   createFormatters,
   type FormatterOptions,

@@ -8,13 +8,17 @@ export function PlayError({ exitTo }: { exitTo: string }) {
   const navigate = useNavigate();
 
   return (
-    <div className="play-error" role="alert" data-testid="play-error">
-      <p className="play-error__title">{t('child.play.error.title')}</p>
+    <div
+      className="flex flex-1 flex-col items-center justify-center gap-3 px-4 text-center [&_p]:m-0"
+      role="alert"
+      data-testid="play-error"
+    >
+      <p className="text-size-ui-heading font-label">{t('child.play.error.title')}</p>
       <p>{t('child.play.error.body')}</p>
       <Button
         autoFocus
         onClick={() => {
-          void navigate(exitTo);
+          navigate(exitTo);
         }}
       >
         {t('child.play.leave')}

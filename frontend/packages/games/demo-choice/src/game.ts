@@ -1,9 +1,27 @@
 import type { GameModule } from '@learnofun/game-sdk';
 import { manifest } from './manifest';
-import './game.css';
 
 /** A hint crosses out wrong answers, but always leaves at least this many to choose from. */
 const MIN_CHOICES = 2;
+
+/*
+ * The game's look: Tailwind utilities on the design system's theme (ADR 0043), beside the
+ * g-demo-choice hooks that tests find elements by. On phones, three tiles space-5 apart are wider than
+ * the screen, so they wrap onto two rows; the game gives up its own padding to keep everything on
+ * screen (ADR 0012).
+ */
+const CONTAINER_CLASSES =
+  'g-demo-choice flex flex-col items-center gap-4 p-5 text-center max-phone:gap-3 max-phone:py-0';
+
+const INSTRUCTIONS_CLASSES = 'g-demo-choice__instructions m-0 text-ink-muted';
+
+/** Every numeral in a maths game is in the display face (design system README). */
+const PROMPT_CLASSES = 'g-demo-choice__prompt m-0 font-display text-play-number';
+
+/** The answers are the UI kit's answer tiles (ADR 0020), space-5 apart as the spec asks. */
+const ANSWERS_CLASSES = 'g-demo-choice__answers flex flex-wrap items-start justify-center gap-5';
+
+const HINT_CLASSES = 'g-demo-choice__hint m-0 min-block-lh font-display text-play-label';
 
 /** Answers made only of digits and sums are set as numbers; anything else as words. */
 const NUMBER = /^[\p{Nd}\p{Zs}+\-−=]+$/u;
@@ -24,18 +42,18 @@ export const game: GameModule = {
   manifest,
   mount(ctx, root) {
     const container = document.createElement('div');
-    container.className = 'g-demo-choice';
+    container.className = CONTAINER_CLASSES;
     const instructions = document.createElement('p');
-    instructions.className = 'g-demo-choice__instructions';
+    instructions.className = INSTRUCTIONS_CLASSES;
     instructions.textContent = ctx.t('games.demoChoice.instructions');
     const prompt = document.createElement('p');
-    prompt.className = 'g-demo-choice__prompt';
+    prompt.className = PROMPT_CLASSES;
     const group = document.createElement('div');
-    group.className = 'g-demo-choice__answers';
+    group.className = ANSWERS_CLASSES;
     group.setAttribute('role', 'group');
     group.setAttribute('aria-label', ctx.t('games.demoChoice.answers'));
     const hint = document.createElement('p');
-    hint.className = 'g-demo-choice__hint';
+    hint.className = HINT_CLASSES;
     hint.setAttribute('role', 'status');
     container.append(instructions, prompt, group, hint);
     root.append(container);

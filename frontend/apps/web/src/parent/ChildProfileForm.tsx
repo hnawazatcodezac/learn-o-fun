@@ -10,6 +10,17 @@ import {
   type ProfileErrors,
   type ProfileValues,
 } from './profile-form';
+import {
+  ACTIONS_CLASSES,
+  CONTROL_CLASSES,
+  ERROR_CLASSES,
+  FIELD_CLASSES,
+  FIELD_PART_CLASSES,
+  FIELD_ROW_CLASSES,
+  FORM_CLASSES,
+  HINT_CLASSES,
+  TEXT_CONTROL_CLASSES,
+} from './classes';
 
 const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
@@ -101,16 +112,17 @@ export function ChildProfileForm({
     parts.filter(Boolean).join(' ') || undefined;
 
   return (
-    <form className="parent-form" noValidate onSubmit={submit}>
-      <div className="parent-field">
+    <form className={FORM_CLASSES} noValidate onSubmit={submit}>
+      <div className={FIELD_CLASSES}>
         <label htmlFor={ids.nickname}>{t('parent.profile.nickname.label')}</label>
-        <p id={`${ids.nickname}-hint`} className="parent-field__hint">
+        <p id={`${ids.nickname}-hint`} className={HINT_CLASSES}>
           {t('parent.profile.nickname.hint')}
         </p>
         <input
           ref={nicknameRef}
           id={ids.nickname}
           type="text"
+          className={TEXT_CONTROL_CLASSES}
           autoComplete="off"
           spellCheck={false}
           required
@@ -130,17 +142,18 @@ export function ChildProfileForm({
       </div>
 
       <fieldset
-        className="parent-field"
+        className={FIELD_CLASSES}
         aria-describedby={describedBy(`${id}-birth-hint`, errors.birth && `${id}-birth-error`)}
       >
         <legend>{t('parent.profile.birth.legend')}</legend>
-        <p id={`${id}-birth-hint`} className="parent-field__hint">
+        <p id={`${id}-birth-hint`} className={HINT_CLASSES}>
           {t('parent.profile.birth.hint')}
         </p>
-        <div className="parent-field__row">
-          <div className="parent-field__part">
+        <div className={FIELD_ROW_CLASSES}>
+          <div className={FIELD_PART_CLASSES}>
             <label htmlFor={ids.month}>{t('parent.profile.birth.month')}</label>
             <select
+              className={CONTROL_CLASSES}
               ref={monthRef}
               id={ids.month}
               required
@@ -158,9 +171,10 @@ export function ChildProfileForm({
               ))}
             </select>
           </div>
-          <div className="parent-field__part">
+          <div className={FIELD_PART_CLASSES}>
             <label htmlFor={ids.year}>{t('parent.profile.birth.year')}</label>
             <select
+              className={CONTROL_CLASSES}
               id={ids.year}
               required
               value={values.birthYear ?? ''}
@@ -181,12 +195,13 @@ export function ChildProfileForm({
         {errors.birth && <FieldError id={`${id}-birth-error`}>{message(errors.birth)}</FieldError>}
       </fieldset>
 
-      <div className="parent-field">
+      <div className={FIELD_CLASSES}>
         <label htmlFor={ids.language}>{t('parent.profile.learningLanguage.label')}</label>
-        <p id={`${ids.language}-hint`} className="parent-field__hint">
+        <p id={`${ids.language}-hint`} className={HINT_CLASSES}>
           {t('parent.profile.learningLanguage.hint')}
         </p>
         <select
+          className={CONTROL_CLASSES}
           id={ids.language}
           value={values.learningLanguage}
           aria-describedby={`${ids.language}-hint`}
@@ -202,9 +217,10 @@ export function ChildProfileForm({
         </select>
       </div>
 
-      <div className="parent-field">
+      <div className={FIELD_CLASSES}>
         <label htmlFor={ids.grade}>{t('parent.profile.grade.label')}</label>
         <select
+          className={CONTROL_CLASSES}
           id={ids.grade}
           value={values.grade}
           onChange={(event) => {
@@ -220,7 +236,7 @@ export function ChildProfileForm({
         </select>
       </div>
 
-      <div className="parent-field">
+      <div className={FIELD_CLASSES}>
         <AvatarPicker
           label={t('parent.profile.avatar.label')}
           value={values.avatarId}
@@ -229,7 +245,7 @@ export function ChildProfileForm({
             set({ avatarId });
           }}
         />
-        <p id={`${id}-avatar-hint`} className="parent-field__hint">
+        <p id={`${id}-avatar-hint`} className={HINT_CLASSES}>
           {t('parent.profile.avatar.hint')}
         </p>
       </div>
@@ -239,7 +255,7 @@ export function ChildProfileForm({
           {t('parent.profile.saveFailed')}
         </FieldError>
       )}
-      <div className="parent-form__actions">
+      <div className={ACTIONS_CLASSES}>
         <Button type="submit" aria-disabled={saving || undefined}>
           {submitLabel}
         </Button>
@@ -253,7 +269,7 @@ export function ChildProfileForm({
 
 function FieldError({ id, role, children }: { id: string; role?: 'alert'; children: ReactNode }) {
   return (
-    <p id={id} role={role} className="parent-field__error">
+    <p id={id} role={role} className={ERROR_CLASSES}>
       <WarningIcon />
       <span>{children}</span>
     </p>

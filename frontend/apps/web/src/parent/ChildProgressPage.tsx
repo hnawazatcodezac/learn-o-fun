@@ -17,6 +17,15 @@ import { useApi } from '../api/useApi';
 import { LoadState } from '../shared/LoadState';
 import { subjectName } from './subject-name';
 import { useFamily } from './use-family';
+import {
+  CARD_CLASSES,
+  COLUMN_LIST_CLASSES,
+  HEADING_CLASSES,
+  HINT_CLASSES,
+  SECTION_CLASSES,
+  STRAND_TITLE_CLASSES,
+  TITLE_CLASSES,
+} from './classes';
 
 type Translate = ReturnType<typeof useI18n>['t'];
 type Reason = Recommendation['reasons'][number];
@@ -124,7 +133,7 @@ export function ChildProgressPage() {
         if (!child) {
           return (
             <>
-              <h1 className="parent-page__title">{t('parent.profile.notFound')}</h1>
+              <h1 className={TITLE_CLASSES}>{t('parent.profile.notFound')}</h1>
               <p>
                 <Link to="/parent">{t('parent.profile.back')}</Link>
               </p>
@@ -166,7 +175,7 @@ function Progress({
 
   return (
     <>
-      <h1 className="parent-page__title">{title}</h1>
+      <h1 className={TITLE_CLASSES}>{title}</h1>
       <LoadState result={data}>
         {([progress, learning, catalog]) => (
           <ProgressView
@@ -213,20 +222,18 @@ function ProgressView({
 
   return (
     <>
-      <section className="parent-section" aria-labelledby={todayId}>
-        <h2 className="parent-page__heading" id={todayId}>
+      <section className={SECTION_CLASSES} aria-labelledby={todayId}>
+        <h2 className={HEADING_CLASSES} id={todayId}>
           {t('parent.progress.today.title')}
         </h2>
-        <ul className="parent-reasons">
+        <ul className={COLUMN_LIST_CLASSES}>
           {progress.today.map((card) => {
             const activity = catalog.activities.find((a) => a.id === card.activityId);
             return (
-              <li key={card.id} className="parent-reasons__card">
-                <p className="parent-reasons__kind">{cardName(t, card.card)}</p>
+              <li key={card.id} className={CARD_CLASSES}>
+                <p className={HINT_CLASSES}>{cardName(t, card.card)}</p>
                 {activity && (
-                  <p className="parent-reasons__activity">
-                    {localizeContent(activity.title, locale)}
-                  </p>
+                  <p className="font-label">{localizeContent(activity.title, locale)}</p>
                 )}
                 {card.reasons.map((reason) => (
                   <p key={reason.code}>{explain(reason, card.skillId, context)}</p>
@@ -238,14 +245,14 @@ function ProgressView({
       </section>
 
       {progress.detail === 'full' ? (
-        <p className="parent-field__hint">
+        <p className={HINT_CLASSES}>
           {t('parent.progress.skills.earlyHint', {
             firstTries: DEFAULT_EVIDENCE_CONFIG.minFullWeight,
             items: DEFAULT_EVIDENCE_CONFIG.minItems,
           })}
         </p>
       ) : (
-        <p className="parent-field__hint">
+        <p className={HINT_CLASSES}>
           {t('parent.progress.summary.premium')}{' '}
           <Link to="/parent/plan">{t('parent.children.seePlan')}</Link>
         </p>
@@ -277,30 +284,33 @@ function SubjectProgress({
   const { skillGraph } = catalog;
 
   return (
-    <section className="parent-section" aria-labelledby={id}>
-      <h2 className="parent-page__heading" id={id}>
+    <section className={SECTION_CLASSES} aria-labelledby={id}>
+      <h2 className={HEADING_CLASSES} id={id}>
         {name}
       </h2>
       {strands.map((strand) => {
         const found = skillGraph.strands.find((candidate) => candidate.id === strand.strandId);
         return (
-          <div key={strand.strandId} className="parent-strand">
-            <h3 className="parent-strand__title">
+          <div key={strand.strandId} className="flex flex-col gap-2">
+            <h3 className={STRAND_TITLE_CLASSES}>
               {found ? localizeContent(found.title, locale) : strand.strandId}
             </h3>
             {strand.skills ? (
-              <ul className="parent-skills">
+              <ul className="m-0 flex list-none flex-col gap-2 p-0">
                 {strand.skills.map(({ skillId, status, evidence }) => {
                   const info = skillGraph.skills.find((candidate) => candidate.id === skillId);
                   const started = status !== 'not-started' || evidence.firstTries > 0;
                   return (
-                    <li key={skillId} className="parent-skills__skill">
-                      <span className="parent-skills__name">
+                    <li
+                      key={skillId}
+                      className="parent-skills__skill flex flex-wrap items-center gap-x-3 gap-y-2 border-be border-line py-2"
+                    >
+                      <span className="font-label">
                         {info ? localizeContent(info.title, locale) : skillId}
                       </span>
                       <SkillStatus status={status} earlySignal={started && evidence.earlySignal} />
                       {evidence.firstTries > 0 && (
-                        <span className="parent-skills__evidence">
+                        <span className={HINT_CLASSES}>
                           {evidence.earlySignal
                             ? t('parent.progress.skills.early', { total: evidence.firstTries })
                             : t('parent.progress.skills.evidence', {
@@ -315,9 +325,9 @@ function SubjectProgress({
                 })}
               </ul>
             ) : (
-              <ul className="parent-summary">
+              <ul className="m-0 flex list-none flex-row flex-wrap gap-3 p-0">
                 {strand.counts.map(({ status, count }) => (
-                  <li key={status} className="parent-summary__count">
+                  <li key={status} className="inline-flex items-center gap-2">
                     <SkillStatus status={status} />
                     <span>{t('parent.progress.summary.count', { count })}</span>
                   </li>

@@ -13,6 +13,7 @@ import { useNavigate } from '../shared/navigation';
 import { api } from '../api/client';
 import { useApi } from '../api/useApi';
 import { LoadState } from '../shared/LoadState';
+import { PLACEHOLDER_CLASSES, PLACEHOLDER_TITLE_CLASSES } from '../shared/page-classes';
 import { useChildMode } from './child-mode';
 import { ChildGate } from './ChildGate';
 import { ChildScreen } from './ChildScreen';
@@ -43,41 +44,42 @@ export function ProfilePicker() {
 
   const enter = (childId: string) => {
     choose(childId);
-    void navigate('/today');
+    navigate('/today');
   };
 
   return (
     <ChildScreen band={DEFAULT_BAND}>
-      <main className="placeholder" data-testid="child-root">
-        <div className="placeholder__row">
+      <main className={PLACEHOLDER_CLASSES} data-testid="child-root">
+        <div className="flex items-center gap-5">
           <div
-            className="placeholder__shape placeholder__shape--child"
+            className="flex-none rounded-full bg-sun block-ui-placeholder-shape inline-ui-placeholder-shape"
             data-testid="placeholder-shape"
             aria-hidden="true"
           />
-          <h1 className="placeholder__title">{title}</h1>
+          <h1 className={PLACEHOLDER_TITLE_CLASSES}>{title}</h1>
         </div>
-        <section className="placeholder__section" aria-labelledby={headingId}>
-          <h2 id={headingId} className="placeholder__subtitle">
+        <section className="mbs-6 flex flex-col items-center gap-3" aria-labelledby={headingId}>
+          <h2 id={headingId} className="m-0 text-size-ui-heading">
             {t('child.profiles.title')}
           </h2>
           <LoadState result={profiles}>
             {(data) => (
-              <ul className="profile-picker">
+              // Who's playing? Each child is one large button: avatar above nickname.
+              <ul className="m-0 flex list-none flex-wrap justify-center gap-5 p-0">
                 {data.profiles.map((profile) => (
                   <li key={profile.id}>
                     <button
                       type="button"
-                      className="profile-picker__choice"
+                      className="flex cursor-pointer flex-col items-center gap-2 rounded-ui border-2 border-line-strong bg-surface-raised p-3 font-inherit text-ink min-inline-ui-profile-choice hover:border-ui-primary focus-visible:shadow-focus-ring focus-visible:outline-none"
                       onClick={() => {
                         if (profile.hasPicturePin) setUnlocking(profile);
                         else enter(profile.id);
                       }}
                     >
-                      <span className="profile-picker__avatar">
+                      <span className="block-ui-profile-avatar inline-ui-profile-avatar">
                         <Avatar id={isAvatarId(profile.avatarId) ? profile.avatarId : AVATARS[0]} />
                       </span>
-                      <span className="profile-picker__name" data-user-content>
+                      <span className="font-label" data-user-content>
                         {profile.nickname}
                       </span>
                     </button>
@@ -101,7 +103,7 @@ export function ProfilePicker() {
         open={gateOpen}
         onPass={() => {
           setGateOpen(false);
-          void navigate('/parent');
+          navigate('/parent');
         }}
         onCancel={() => {
           setGateOpen(false);
@@ -166,11 +168,11 @@ function PinEntry({
 
   return (
     <Dialog open title={title} onClose={onClose}>
-      <div className="pin-entry">
+      <div className="flex flex-col gap-3 [&_p]:m-0">
         <p>{t('child.picker.pinPrompt')}</p>
         <PicturePinPad value={pin} onChange={change} label={title} disabled={checking} />
         {message && (
-          <p className="pin-entry__message" role="alert">
+          <p className="font-label" role="alert">
             {message}
           </p>
         )}

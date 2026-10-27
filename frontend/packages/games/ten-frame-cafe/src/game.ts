@@ -1,7 +1,6 @@
 import type { TenFrameScene } from '@learnofun/contracts';
 import type { GameModule, GradeResult, SupportLevel } from '@learnofun/game-sdk';
 import { EXPLAINED_MISCONCEPTIONS, FRUITS, manifest } from './manifest';
-import './game.css';
 
 const SVG = 'http://www.w3.org/2000/svg';
 
@@ -31,6 +30,83 @@ interface Order {
   answer: number;
 }
 
+/*
+ * The game's look: Tailwind utilities on the design system's theme (ADR 0043), beside the
+ * g-ten-frame-cafe hooks that tests find elements by. SVG sizes are in the tray's own units, which
+ * scale with its width, so the drawing's widths and dashes are its attributes. On phones,
+ * everything sits closer.
+ */
+const CONTAINER_CLASSES =
+  'g-ten-frame-cafe flex inline-full flex-col items-center gap-3 px-1 py-3 text-center max-phone:gap-2 max-phone:py-2';
+
+/** The order, and once answered the order as numbers, in the display face (design system README). */
+const ORDER_CLASSES = 'g-ten-frame-cafe__order m-0 font-display text-play-label';
+
+/** Reading text at the story size, so the instructions leave room for the trays. */
+const INSTRUCTIONS_CLASSES =
+  'g-ten-frame-cafe__instructions m-0 text-size-read-story leading-read-story text-ink-muted';
+
+const MESSAGE_CLASSES = 'g-ten-frame-cafe__message m-0 min-block-lh font-display text-play-label';
+
+/** Every numeral in a maths game is in the display face; the count stays on one line. */
+const TOTAL_CLASSES = 'g-ten-frame-cafe__total m-0 font-display text-play-title font-number';
+
+/** The trays: one keyboard control, side by side, small enough to leave room on a phone. */
+const TRAYS_CLASSES =
+  'g-ten-frame-cafe__trays flex inline-full max-inline-ui-scene justify-center gap-4 rounded-ui p-2 focus-visible:shadow-focus-ring focus-visible:outline-none max-phone:gap-2 max-phone:p-1';
+
+/** A full tray gets a heavier border: not colour alone. */
+const TRAY_CLASSES = {
+  partly:
+    'g-ten-frame-cafe__tray flex min-inline-0 shrink grow-0 basis-ui-tray-basis flex-col items-center gap-1 rounded-ui border-2 border-ui-secondary-border bg-surface-raised p-1',
+  full: 'g-ten-frame-cafe__tray g-ten-frame-cafe__tray--full flex min-inline-0 shrink grow-0 basis-ui-tray-basis flex-col items-center gap-1 rounded-ui border-2 border-ink bg-surface-raised p-1 ring-2 ring-ink',
+};
+
+/** The child never has to hit a single cell (BRIEF.md), so on a short screen the trays shrink. */
+const TRAY_SCENE_CLASSES = 'block inline-full block-auto max-block-ui-tray-height';
+
+/** Fruit past a full tray, on the counter beside it: a small row, to take away. */
+const COUNTER_CLASSES =
+  'g-ten-frame-cafe__counter flex min-inline-0 shrink grow-0 basis-ui-counter-basis flex-col items-center justify-center gap-1';
+
+const COUNTER_SCENE_CLASSES = 'block inline-full block-auto';
+
+const TRAY_COUNT_CLASSES = 'g-ten-frame-cafe__tray-count m-0 font-display text-play-label';
+
+/** The hint: the empty cells outlined, and in making ten the cells still to fill marked too. */
+const CELL_CLASSES = {
+  plain: 'g-ten-frame-cafe__cell fill-surface-sunken stroke-ink-muted stroke-2',
+  outlined:
+    'g-ten-frame-cafe__cell g-ten-frame-cafe__cell--outlined fill-surface-sunken stroke-ink stroke-3',
+  toFill:
+    'g-ten-frame-cafe__cell g-ten-frame-cafe__cell--outlined g-ten-frame-cafe__cell--to-fill fill-surface-raised stroke-ink stroke-4',
+};
+
+/** Placeholder fruit, a distinct shape each, until the art is made. */
+const FRUIT_CLASSES = {
+  shape: 'fill-ui-primary stroke-ink stroke-2',
+  stem: 'fill-none stroke-ink stroke-3',
+};
+
+/** On phones, the controls share rows of three equal columns, and everything sits closer. */
+const CONTROLS_CLASSES =
+  'g-ten-frame-cafe__controls flex flex-wrap justify-center gap-3 max-phone:grid max-phone:inline-full max-phone:grid-cols-6 max-phone:gap-2';
+
+/** Play buttons sit on a ledge; pressed, they move down 6px and the ledge disappears. */
+const BUTTON_CLASSES =
+  'min-block-ui-target min-inline-ui-target cursor-pointer rounded-ui border-2 border-ui-secondary-border px-5 font-display text-play-label shadow-press-depth transition-[translate,box-shadow] enabled:active:translate-y-ui-press enabled:active:shadow-none focus-visible:shadow-with-focus-press-depth focus-visible:outline-none disabled:cursor-default disabled:border-ui-disabled-border disabled:bg-ui-disabled disabled:text-ui-on-disabled disabled:shadow-none max-phone:px-1';
+
+const BUTTON_COLOUR_CLASSES = {
+  secondary: 'bg-ui-secondary text-ui-on-secondary',
+  primary: 'bg-ui-primary text-ui-on-primary',
+};
+
+/** Six columns on phones: Take away, Add and Serve share a row, and making ten's moves the row above. */
+const BUTTON_SPAN_CLASSES = { third: 'max-phone:col-span-2', half: 'max-phone:col-span-3' };
+
+/** The cells' dashes, in the tray's own units. */
+const DASHED = { 'stroke-dasharray': '6 4' } as const;
+
 /**
  * Ten Frame Café (BRIEF.md): a customer asks for fruit, and the child fills ten-frame trays one
  * fruit at a time, then serves. Counting fills the trays to a number; bonds to 10 fill a part-full
@@ -55,9 +131,11 @@ export const game: GameModule = {
       return created;
     };
     const button = (key: string, onPress: () => void, modifier: string) => {
+      const colours = modifier === 'serve' ? 'primary' : 'secondary';
+      const span = modifier === 'move' || modifier === 'move-back' ? 'half' : 'third';
       const created = element(
         'button',
-        `g-ten-frame-cafe__button g-ten-frame-cafe__button--${modifier}`,
+        `g-ten-frame-cafe__button g-ten-frame-cafe__button--${modifier} ${BUTTON_CLASSES} ${BUTTON_COLOUR_CLASSES[colours]} ${BUTTON_SPAN_CLASSES[span]}`,
       );
       created.type = 'button';
       created.textContent = ctx.t(key);
@@ -65,21 +143,21 @@ export const game: GameModule = {
       return created;
     };
 
-    const container = element('div', 'g-ten-frame-cafe');
-    const order = element('p', 'g-ten-frame-cafe__order');
-    const instructions = element('p', 'g-ten-frame-cafe__instructions');
+    const container = element('div', CONTAINER_CLASSES);
+    const order = element('p', ORDER_CLASSES);
+    const instructions = element('p', INSTRUCTIONS_CLASSES);
     // The trays are one control (BRIEF.md, accessibility): Up adds, Down takes away, Right and
     // Left move fruit between trays in making ten, Enter serves.
-    const trays = element('div', 'g-ten-frame-cafe__trays');
+    const trays = element('div', TRAYS_CLASSES);
     trays.setAttribute('role', 'spinbutton');
     trays.setAttribute('aria-label', ctx.t('games.tenFrameCafe.trays'));
     // The ten frame fills left to right, as it is usually taught (BRIEF.md, localization).
     trays.dir = 'ltr';
     trays.tabIndex = 0;
-    const total = element('p', 'g-ten-frame-cafe__total');
-    const message = element('p', 'g-ten-frame-cafe__message');
+    const total = element('p', TOTAL_CLASSES);
+    const message = element('p', MESSAGE_CLASSES);
     message.setAttribute('role', 'status');
-    const controls = element('div', 'g-ten-frame-cafe__controls');
+    const controls = element('div', CONTROLS_CLASSES);
     controls.setAttribute('role', 'group');
     controls.setAttribute('aria-label', ctx.t('games.tenFrameCafe.controls'));
     container.append(order, instructions, trays, total, message, controls);
@@ -156,17 +234,26 @@ export const game: GameModule = {
       });
       const shapes: Record<Fruit, () => SVGElement[]> = {
         apple: () => [
-          svg('circle', { cx, cy: cy + 2, r }),
-          svg('line', { x1: cx, y1: cy - r + 2, x2: cx + 4, y2: cy - r - 6, class: 'stem' }),
+          svg('circle', { class: FRUIT_CLASSES.shape, cx, cy: cy + 2, r }),
+          svg('line', {
+            class: FRUIT_CLASSES.stem,
+            'stroke-linecap': 'round',
+            x1: cx,
+            y1: cy - r + 2,
+            x2: cx + 4,
+            y2: cy - r - 6,
+          }),
         ],
         pear: () => [
           svg('path', {
+            class: FRUIT_CLASSES.shape,
             d: `M ${String(cx)} ${String(cy - r)} C ${String(cx + 9)} ${String(cy - r)} ${String(cx + 8)} ${String(cy - 4)} ${String(cx + r - 2)} ${String(cy + 6)} C ${String(cx + r)} ${String(cy + r)} ${String(cx - r)} ${String(cy + r)} ${String(cx - r + 2)} ${String(cy + 6)} C ${String(cx - 8)} ${String(cy - 4)} ${String(cx - 9)} ${String(cy - r)} ${String(cx)} ${String(cy - r)} Z`,
           }),
         ],
-        lemon: () => [svg('ellipse', { cx, cy, rx: r + 2, ry: r - 6 })],
+        lemon: () => [svg('ellipse', { class: FRUIT_CLASSES.shape, cx, cy, rx: r + 2, ry: r - 6 })],
         strawberry: () => [
           svg('path', {
+            class: FRUIT_CLASSES.shape,
             d: `M ${String(cx - r)} ${String(cy - r + 6)} Q ${String(cx)} ${String(cy - r - 4)} ${String(cx + r)} ${String(cy - r + 6)} Q ${String(cx + r - 4)} ${String(cy + 6)} ${String(cx)} ${String(cy + r)} Q ${String(cx - r + 4)} ${String(cy + 6)} ${String(cx - r)} ${String(cy - r + 6)} Z`,
           }),
         ],
@@ -177,10 +264,10 @@ export const game: GameModule = {
 
     /** One tray: its cells, its fruit, and in Practice how many it holds. */
     function drawTray(count: number, index: number) {
-      const box = element('div', 'g-ten-frame-cafe__tray');
       const full = count === TRAY;
-      if (full) box.classList.add('g-ten-frame-cafe__tray--full');
+      const box = element('div', full ? TRAY_CLASSES.full : TRAY_CLASSES.partly);
       const scene = svg('svg', {
+        class: TRAY_SCENE_CLASSES,
         viewBox: `0 0 ${String(TRAY_WIDTH)} ${String(TRAY_HEIGHT)}`,
         'aria-hidden': 'true',
         focusable: 'false',
@@ -194,13 +281,12 @@ export const game: GameModule = {
         const outlined = hinted && empty;
         scene.append(
           svg('rect', {
-            class: [
-              'g-ten-frame-cafe__cell',
-              outlined ? 'g-ten-frame-cafe__cell--outlined' : '',
-              outlined && toFill ? 'g-ten-frame-cafe__cell--to-fill' : '',
-            ]
-              .filter(Boolean)
-              .join(' '),
+            class: outlined
+              ? toFill
+                ? CELL_CLASSES.toFill
+                : CELL_CLASSES.outlined
+              : CELL_CLASSES.plain,
+            ...(outlined ? DASHED : {}),
             x,
             y,
             width: CELL.size,
@@ -215,7 +301,7 @@ export const game: GameModule = {
       box.append(scene);
       // The tray's count is shown in Practice, and hidden in Challenge (BRIEF.md).
       if (ctx.mode === 'practice') {
-        const label = element('p', 'g-ten-frame-cafe__tray-count');
+        const label = element('p', TRAY_COUNT_CLASSES);
         label.textContent = ctx.t('games.tenFrameCafe.trayCount', { count });
         box.append(label);
       }
@@ -224,9 +310,10 @@ export const game: GameModule = {
 
     /** The fruit spilt past a full tray, in a row on the counter, and in Practice how many. */
     function drawCounter(count: number) {
-      const box = element('div', 'g-ten-frame-cafe__counter');
+      const box = element('div', COUNTER_CLASSES);
       const step = 2 * COUNTER.fruit + COUNTER.gap;
       const scene = svg('svg', {
+        class: COUNTER_SCENE_CLASSES,
         viewBox: `0 0 ${String(TRAY * step)} ${String(2 * COUNTER.fruit + COUNTER.gap)}`,
         'aria-hidden': 'true',
         focusable: 'false',
@@ -237,7 +324,7 @@ export const game: GameModule = {
       }
       box.append(scene);
       if (ctx.mode === 'practice') {
-        const label = element('p', 'g-ten-frame-cafe__tray-count');
+        const label = element('p', TRAY_COUNT_CLASSES);
         label.textContent = ctx.t('games.tenFrameCafe.counter', { count });
         box.append(label);
       }

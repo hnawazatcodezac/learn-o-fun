@@ -159,14 +159,18 @@ test('going to the background pauses the session and shows the pause menu on ret
 });
 
 test('leaving the shell any other way pauses the session as navigated away', async ({ page }) => {
-  await page.goto(DEMO);
+  // To the game from the profile picker, inside the app, so the back button stays in the app too.
+  await page.goto('/');
+  await expect(page.getByTestId('child-root')).toBeVisible();
+  await page.evaluate((url) => {
+    // Next.js's router, which it exposes for debugging and tests (ADR 0042).
+    (window as unknown as { next: { router: { push: (href: string) => void } } }).next.router.push(
+      url,
+    );
+  }, DEMO);
   await expect(prompt(page)).toHaveText('3 + 4');
 
-  // As the browser's back button would: a client-side move to another page.
-  await page.evaluate(() => {
-    window.history.pushState(null, '', '/');
-    window.dispatchEvent(new PopStateEvent('popstate'));
-  });
+  await page.goBack();
 
   await expect(page.getByTestId('child-root')).toBeVisible();
   await expect

@@ -10,6 +10,7 @@ import { PlanLimit } from './PlanLimit';
 import { noteSaved } from './saved-notice';
 import { useFamily } from './use-family';
 import { useMarket } from './use-market';
+import { TITLE_CLASSES } from './classes';
 
 /** /parent/children/new: add a child to the family shown (ADR 0026). */
 export function AddChildPage() {
@@ -23,7 +24,7 @@ export function AddChildPage() {
 
   return (
     <>
-      <h1 className="parent-page__title">{title}</h1>
+      <h1 className={TITLE_CLASSES}>{title}</h1>
       <LoadState result={family}>{(data) => <AddChild family={data} />}</LoadState>
     </>
   );
@@ -43,7 +44,7 @@ function AddChild({ family }: { family: FamilyResponse }) {
     const { child } = await api.addChild(family.family.id, input);
     // Back to the overview, which says it was saved.
     noteSaved(child.nickname);
-    void navigate('/parent');
+    navigate('/parent');
   };
 
   return (
@@ -56,7 +57,7 @@ function AddChild({ family }: { family: FamilyResponse }) {
           submitLabel={t('parent.profile.add')}
           onSubmit={add}
           onCancel={() => {
-            void navigate('/parent');
+            navigate('/parent');
           }}
         />
       )}
@@ -77,7 +78,7 @@ export function EditChildPage() {
         if (!child) {
           return (
             <>
-              <h1 className="parent-page__title">{t('parent.profile.notFound')}</h1>
+              <h1 className={TITLE_CLASSES}>{t('parent.profile.notFound')}</h1>
               <BackToOverview />
             </>
           );
@@ -85,7 +86,7 @@ export function EditChildPage() {
         if (!canManageChildren(data.role)) {
           return (
             <>
-              <h1 className="parent-page__title">
+              <h1 className={TITLE_CLASSES}>
                 {t('parent.profile.editTitle', { nickname: child.nickname })}
               </h1>
               <BackToOverview>{t('parent.profile.notAllowed')}</BackToOverview>
@@ -111,12 +112,12 @@ function EditChild({ family, child }: { family: FamilyResponse; child: ChildProf
   const save = async (input: ChildProfileInput) => {
     const { child: savedChild } = await api.editChild(family.family.id, child.id, input);
     noteSaved(savedChild.nickname);
-    void navigate('/parent');
+    navigate('/parent');
   };
 
   return (
     <>
-      <h1 className="parent-page__title">{title}</h1>
+      <h1 className={TITLE_CLASSES}>{title}</h1>
       <LoadState result={market}>
         {(config) => (
           <ChildProfileForm
@@ -127,7 +128,7 @@ function EditChild({ family, child }: { family: FamilyResponse; child: ChildProf
             submitLabel={t('parent.profile.save')}
             onSubmit={save}
             onCancel={() => {
-              void navigate('/parent');
+              navigate('/parent');
             }}
           />
         )}

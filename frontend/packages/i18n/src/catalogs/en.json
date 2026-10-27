@@ -415,6 +415,9 @@
     }
   },
   "dev": {
+    "tools": {
+      "title": "Developer tools"
+    },
     "mock": {
       "title": "Mock API",
       "latency": "Speed",

@@ -1,13 +1,13 @@
 import { createI18n } from '@learnofun/i18n';
 import type { ReactNode } from 'react';
-import { renderToString } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { I18nProvider } from '../../i18n/I18nProvider';
 import { SettingsPanel } from './SettingsPanel';
 import { DEFAULT_PLAY_SETTINGS } from '@learnofun/contracts';
+import { renderMarkup } from '../../test/markup';
 
 function render(node: ReactNode) {
-  return renderToString(<I18nProvider i18n={createI18n('en')}>{node}</I18nProvider>);
+  return renderMarkup(<I18nProvider i18n={createI18n('en')}>{node}</I18nProvider>);
 }
 
 const noop = () => undefined;

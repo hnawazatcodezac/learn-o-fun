@@ -5,10 +5,12 @@
   "main": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./styles.css": "./src/styles/index.css"
+    "./styles.css": "./src/styles/index.css",
+    "./tailwind.css": "./src/styles/tailwind.css"
   },
   "scripts": {
     "tokens": "node scripts/tokens.mjs",
+    "fonts": "node scripts/fonts.mjs",
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run"
   },
@@ -18,9 +20,9 @@
     "@fontsource/readex-pro": "^5.3.0",
     "@learnofun/contracts": "*",
     "@learnofun/i18n": "*",
-    "@phosphor-icons/core": "^2.1.1",
-    "@phosphor-icons/react": "^2.1.10",
-    "react-i18next": "^17.1.0"
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.7.0",
+    "use-intl": "^4.14.9"
   },
   "peerDependencies": {
     "react": "^19.3.1"
@@ -30,6 +32,7 @@
     "@types/react-dom": "^19.3.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
+    "tailwindcss": "^4.3.3",
     "vitest": "^5.0.5"
   }
 }

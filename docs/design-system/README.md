@@ -61,7 +61,8 @@ Write **Learnofun** as one word with a capital L only. Until a logo is designed,
 
 - Characters and scenes are original and flat, built from the same pebbles, discs and pills as the interface: no outlines, no gradients, no textures. Never draw known characters or brands.
 - Until an illustrator delivers final art, use plain geometric placeholders in the brand fills, as the ActivityCard preview does.
-- Icons come from **Phosphor Icons**: the Bold weight at 28 to 32px in the child app, and Regular at 20px for parents. An icon-only button always has an accessible label. The icon files are not in this system yet.
+- **Pip** is the placeholder guide: a frog built from a `leaf` pebble body, two `leaf` eye bumps with white eyes and `navy` pupils, and a `navy` smile. Pip appears on the website hero, in Hop Line and on celebration screens, never on parent dashboard pages. An illustrator replaces Pip with the final character.
+- Icons are **Learnofun's own**, as the screen designs draw them (ADR 0045): line icons on a 24-pixel grid, with rounded caps and joins and a thick stroke (2 to 3.5) in the text colour, at 28px in the child app and 20px for parents. They live in `frontend/packages/ui-kit`. A new icon is drawn in the same style, never taken from another set. An icon-only button always has an accessible label.
 - Skill statuses use the progress-pie icons shown in SkillStatus: an empty circle, then a quarter, half, three-quarters and a full circle with a check, plus a loop arrow for Review due.
 
 ## Experience bands
@@ -73,11 +74,17 @@ Write **Learnofun** as one word with a capital L only. Until a logo is designed,
 
 ## Website
 
-The website belongs to the Family world: `family-ground`, wide `navy` hero bands with `on-navy` text, and `site-headline` for the hero. It borrows play shapes (pebbles, discs and number-line hops) in `sun`, `sky`, `coral` and `leaf` as decoration. Primary calls to action are `action` buttons.
+The website belongs to the Family world: `family-ground`, wide `navy` hero bands with `on-navy` text, `site-headline` for the hero and `site-title` for section headings. It borrows play shapes (pebbles, discs and number-line hops) in `sun`, `sky`, `coral` and `leaf` as decoration.
+
+- On `family-ground` and the surfaces, the primary call to action is an `action` button.
+- On a `navy` band, the primary call to action is a `sun` play button with an `on-bright` label: `action` does not stand out enough against `navy`.
+- Secondary text on `navy` is `on-navy` at 85% opacity, never a grey.
 
 ## Components
 
 The previews here are visual specs in plain HTML and CSS (`components/bundle.css`). Build the React versions in the app's own UI kit, using the tokens by name.
+
+On a Design canvas, load `tokens.css` first and then `components/bundle.css`; the stylesheet reads its variables from `tokens.css`. Load the three Google Fonts families (Baloo 2, Andika, Readex Pro) with a `<link>` for mockups only; the apps themselves self-host them.
 
 - **Button:** play buttons (`sun` primary, `sky` secondary) and parent buttons (`action`, quiet).
 - **AnswerTile:** a tappable answer, with default, selected, correct and try-again states.

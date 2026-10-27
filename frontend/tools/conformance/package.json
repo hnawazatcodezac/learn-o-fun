@@ -21,7 +21,8 @@
     "@axe-core/playwright": "^4.14.0",
     "@learnofun/learning-core": "*",
     "@playwright/test": "^1.64.1",
-    "vite": "^8.3.4",
+    "@types/node": "^26.6.5",
+    "esbuild": "^0.28.2",
     "vitest": "^5.0.5"
   }
 }

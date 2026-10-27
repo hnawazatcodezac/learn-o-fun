@@ -5,6 +5,7 @@ dist-e2e/
 out/
 out-e2e/
 next-env.d.ts
+*.tsbuildinfo
 coverage/
 playwright-report/
 test-results/

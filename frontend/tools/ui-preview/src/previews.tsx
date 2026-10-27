@@ -29,6 +29,16 @@ import type { ComponentId } from './matrix';
 import { usePreview } from './PreviewContext';
 import { createSeededRandom } from './seeded-random';
 
+/** The examples' layouts: a row that wraps, a grid of cards, and a column. */
+const ROW_CLASSES = 'flex flex-wrap items-center gap-4';
+
+const TOP_ROW_CLASSES = 'flex flex-wrap items-start gap-4';
+
+const GRID_CLASSES =
+  'grid max-inline-ui-preview grid-cols-[repeat(auto-fill,minmax(var(--ui-preview-cell),1fr))] gap-5';
+
+const STACK_CLASSES = 'flex flex-col gap-5';
+
 /** The parent PIN the PIN gate accepts in the preview. */
 const SAMPLE_PIN = '2468';
 
@@ -38,7 +48,7 @@ function ButtonPreview() {
   const secondary = t('dev.preview.samples.secondaryAction');
 
   return (
-    <div className="preview-row">
+    <div className={ROW_CLASSES}>
       <Button>{primary}</Button>
       <Button variant="secondary">{secondary}</Button>
       <Button variant="secondary" icon={<HintIcon />}>
@@ -68,7 +78,7 @@ function AnswerTilePreview() {
   const { t, format } = useI18n();
 
   return (
-    <div className="preview-row preview-row--top" role="group">
+    <div className={TOP_ROW_CLASSES} role="group">
       {ANSWER_TILE_ORDER.map((state, index) => (
         <AnswerTile key={state} state={state}>
           {format.number(11 + index)}
@@ -83,7 +93,7 @@ function CardPreview() {
   const { t } = useI18n();
 
   return (
-    <div className="preview-grid">
+    <div className={GRID_CLASSES}>
       <Card title={t('dev.preview.samples.cardTitle')}>
         <p>{t('dev.preview.samples.cardBody')}</p>
         <Button>{t('dev.preview.samples.primaryAction')}</Button>
@@ -104,7 +114,7 @@ function ActivityCardPreview() {
   const { t } = useI18n();
 
   return (
-    <div className="preview-grid">
+    <div className={GRID_CLASSES}>
       {ACTIVITY_CARD_KINDS.map((kind) => {
         const [title, minutes] = ACTIVITY_SAMPLES[kind];
         return (
@@ -136,7 +146,7 @@ function AvatarPickerPreview() {
 
 function ProgressTrailPreview() {
   return (
-    <div className="preview-stack">
+    <div className={STACK_CLASSES}>
       <ProgressTrail done={0} total={5} />
       <ProgressTrail done={5} total={8} />
       <ProgressTrail done={6} total={6} />
@@ -163,7 +173,7 @@ function DialogPreview() {
       </Button>
       <Dialog open={open} title={t('dev.preview.samples.dialogTitle')} onClose={close}>
         <p>{t('dev.preview.samples.dialogBody')}</p>
-        <div className="preview-row">
+        <div className={ROW_CLASSES}>
           <Button onClick={close}>{t('dev.preview.samples.takeBreak')}</Button>
           <Button variant="secondary" onClick={close}>
             {t('dev.preview.samples.keepGoing')}
@@ -212,7 +222,7 @@ function FeedbackPreview() {
   const { t } = useI18n();
 
   return (
-    <div className="preview-stack">
+    <div className={STACK_CLASSES}>
       {FEEDBACK_KINDS.map((kind) => (
         <Feedback key={kind} kind={kind} open inline />
       ))}
@@ -267,7 +277,7 @@ function ParentalGatePreview() {
   };
 
   return (
-    <div className="preview-stack">
+    <div className={STACK_CLASSES}>
       <div>
         <Button
           onClick={() => {
@@ -335,7 +345,7 @@ function PicturePinPreview() {
   const [pin, setPin] = useState<PinPicture[]>(['sun', 'fish']);
 
   return (
-    <div className="preview-stack">
+    <div className={STACK_CLASSES}>
       <PicturePinPad value={pin} onChange={setPin} label={t('dev.preview.samples.pinLabel')} />
       {pin.length === 3 && <p role="status">{t('dev.preview.samples.pinComplete')}</p>}
     </div>
@@ -345,8 +355,8 @@ function PicturePinPreview() {
 /** Every status, then one with too little evidence yet. Parent dashboard only. */
 function SkillStatusPreview() {
   return (
-    <div className="preview-stack">
-      <div className="preview-row">
+    <div className={STACK_CLASSES}>
+      <div className={ROW_CLASSES}>
         {SKILL_STATUSES.map((status) => (
           <SkillStatus key={status} status={status} />
         ))}

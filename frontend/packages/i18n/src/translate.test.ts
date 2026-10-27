@@ -18,7 +18,7 @@ describe('createTranslate', () => {
   it('follows the current locale, including pseudo-locales', () => {
     const i18n = createI18n('en');
     const t = createTranslate(i18n);
-    void i18n.changeLanguage('en-XA');
+    i18n.changeLocale('en-XA');
 
     expect(t('games.demoChoice.answers')).toMatch(/^\[Åñšŵéŕš ·+\]$/);
   });

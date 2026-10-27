@@ -1,5 +1,6 @@
+import { basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { build } from 'vite';
+import { build, type Plugin } from 'esbuild';
 
 /** Plan 6.7: a game's bundle stays under 1.5 MB, measured minified and uncompressed (ADR 0014). */
 export const BUNDLE_BUDGET_BYTES = 1_500_000;
@@ -13,44 +14,69 @@ const SHARED = [/^@learnofun\//, /^zod(\/|$)/, /^react(-dom)?(\/|$)/];
 /** Audio does not count toward the budget (plan 6.7). */
 const AUDIO = /\.(?:aac|flac|m4a|mp3|oga|ogg|opus|wav|weba)$/i;
 
+/** The files a game may bring besides its code, each counted as a file of its own. */
+const ASSETS = [
+  '.png',
+  '.jpg',
+  '.jpeg',
+  '.webp',
+  '.avif',
+  '.gif',
+  '.svg',
+  '.woff',
+  '.woff2',
+  '.riv',
+  '.aac',
+  '.flac',
+  '.m4a',
+  '.mp3',
+  '.oga',
+  '.ogg',
+  '.opus',
+  '.wav',
+  '.weba',
+] as const;
+
 export interface BundleSize {
   bytes: number;
   files: { name: string; bytes: number }[];
 }
 
-const encoder = new TextEncoder();
+/** Leaves the shared runtime out of the bundle. */
+const sharedRuntime: Plugin = {
+  name: 'learnofun-shared-runtime',
+  setup(builder) {
+    builder.onResolve({ filter: /.*/ }, ({ path, kind }) =>
+      kind !== 'entry-point' && SHARED.some((pattern) => pattern.test(path))
+        ? { path, external: true }
+        : undefined,
+    );
+  },
+};
 
 /**
- * Builds a game's own code as a minified library, leaving out the shared runtime, and adds up
- * the JavaScript, CSS, images and fonts it produces.
+ * Builds a game's own code as a minified ES module with esbuild, leaving out the shared runtime,
+ * and adds up the JavaScript, CSS, images and fonts it produces (ADR 0042).
  */
 export async function measureGameBundle(gameId: string): Promise<BundleSize> {
   const entry = fileURLToPath(
     new URL(`../../../packages/games/${gameId}/src/index.ts`, import.meta.url),
   );
   const result = await build({
-    configFile: false,
+    entryPoints: { [gameId]: entry },
+    bundle: true,
+    minify: true,
+    format: 'esm',
+    platform: 'browser',
+    target: 'es2022',
+    write: false,
+    outdir: 'measure',
     logLevel: 'silent',
-    build: {
-      write: false,
-      minify: true,
-      lib: { entry, formats: ['es'], fileName: gameId },
-      rolldownOptions: { external: (id) => SHARED.some((pattern) => pattern.test(id)) },
-    },
+    loader: Object.fromEntries(ASSETS.map((extension) => [extension, 'file'])),
+    plugins: [sharedRuntime],
   });
-  const outputs = (Array.isArray(result) ? result : [result]).flatMap((output) =>
-    'output' in output ? output.output : [],
-  );
-  const files = outputs
-    .filter((file) => !AUDIO.test(file.fileName))
-    .map((file) => ({
-      name: file.fileName,
-      bytes:
-        file.type === 'chunk'
-          ? encoder.encode(file.code).byteLength
-          : typeof file.source === 'string'
-            ? encoder.encode(file.source).byteLength
-            : file.source.byteLength,
-    }));
+  const files = result.outputFiles
+    .filter((file) => !AUDIO.test(file.path))
+    .map((file) => ({ name: basename(file.path), bytes: file.contents.byteLength }));
   return { bytes: files.reduce((total, file) => total + file.bytes, 0), files };
 }
