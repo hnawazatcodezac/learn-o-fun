@@ -1,5 +1,15 @@
 import { z } from 'zod';
-import { checkUnique, ContentId, IsoDate, SemVer, Timestamp, Uuidv7 } from './common';
+import {
+  checkUnique,
+  ContentId,
+  IsoDate,
+  Locale,
+  Market,
+  SemVer,
+  Timestamp,
+  Uuidv7,
+} from './common';
+import { ConsentRecord } from './consent';
 import { Activity, Mode, Tier } from './activity';
 import {
   BREAK_REMINDER_STEPS,
@@ -104,8 +114,69 @@ export const ParentSessionResponse = z.object({
     .min(1, { error: 'A parent account belongs to at least one family' }),
 });
 
-/** POST /api/parent/session: the mock sign-in, which picks an account (ADR 0025). */
-export const ParentSignInRequest = z.object({ accountId: Uuidv7 });
+/**
+ * What a new parent gives at sign-up, besides the email that comes with the proof (plan 8.3):
+ * their name, their country, and the language the dashboard is shown in (ADR 0046).
+ */
+export const SignUpDetails = z.strictObject({
+  displayName: ParentAccount.shape.displayName,
+  market: Market,
+  uiLocale: Locale,
+});
+
+/**
+ * POST /api/parent/magic-links: sends a sign-in link to an email address; with sign-up details,
+ * redeeming it creates the account (ADR 0046). The answer never says whether an account exists.
+ */
+export const MagicLinkRequest = z.strictObject({
+  email: z.email({ error: 'Expected an email address' }),
+  signUp: SignUpDetails.optional(),
+});
+export const MagicLinkResponse = z.object({
+  sentTo: z.email(),
+  /** Only the mock API answers with the link, which it shows in place of an email. */
+  mockLink: z.string().startsWith('/parent/login?token=').optional(),
+});
+
+/**
+ * POST /api/parent/session: signs in, with no password (plan 8.1, ADR 0046): a magic link's token,
+ * a passkey, or Google's or Apple's account, all mocked; or, in the mock only, a demo account by
+ * its ID (ADR 0025). A link or provider that comes with sign-up details creates the account and
+ * its family, with the new parent as owner, when no account has that email yet.
+ */
+export const ParentSignInRequest = z.union([
+  z.strictObject({ accountId: Uuidv7 }),
+  z.strictObject({ method: z.literal('magic-link'), token: z.string().min(1) }),
+  z.strictObject({ method: z.literal('passkey'), credentialId: z.string().min(1) }),
+  z.strictObject({
+    method: z.enum(['google', 'apple']),
+    email: z.email({ error: 'Expected an email address' }),
+    signUp: SignUpDetails.optional(),
+  }),
+]);
+
+/** POST /api/parent/passkeys: a passkey for the signed-in parent, mocked (ADR 0046). */
+export const PasskeyResponse = z.object({ credentialId: z.string().min(1) });
+
+/** GET /api/markets: the markets a family can sign up in. */
+export const MarketListResponse = z.object({ markets: z.array(Market).min(1) });
+
+/**
+ * POST /api/families/:familyId/consent: an owner or guardian consents to the market's current
+ * privacy policy, before any child is added (plan 8.4, ADR 0046).
+ */
+export const ConsentRequest = z.strictObject({
+  policyVersion: z.string().trim().min(1),
+  agreed: z.literal(true),
+});
+export const ConsentResponse = z.object({ consent: ConsentRecord });
+
+/**
+ * POST /api/families/:familyId/child-mode: hands this device to the family's children (plan 8.1,
+ * ADR 0046). Its profile picker then shows them; any member may, a caregiver too.
+ */
+export const ChildModeRequest = z.strictObject({ childId: Uuidv7 });
+export const ChildModeResponse = z.object({ childId: Uuidv7 });
 
 /**
  * GET /api/parent/session: the session, or none when nobody is signed in. Signed out is an
@@ -132,6 +203,8 @@ export const FamilyResponse = z.object({
   role: FamilyRole,
   children: z.array(ChildProfile),
   entitlements: Entitlements,
+  /** The latest consent given for the family, or none yet: no child can be added (ADR 0046). */
+  consent: ConsentRecord.nullable(),
 });
 
 /**
@@ -414,6 +487,15 @@ export type FamilyResponse = z.infer<typeof FamilyResponse>;
 export type ParentSessionResponse = z.infer<typeof ParentSessionResponse>;
 export type ParentSessionState = z.infer<typeof ParentSessionState>;
 export type ParentSignInRequest = z.infer<typeof ParentSignInRequest>;
+export type SignUpDetails = z.infer<typeof SignUpDetails>;
+export type MagicLinkRequest = z.infer<typeof MagicLinkRequest>;
+export type MagicLinkResponse = z.infer<typeof MagicLinkResponse>;
+export type PasskeyResponse = z.infer<typeof PasskeyResponse>;
+export type MarketListResponse = z.infer<typeof MarketListResponse>;
+export type ConsentRequest = z.infer<typeof ConsentRequest>;
+export type ConsentResponse = z.infer<typeof ConsentResponse>;
+export type ChildModeRequest = z.infer<typeof ChildModeRequest>;
+export type ChildModeResponse = z.infer<typeof ChildModeResponse>;
 export type MockAccountsResponse = z.infer<typeof MockAccountsResponse>;
 export type ChildProfileRequest = z.infer<typeof ChildProfileRequest>;
 export type ChildProfileResponse = z.infer<typeof ChildProfileResponse>;

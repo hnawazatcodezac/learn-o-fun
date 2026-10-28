@@ -8,6 +8,11 @@ describe('the mock data file', () => {
     expect(() => parseMockData(seedJson)).not.toThrow();
   });
 
+  it('is served as it is: checking it changes nothing, so a page need not check it again', () => {
+    expect(parseMockData(seedJson)).toStrictEqual(seedJson);
+    expect(seedData).toBe(seedJson);
+  });
+
   it('marks the skill graph as a draft for learning-designer review', () => {
     expect(seedJson.meta.skillGraph.status).toBe('draft');
     expect(seedJson.meta.skillGraph.note).toMatch(/learning designer/);

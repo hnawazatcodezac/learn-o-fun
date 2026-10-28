@@ -1,6 +1,7 @@
 import type { ChildSnapshot } from '@learnofun/contracts';
 import { GAME_IDS, loadGame } from '@learnofun/game-registry';
 import type { GamePackage } from '@learnofun/game-sdk';
+import { localizeContent } from '@learnofun/i18n';
 import { SESSION_PLANS, createAdaptivePolicy, templateMaker } from '@learnofun/learning-core';
 import { Button, useI18n } from '@learnofun/ui-kit';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -111,7 +112,7 @@ function TimeUpScreen({ nickname }: { nickname: string }) {
   return (
     <ChildScreen band={DEFAULT_BAND}>
       <main className={PLACEHOLDER_CLASSES}>
-        <TimeUp nickname={nickname}>
+        <TimeUp nickname={nickname} heading="h1">
           <Button
             onClick={() => {
               navigate(EXIT_TO);
@@ -162,6 +163,7 @@ function ActivitySession({
   snapshot: ChildSnapshot;
 }) {
   const { activity, template, childId, contentRelease, pkg, resume } = loaded;
+  const { locale } = useI18n();
   const [search] = useSearchParams();
   // A saved session carries on as it was: its mode, seed, plan and items (ADR 0023).
   const mode = resume?.mode ?? pickMode(activity, search.get('mode'));
@@ -224,6 +226,7 @@ function ActivitySession({
       ) : (
         <PlayErrorBoundary exitTo={EXIT_TO}>
           <GameShell
+            title={localizeContent(activity.title, locale)}
             game={pkg.game}
             items={items}
             mode={mode}

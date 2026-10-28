@@ -20,7 +20,7 @@ describe('Button', () => {
     const html = renderMarkup(<Button icon={<PauseIcon />}>Pause</Button>);
 
     expect(html).toMatch(
-      /^<button[^>]*><svg[^>]*class="lf-icon"[^>]*aria-hidden="true"[^>]*>.*<\/svg><span class="lf-button__label">Pause<\/span><\/button>$/,
+      /^<button[^>]*><svg(?=[^>]*aria-hidden="true")[^>]*class="lf-icon"[^>]*>.*<\/svg><span class="lf-button__label">Pause<\/span><\/button>$/,
     );
   });
 

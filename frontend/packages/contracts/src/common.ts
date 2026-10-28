@@ -54,6 +54,11 @@ export const Market = z
   .string()
   .regex(/^[A-Z]{2}$/, { error: 'Expected an ISO 3166 country code, such as GB' });
 
+/** Where a family's personal data lives, such as `eu-1` (plan 3.1). */
+export const HomeRegion = z
+  .string()
+  .regex(/^[a-z]{2}-\d+$/, { error: 'Expected a region such as eu-1' });
+
 /** An IANA time zone, such as `Europe/London`. A child's learning day is counted in it. */
 export const TimeZone = z.string().refine(isTimeZone, {
   error: 'Expected an IANA time zone, such as Europe/London',

@@ -7,9 +7,11 @@ import {
   SESSION_MINUTE_STEPS,
   ChildProfile,
   ChildSettings,
+  ConsentRecord,
   ContentId,
   Entitlements,
   Family,
+  Features,
   LearningGoal,
   MarketConfig,
   Mode,
@@ -28,6 +30,8 @@ export const MockRecords = z.object({
   settings: z.array(ChildSettings),
   goals: z.array(LearningGoal),
   entitlements: z.array(Entitlements),
+  /** Every consent given, oldest first; the latest for a family applies (plan 8.4, ADR 0046). */
+  consents: z.array(ConsentRecord),
 });
 // Skill states are not here: the learner model works them out from the events (ADR 0031).
 
@@ -290,6 +294,19 @@ function checkReferences(data: MockData, issue: Issue) {
     issue,
   );
 
+  // A consent names a family and one of its members.
+  data.consents.forEach((consent, index) => {
+    const family = families.find((candidate) => candidate.id === consent.familyId);
+    if (!family) issue(`Unknown family ${consent.familyId}`, ['consents', index, 'familyId']);
+    else if (!family.members.some((member) => member.accountId === consent.accountId)) {
+      issue(`Account ${consent.accountId} is not in family ${family.id}`, [
+        'consents',
+        index,
+        'accountId',
+      ]);
+    }
+  });
+
   // A script plays an activity the child's family can play, practising skills it targets.
   data.sessionScripts.forEach((script, index) => {
     const child = children.find((candidate) => candidate.id === script.childId);
@@ -331,6 +348,8 @@ export const MockData = z
     markets: z.array(MarketConfig),
     /** Past sessions, played into events when the mock API starts (ADR 0028). */
     sessionScripts: z.array(SessionScript),
+    /** What a family that signs up starts with, until plans come as data (step 17, ADR 0046). */
+    freePlanFeatures: Features,
     ...MockRecords.shape,
   })
   .superRefine((data, context) => {
@@ -351,5 +370,9 @@ export function parseMockData(value: unknown): MockData {
   return result.data;
 }
 
-/** `src/data/mock-data.json`, validated. */
-export const seedData: MockData = parseMockData(seedJson);
+/**
+ * `src/data/mock-data.json`. A unit test checks it against every contract and reference, and that
+ * checking leaves it unchanged, so a page uses it as it is rather than checking it again on every
+ * load, which kept a first visit waiting (ADR 0040).
+ */
+export const seedData = seedJson as unknown as MockData;

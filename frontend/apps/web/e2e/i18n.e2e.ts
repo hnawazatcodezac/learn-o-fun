@@ -1,4 +1,5 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
+import { openDevTools } from './helpers';
 
 /** Each area's first page, and two things on it, side by side, that swap places right to left. */
 const AREAS = [

@@ -1096,6 +1096,9 @@
   "markets": [
     {
       "market": "GB",
+      "homeRegion": "eu-1",
+      "timeZone": "Europe/London",
+      "privacyPolicyVersion": "draft-2026-10",
       "learningLanguages": ["en"],
       "defaultCurriculumId": "england-national-curriculum",
       "gradeScheme": {
@@ -1324,6 +1327,33 @@
       "computedAt": "2026-09-10T19:00:00.000Z"
     }
   ],
+  "consents": [
+    {
+      "id": "0192f4c1-0000-7000-8000-00000000d001",
+      "familyId": "0192f4c1-0000-7000-8000-00000000f001",
+      "accountId": "0192f4c1-0000-7000-8000-00000000a001",
+      "policyVersion": "draft-2026-10",
+      "method": "declaration",
+      "evidence": "Sign-up: the consent statement, ticked",
+      "givenAt": "2026-09-01T08:00:00.000Z"
+    },
+    {
+      "id": "0192f4c1-0000-7000-8000-00000000d002",
+      "familyId": "0192f4c1-0000-7000-8000-00000000f002",
+      "accountId": "0192f4c1-0000-7000-8000-00000000a002",
+      "policyVersion": "draft-2026-10",
+      "method": "declaration",
+      "evidence": "Sign-up: the consent statement, ticked",
+      "givenAt": "2026-09-10T19:00:00.000Z"
+    }
+  ],
+  "freePlanFeatures": {
+    "children.max": 2,
+    "activities.tier": "free",
+    "insights.detail": "basic",
+    "digest.weekly": false,
+    "goals.custom": false
+  },
   "sessionScripts": [
     {
       "childId": "0192f4c1-0000-7000-8000-00000000c001",

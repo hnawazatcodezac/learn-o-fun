@@ -39,7 +39,7 @@ export function DevTools({ mockApi }: { mockApi: boolean }) {
       }}
     >
       <summary
-        className="min-block-target-family cursor-pointer px-3 py-2 font-label focus-visible:shadow-focus-ring focus-visible:outline-none"
+        className="cursor-pointer px-3 py-2 font-label min-block-target-family focus-visible:shadow-focus-ring focus-visible:outline-none"
         data-testid="dev-tools-toggle"
       >
         {t('dev.tools.title')}

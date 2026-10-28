@@ -1,6 +1,6 @@
 # 0044. The screen designs are the reference for how the app looks and behaves
 
-- Status: accepted; amended 2026-10-26 (when the designs are built) and 2026-10-27 (the designs are built now)
+- Status: accepted; amended 2026-10-26 (when the designs are built) and 2026-10-27 (the designs' basics now, their screens later; four answers for then)
 - Date: 2026-10-26
 - Plan section: 1, 4.4, 6.7, 8.1, 8.7, 12.2; FRONTEND-KICKOFF steps 1, 9, 10, 15, 16–18
 
@@ -34,9 +34,20 @@ The human chose the first option for the games, rewards and the refresh folder, 
   - The speaker buttons beside titles appear once there is audio, not before.
   - Bracketed placeholders such as `[YEARLY PRICE]` stay placeholders until the human gives the values.
 
-## Amendment, 2026-10-27: the new design is built now
+## Amendment, 2026-10-27: the designs' basics now, their screens later
 
-The human reviewed the designs again and moved the project to them on 2026-10-27, with updated exports (the child app now has 14 screens). The colours, type, spacing and radii in every screen already match `docs/design-system/tokens.json`, in all three themes, so no old value remains there. The icons are the designs' own (ADR 0045). Nothing new is built in the old look: FRONTEND-KICKOFF 15d, 9e and 10f bring the designs to every existing screen, and steps 16 to 18 follow them. Where a design and a rule or decision disagree, such as a child typing a username, the rule wins, as above.
+The human reviewed the designs again on 2026-10-27, with updated exports (the child app now has 14 screens), and asked for their colour theme and essentials to be taken now, so that the old look is never used again. The colours, type, spacing and radii in every screen already match `docs/design-system/tokens.json`, in all three themes, so no old value remains there. The icons are the designs' own (ADR 0045).
+
+Later the same day the human asked for the screens themselves not to be built for now: only the basics. FRONTEND-KICKOFF 15d, 9e and 10f wait until the human says so. Where a design and a rule or decision disagree, such as a child typing a username, the rule wins, as above.
+
+The human answered four questions for when the screens are built. These are decisions, not yet built:
+
+- **A child's PIN is a 4-digit number**, entered on the designs' "Your secret number" keypad after the child taps their picture on "Who's playing?". It replaces ADR 0018's three pictures from nine, for every age. No child types a username (CLAUDE.md rule 6): "Who's playing?" stays the way in.
+- **The overview shows one child at a time,** the child chosen in the sidebar, so siblings never sit side by side (CLAUDE.md rule 10). Each child's numbers compare only with their own previous week.
+- **Goals and limits take the designs' look and keep everything ADR 0027 has.** The play window, the weekend times, "Focus" and the games a child can see are added; the subject balance, the session length and premium's skill goal with an end date stay. The daily limit still cannot be turned off (plan 8.7), so the designs' "No limit" is left out.
+- **The grown-ups' settings live only in the parent dashboard,** which its own sign-in protects: colours and motion, the child's PIN and one more session today. The child area keeps no settings screen and no way into `/parent`, as the designs' "The dashboard never opens from here" says. With no way out of child mode, nothing there needs the parental gate (CLAUDE.md rule 6).
+
+Defaults for that work, which the human was told of: the library shows only playable games, with a category only when it has games (ADR 0018); speaker and music buttons wait for audio; the "growth over 8 weeks" line is the learner model's estimate of how many skills the child can do, with a band for how sure it is; sign-up, plan and billing and the website follow the designs in steps 16 to 18.
 
 ## Amendment, 2026-10-26: the designs wait for another review
 

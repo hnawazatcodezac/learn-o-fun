@@ -139,7 +139,7 @@ describe('the Tailwind theme (ADR 0043)', () => {
     const css = build([]);
     expect(css).toContain('.lf-answer__tile');
     // The state marks are CheckIcon and RetryIcon, inlined (ADR 0045).
-    expect(css).toContain("mask-image: url(\"data:image/svg+xml,%3Csvg");
+    expect(css).toContain('mask-image: url("data:image/svg+xml,%3Csvg');
     expect(css).toContain('M5 12.5l4.5 4.5L19 7.5');
   });
 

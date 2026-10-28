@@ -1,6 +1,14 @@
 import { z } from 'zod';
 import { ExperienceBand } from './bands';
-import { checkUnique, ContentId, Locale, LocalizedText, Market } from './common';
+import {
+  checkUnique,
+  ContentId,
+  HomeRegion,
+  Locale,
+  LocalizedText,
+  Market,
+  TimeZone,
+} from './common';
 import { SubjectId } from './skills';
 
 /** A school year within a market's grade scheme, such as Year 3 (plan 7.4). */
@@ -44,10 +52,16 @@ export const AgeBand = z
 /**
  * GET /api/markets/:market: what a market configures for child profiles (plan 7.4): the
  * languages content is delivered in there, the default curriculum, the grade scheme and the
- * experience bands. Data, not code, so a new market changes no code.
+ * experience bands; and for a new family there (ADR 0046): where its data lives, its time zone
+ * until a parent changes it, and the privacy policy a parent consents to. Data, not code, so a
+ * new market changes no code.
  */
 export const MarketConfig = z.object({
   market: Market,
+  homeRegion: HomeRegion,
+  timeZone: TimeZone,
+  /** The privacy policy's current version, which consent names (plan 8.4). */
+  privacyPolicyVersion: z.string().trim().min(1),
   /** The first is the default for a new child. */
   learningLanguages: z
     .array(Locale)

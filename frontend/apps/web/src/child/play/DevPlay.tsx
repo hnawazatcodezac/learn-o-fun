@@ -1,6 +1,7 @@
 import { MODES, type Mode } from '@learnofun/contracts';
 import { GAME_IDS, loadGame } from '@learnofun/game-registry';
 import type { GamePackage } from '@learnofun/game-sdk';
+import { useI18n } from '@learnofun/ui-kit';
 import { useCallback, useMemo, useState } from 'react';
 import { useQueryParam, useSearchParams } from '../../shared/navigation';
 import { useApi } from '../../api/useApi';
@@ -55,8 +56,13 @@ export function DevPlay() {
   return <DevGame pkg={result.data} />;
 }
 
+/** A game's own name, from the strings it declares; a story's title is development text. */
+const GAME_TITLE = /^games\.[^.]+\.title$/;
+
 function DevGame({ pkg }: { pkg: GamePackage }) {
+  const { t, translate } = useI18n();
   const [search] = useSearchParams();
+  const titleKey = pkg.game.manifest.strings.find((key) => GAME_TITLE.test(key));
   const [seed] = useState(() => {
     const fixed = Number(search.get('seed'));
     return search.has('seed') && Number.isSafeInteger(fixed) && fixed >= 0 ? fixed : randomSeed();
@@ -86,6 +92,7 @@ function DevGame({ pkg }: { pkg: GamePackage }) {
       <PlayErrorBoundary exitTo={EXIT_TO}>
         <GameShell
           key={`${story.id}:${mode}:${String(seed)}`}
+          title={titleKey ? translate(titleKey) : t('child.play.stage')}
           game={pkg.game}
           items={story.items}
           mode={mode}

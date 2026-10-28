@@ -13,11 +13,15 @@ const here = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 const frontend = join(here, '..', '..', '..');
 
-/** The families and weights the design system uses (its README), each a fontsource package. */
+/**
+ * The families and weights the design system uses (its README), each a fontsource package. Only
+ * the child area's own family is preloaded, for its first screens; the others download when a
+ * page uses them, so a first visit spends its bandwidth on what it shows (ADR 0040).
+ */
 export const HOSTED_FONTS = [
-  { family: 'Baloo 2', package: 'baloo-2', weights: [500, 700, 800] },
-  { family: 'Andika', package: 'andika', weights: [400, 700] },
-  { family: 'Readex Pro', package: 'readex-pro', weights: [400, 500, 600] },
+  { family: 'Baloo 2', package: 'baloo-2', weights: [500, 700, 800], preload: true },
+  { family: 'Andika', package: 'andika', weights: [400, 700], preload: false },
+  { family: 'Readex Pro', package: 'readex-pro', weights: [400, 500, 600], preload: false },
 ];
 
 /** The Next.js apps, each with its own copy of the module. */
@@ -74,7 +78,7 @@ function renderCall(font, { subset, range, files }) {
     src,
     '  ],',
     "  display: 'swap',",
-    `  preload: ${String(latin)},`,
+    `  preload: ${String(latin && font.preload)},`,
     `  adjustFontFallback: ${latin ? "'Arial'" : 'false'},`,
     '  declarations: [',
     `    { prop: 'font-family', value: "'${font.family}'" },`,
@@ -104,8 +108,8 @@ export function renderNextFonts() {
     '/*',
     " * The design system's three families, self-hosted with next/font (ADR 0019, ADR 0042), under",
     ' * their own names, as the design tokens name them: a group of faces per subset, so a browser',
-    ' * downloads only the subsets a page shows. Only the Latin faces are preloaded, and they get a',
-    ' * fallback font sized to match.',
+    ' * downloads only the subsets a page shows. The Latin faces get a fallback font sized to match,',
+    " * and only the child area's family, Baloo 2, is preloaded (ADR 0040).",
     ' */',
     ...calls.flatMap((call) => ['', call]),
     '',

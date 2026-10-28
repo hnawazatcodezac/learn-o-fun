@@ -16,6 +16,9 @@ const OCTOBER_2026 = { year: 2026, month: 10 };
 
 const market: MarketConfig = {
   market: 'GB',
+  homeRegion: 'eu-1',
+  timeZone: 'Europe/London',
+  privacyPolicyVersion: 'draft-2026-10',
   learningLanguages: ['en'],
   defaultCurriculumId: 'england-national-curriculum',
   gradeScheme: { id: 'england-school-years', grades: [{ id: 'year-1', name: { en: 'Year 1' } }] },

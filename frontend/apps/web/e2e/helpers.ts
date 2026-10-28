@@ -1,5 +1,26 @@
 import AxeBuilder from '@axe-core/playwright';
+import type { TimeLimits } from '@learnofun/contracts';
 import { expect, type Page } from '@playwright/test';
+
+/** The locales the app is checked in: English and the two pseudo-locales (plan 7). */
+export type TestLocale = 'en' | 'en-XA' | 'en-XB';
+
+/**
+ * A name as a locale shows it, for finding a control by its English name in any locale. Both
+ * pseudo-locales bracket and pad the text; en-XA also accents every letter, so each letter
+ * matches any letter.
+ */
+export function named(text: string, locale: TestLocale = 'en'): string | RegExp {
+  if (locale === 'en') return text;
+  const escaped = text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const body = locale === 'en-XA' ? escaped.replace(/[A-Za-z]/g, '\\p{L}') : escaped;
+  return new RegExp(`^\\[${body} ·+\\]$`, 'u');
+}
+
+/** English letters back from en-XA's accents, enough to read the gate's number words. */
+function unaccented(text: string): string {
+  return text.normalize('NFD').replace(/\p{M}/gu, '').replaceAll('ƒ', 'f');
+}
 
 const WORDS: Record<string, number> = {
   three: 3,
@@ -11,21 +32,23 @@ const WORDS: Record<string, number> = {
   nine: 9,
 };
 
-/** Answers the parental gate's times-table question, as an adult would. */
-export async function passGate(page: Page) {
-  const gate = page.getByRole('dialog', { name: 'For grown-ups' });
-  const question = await gate.getByText(/^What is \w+ times \w+\?$/).textContent();
-  const match = /^What is (\w+) times (\w+)\?$/.exec(question ?? '');
-  const a = WORDS[match?.[1] ?? ''];
-  const b = WORDS[match?.[2] ?? ''];
+/** Answers the parental gate's times-table question, as an adult would, in any test locale. */
+export async function passGate(page: Page, locale: TestLocale = 'en') {
+  const gate = page.getByRole('dialog', { name: named('For grown-ups', locale) });
+  // The entry is labelled by the question, "What is three times four?".
+  const questionId = await gate.locator('output').getAttribute('aria-labelledby');
+  const question = await gate.locator(`[id="${String(questionId)}"]`).textContent();
+  const [a, b] = unaccented(question ?? '')
+    .split(/[^a-z]+/)
+    .flatMap((word) => (word in WORDS ? [WORDS[word] ?? 0] : []));
   if (a === undefined || b === undefined) {
     throw new Error(`Unexpected question: ${String(question)}`);
   }
-  const keypad = gate.getByRole('group', { name: 'Number pad' });
+  const keypad = gate.getByRole('group', { name: named('Number pad', locale) });
   for (const digit of String(a * b)) {
     await keypad.getByRole('button', { name: digit, exact: true }).click();
   }
-  await keypad.getByRole('button', { name: 'Done' }).click();
+  await keypad.getByRole('button', { name: named('Done', locale) }).click();
 }
 
 /** Opens the development panel in the corner, unless it is open already (FRONTEND-KICKOFF 15b). */
@@ -66,7 +89,29 @@ export async function signInAs(page: Page, accountId: string) {
   expect(status, 'the mock sign-in').toBe(200);
 }
 
-const WCAG_22_AA = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
+/**
+ * Sets Robin's time limits in the dashboard, as a parent does (ADR 0027), before play starts. The
+ * mock API answers on the real clock; the page's clock is fast-forwarded a quarter of an hour at
+ * most, so both stay on the same day.
+ */
+export async function setLimits(page: Page, limits: TimeLimits) {
+  await signInAs(page, SAM);
+  const status = await page.evaluate(
+    async ({ childId, body }) => {
+      const familyId = '0192f4c1-0000-7000-8000-00000000f001';
+      const response = await fetch(`/api/families/${familyId}/children/${childId}/time-limits`, {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      return response.status;
+    },
+    { childId: ROBIN, body: limits },
+  );
+  expect(status, 'the limits are saved').toBe(200);
+}
+
+export const WCAG_22_AA = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
 /** Checks the page as it stands against WCAG 2.2 AA, listing every rule it breaks. */
 export async function meetsWcag(page: Page) {
@@ -94,13 +139,16 @@ export function untranslatedText(page: Page, selector: string, names: readonly s
   }, names);
 }
 
+/** A Hop Line sum not yet answered, "3 + 4", bracketed and padded in the pseudo-locales. */
+const UNANSWERED_SUM = /^\[?(\d+) \+ (\d+)(?: ·+\])?$/;
+
 /** Answers the item on screen with the keyboard: hop from the start as many times as the sum says. */
 export async function answerRight(page: Page) {
   // Wait for the next item: the last one's sum shows its answer until it goes.
   const unanswered = page.locator('.g-hop-line__sum');
-  await expect(unanswered).toHaveText(/^\d+ \+ \d+$/);
+  await expect(unanswered).toHaveText(UNANSWERED_SUM);
   const sum = await unanswered.textContent();
-  const match = /^(\d+) \+ (\d+)$/.exec(sum ?? '');
+  const match = UNANSWERED_SUM.exec(sum ?? '');
   if (!match) throw new Error(`Unexpected sum: ${String(sum)}`);
   const line = page.getByRole('slider');
   await expect(line).toBeFocused();
@@ -110,7 +158,7 @@ export async function answerRight(page: Page) {
 
 /** Answers the item on screen wrongly: lands without hopping, on the start. */
 export async function answerWrong(page: Page) {
-  await expect(page.locator('.g-hop-line__sum')).toHaveText(/^\d+ \+ \d+$/);
+  await expect(page.locator('.g-hop-line__sum')).toHaveText(UNANSWERED_SUM);
   await expect(page.getByRole('slider')).toBeFocused();
   await page.keyboard.press('Enter');
 }

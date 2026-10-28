@@ -4,6 +4,9 @@ import { problems } from './testing';
 
 const market = {
   market: 'GB',
+  homeRegion: 'eu-1',
+  timeZone: 'Europe/London',
+  privacyPolicyVersion: 'draft-2026-10',
   learningLanguages: ['en'],
   defaultCurriculumId: 'england-national-curriculum',
   gradeScheme: {

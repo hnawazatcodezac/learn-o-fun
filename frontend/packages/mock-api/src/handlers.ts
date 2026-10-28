@@ -6,6 +6,8 @@ import {
   CatalogResponse,
   ChildGoalRequest,
   ChildLearningResponse,
+  ChildModeRequest,
+  ChildModeResponse,
   ChildProfile,
   ChildProgressResponse,
   ChildSessionsResponse,
@@ -13,20 +15,28 @@ import {
   ChildProfileResponse,
   ChildSettings,
   ChildSnapshot,
+  ConsentRequest,
+  ConsentResponse,
   DEFAULT_PLAY_SETTINGS,
   DEFAULT_TIME_LIMITS,
   DeviceProfilesResponse,
   EventBatch,
   ExtraTimeRequest,
+  Family,
   FamilyResponse,
   IngestResponse,
   LearningGoal,
   LearningSession,
+  MagicLinkRequest,
+  MagicLinkResponse,
   MarketConfig,
+  MarketListResponse,
   MockAccountsResponse,
+  ParentAccount,
   ParentSessionResponse,
   ParentSessionState,
   ParentSignInRequest,
+  PasskeyResponse,
   PlaySettings,
   PlayToday,
   PROFILE_AGES,
@@ -40,10 +50,9 @@ import {
   type ApiErrorCode,
   type ChildProfileInput,
   type Entitlements,
-  type Family,
   type FamilyRole,
-  type ParentAccount,
   type Recommendation,
+  type SignUpDetails,
   type SkillState,
 } from '@learnofun/contracts';
 import {
@@ -93,6 +102,12 @@ interface HandlerOptions {
   /** A new UUIDv7 for a record the API creates, such as a child; tests pass their own. */
   newId?: () => string;
 }
+
+/** How long a sign-in link works (ADR 0046). */
+const MAGIC_LINK_MS = 15 * 60 * 1000;
+
+/** The proof a declaration leaves (plan 8.4, ADR 0046): where the parent ticked the statement. */
+const DECLARATION_EVIDENCE = 'Dashboard: the consent statement, ticked';
 
 /** A fresh seed for the IDs the mock API makes, as a server uses its own random source. */
 function randomSeed(): number {
@@ -200,6 +215,68 @@ export function createHandlers({
     return families.length > 0 ? { account, families } : undefined;
   };
   const signedOut = () => fail(401, 'unauthorized', 'Nobody is signed in');
+  /** Signs an account in, as a real API starts a session, and answers with the session. */
+  const signInAs = (accountId: string) => {
+    db.update((state) => {
+      state.signedInAccountId = accountId;
+    });
+    const signedIn = sessionOf();
+    return signedIn ? respond(ParentSessionResponse, signedIn) : signedOut();
+  };
+  /**
+   * A new parent's account and family, with them as its owner, in their market's region and time
+   * zone, on the free plan until plans come as data (step 17, ADR 0046).
+   */
+  const signUp = (email: string, details: SignUpDetails): string | Response => {
+    const market = db.markets.find((candidate) => candidate.market === details.market);
+    if (!market) {
+      return fail(400, 'invalid-request', 'No such market', [
+        { path: 'signUp.market', message: `No market ${details.market}` },
+      ]);
+    }
+    const at = new Date(now()).toISOString();
+    const account = ParentAccount.parse({
+      id: newId(),
+      displayName: details.displayName,
+      email,
+      uiLocale: details.uiLocale,
+      createdAt: at,
+    });
+    const family = Family.parse({
+      id: newId(),
+      market: market.market,
+      homeRegion: market.homeRegion,
+      timeZone: market.timeZone,
+      members: [{ accountId: account.id, role: 'owner' }],
+      createdAt: at,
+    });
+    db.update((state) => {
+      state.accounts.push(account);
+      state.families.push(family);
+      state.entitlements.push({
+        familyId: family.id,
+        features: { ...db.freePlanFeatures },
+        computedAt: at,
+      });
+    });
+    return account.id;
+  };
+  /**
+   * Signs in the account with an email that a link or a provider vouches for; with sign-up
+   * details and no such account yet, it is created first. An email already used just signs in.
+   */
+  const signInByEmail = (email: string, details: SignUpDetails | undefined) => {
+    const existing = db.state.accounts.find(
+      (account) => account.email.toLowerCase() === email.toLowerCase(),
+    );
+    if (existing) return signInAs(existing.id);
+    if (!details) return fail(404, 'not-found', 'No account has this email');
+    const created = signUp(email, details);
+    return typeof created === 'string' ? signInAs(created) : created;
+  };
+  /** A family's latest consent, or none (plan 8.4). */
+  const consentOf = (familyId: string) =>
+    db.state.consents.filter((consent) => consent.familyId === familyId).at(-1) ?? null;
   /**
    * The signed-in parent's place in a family, if their role may do the action there (plan 8.1).
    * Signed out is 401; another family is not found, as if it did not exist (CLAUDE.md rule 4); a
@@ -567,8 +644,8 @@ export function createHandlers({
     http.get(route('/device/profiles'), async () => {
       const failed = await interrupt();
       if (failed) return failed;
-      // This device belongs to the first family until devices are paired (ADR 0025).
-      const deviceFamily = db.state.families[0]?.id;
+      // The family a parent handed this device to; until then, the first (ADR 0046).
+      const deviceFamily = db.state.deviceFamilyId ?? db.state.families[0]?.id;
       return respond(DeviceProfilesResponse, {
         profiles: db.state.children
           .filter((child) => child.familyId === deviceFamily)
@@ -595,12 +672,39 @@ export function createHandlers({
       return respond(UnlockProfileResponse, { unlocked });
     }),
 
-    // The mock sign-in (ADR 0025): the accounts to sign in as. A real API never lists these.
+    // The demo accounts the mock sign-in offers (ADR 0025): the data file's, never anyone who
+    // signed up. A real API never lists these.
     http.get(route('/parent/accounts'), async () => {
       const failed = await interrupt();
       if (failed) return failed;
       return respond(MockAccountsResponse, {
-        accounts: db.state.accounts.map(({ id, displayName }) => ({ id, displayName })),
+        accounts: db.state.accounts
+          .filter(({ id }) => db.demoAccountIds.has(id))
+          .map(({ id, displayName }) => ({ id, displayName })),
+      });
+    }),
+
+    // Sends a sign-in link (ADR 0046). The mock shows it on screen instead of emailing it, and
+    // answers the same whether or not an account has the email, as a real API must.
+    http.post(route('/parent/magic-links'), async ({ request }) => {
+      const failed = await interrupt();
+      if (failed) return failed;
+      const body = await readBody(request, MagicLinkRequest);
+      if ('response' in body) return body.response;
+      const { email, signUp: details } = body.value;
+      const token = newId();
+      db.update((state) => {
+        state.magicLinks = state.magicLinks.filter((link) => link.expiresAt > now());
+        state.magicLinks.push({
+          token,
+          email,
+          ...(details ? { signUp: details } : {}),
+          expiresAt: now() + MAGIC_LINK_MS,
+        });
+      });
+      return respond(MagicLinkResponse, {
+        sentTo: email,
+        mockLink: `/parent/login?token=${token}`,
       });
     }),
 
@@ -615,17 +719,62 @@ export function createHandlers({
       if (failed) return failed;
       const body = await readBody(request, ParentSignInRequest);
       if ('response' in body) return body.response;
-      const { accountId } = body.value;
-      if (!db.state.accounts.some((account) => account.id === accountId)) {
-        return fail(400, 'invalid-request', 'No such account', [
-          { path: 'accountId', message: `No account ${accountId}` },
-        ]);
+      const signIn = body.value;
+      // A demo account, in the mock only (ADR 0025).
+      if ('accountId' in signIn) {
+        const { accountId } = signIn;
+        if (!db.state.accounts.some((account) => account.id === accountId)) {
+          return fail(400, 'invalid-request', 'No such account', [
+            { path: 'accountId', message: `No account ${accountId}` },
+          ]);
+        }
+        return signInAs(accountId);
       }
-      db.update((state) => {
-        state.signedInAccountId = accountId;
-      });
+      // A link works once, within its time.
+      if (signIn.method === 'magic-link') {
+        const link = db.state.magicLinks.find(
+          (candidate) => candidate.token === signIn.token && candidate.expiresAt > now(),
+        );
+        if (!link) {
+          return fail(400, 'invalid-request', 'This sign-in link has expired or been used', [
+            { path: 'token', message: 'Expired or used' },
+          ]);
+        }
+        db.update((state) => {
+          state.magicLinks = state.magicLinks.filter((candidate) => candidate.token !== link.token);
+        });
+        return signInByEmail(link.email, link.signUp);
+      }
+      if (signIn.method === 'passkey') {
+        const passkey = db.state.passkeys.find(
+          (candidate) => candidate.credentialId === signIn.credentialId,
+        );
+        if (!passkey) {
+          return fail(400, 'invalid-request', 'No such passkey', [
+            { path: 'credentialId', message: 'Unknown passkey' },
+          ]);
+        }
+        return signInAs(passkey.accountId);
+      }
+      // Google or Apple, mocked: the email their account has, which the provider vouches for.
+      return signInByEmail(signIn.email, signIn.signUp);
+    }),
+
+    // A passkey for the signed-in parent, mocked: the device keeps its credential ID (ADR 0046).
+    http.post(route('/parent/passkeys'), async () => {
+      const failed = await interrupt();
+      if (failed) return failed;
       const signedIn = sessionOf();
-      return signedIn ? respond(ParentSessionResponse, signedIn) : signedOut();
+      if (!signedIn) return signedOut();
+      const credentialId = newId();
+      db.update((state) => {
+        state.passkeys.push({
+          credentialId,
+          accountId: signedIn.account.id,
+          createdAt: new Date(now()).toISOString(),
+        });
+      });
+      return respond(PasskeyResponse, { credentialId }, 201);
     }),
 
     http.delete(route('/parent/session'), async () => {
@@ -651,7 +800,53 @@ export function createHandlers({
         role,
         children: childrenOf(family.id),
         entitlements,
+        consent: consentOf(family.id),
       });
+    }),
+
+    // An owner or guardian consents to the market's current privacy policy, before any child is
+    // added (plan 8.4, ADR 0046). Each consent is a new record; none is ever changed.
+    http.post(route('/families/:familyId/consent'), async ({ params, request }) => {
+      const failed = await interrupt();
+      if (failed) return failed;
+      const access = familyAccess(String(params.familyId), 'give-consent');
+      if ('response' in access) return access.response;
+      const body = await readBody(request, ConsentRequest);
+      if ('response' in body) return body.response;
+      const { account, family } = access;
+      if (body.value.policyVersion !== marketOf(family)?.privacyPolicyVersion) {
+        return fail(409, 'conflict', 'The privacy policy has changed: consent to the current one');
+      }
+      const consent = {
+        id: newId(),
+        familyId: family.id,
+        accountId: account.id,
+        policyVersion: body.value.policyVersion,
+        method: 'declaration' as const,
+        evidence: DECLARATION_EVIDENCE,
+        givenAt: new Date(now()).toISOString(),
+      };
+      db.update((state) => {
+        state.consents.push(consent);
+      });
+      return respond(ConsentResponse, { consent }, 201);
+    }),
+
+    // Any member hands this device to the family's children, starting with one of them (plan
+    // 8.1, ADR 0046): its profile picker then shows that family.
+    http.post(route('/families/:familyId/child-mode'), async ({ params, request }) => {
+      const failed = await interrupt();
+      if (failed) return failed;
+      const access = familyAccess(String(params.familyId), 'start-child-mode');
+      if ('response' in access) return access.response;
+      const body = await readBody(request, ChildModeRequest);
+      if ('response' in body) return body.response;
+      const child = childOf(body.value.childId);
+      if (!child || child.familyId !== access.family.id) return noChild(body.value.childId);
+      db.update((state) => {
+        state.deviceFamilyId = access.family.id;
+      });
+      return respond(ChildModeResponse, { childId: child.id });
     }),
 
     // An owner or guardian adds a child, within the plan's children.max (plan 9, ADR 0026). The
@@ -661,6 +856,10 @@ export function createHandlers({
       if (failed) return failed;
       const access = familyAccess(String(params.familyId), 'manage-children');
       if ('response' in access) return access.response;
+      // No child data before a parent's consent (plan 8.4, ADR 0046).
+      if (!consentOf(access.family.id)) {
+        return fail(409, 'conflict', 'A parent consents before a child is added');
+      }
       const body = await readBody(request, ChildProfileRequest);
       if ('response' in body) return body.response;
       const { account, family, entitlements } = access;
@@ -714,6 +913,13 @@ export function createHandlers({
         state.children = state.children.map((c) => (c.id === childId ? child : c));
       });
       return respond(ChildProfileResponse, { child });
+    }),
+
+    // The markets a family can sign up in (ADR 0046): configuration, the same for everyone.
+    http.get(route('/markets'), async () => {
+      const failed = await interrupt();
+      if (failed) return failed;
+      return respond(MarketListResponse, { markets: db.markets.map(({ market }) => market) });
     }),
 
     // A market's options for child profiles (plan 7.4): configuration, the same for everyone.

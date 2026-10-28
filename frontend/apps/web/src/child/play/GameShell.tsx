@@ -46,6 +46,11 @@ import {
 const MENU_CLASSES = 'flex flex-col gap-3 [&_p]:m-0';
 
 export interface GameShellProps {
+  /**
+   * The activity's name: the page's title and its top heading, which screen readers announce
+   * and jump to. It is not shown, since the game shows its own question.
+   */
+  title: string;
   game: GameModule;
   items: readonly Item[];
   mode: Mode;
@@ -86,6 +91,7 @@ type Menu = 'closed' | 'menu' | 'gate' | 'settings';
  * the parental gate (CLAUDE.md rule 6). It plays one session; give it a new `key` for another.
  */
 export function GameShell({
+  title,
   game,
   items,
   mode,
@@ -112,6 +118,10 @@ export function GameShell({
   const [menu, setMenu] = useState<Menu>('closed');
   const stageRef = useRef<HTMLElement>(null);
   const sessionRef = useRef<ShellSession>(undefined);
+
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
 
   // The game reads content text, numbers and settings when it uses them, so they follow later
   // changes.
@@ -273,6 +283,7 @@ export function GameShell({
     // trail itself on a row of its own, so the game keeps its room (ADR 0019). Their words stay as
     // the buttons' names for screen readers.
     <div className="flex flex-col min-block-dvh" data-testid="game-shell">
+      <h1 className="sr-only">{title}</h1>
       <header className="flex flex-wrap items-center gap-3 px-4 py-3 max-phone:grid max-phone:grid-cols-[auto_1fr_auto] max-phone:play:[&_.lf-button]:px-0 max-phone:play:[&_.lf-button]:inline-ui-target max-phone:[&_.lf-button\_\_label]:sr-only max-phone:[&>.lf-button:first-child]:col-start-1 max-phone:[&>.lf-button:first-child]:row-start-1 max-phone:[&>.lf-button:last-child:not(:first-child)]:col-start-3 max-phone:[&>.lf-button:last-child:not(:first-child)]:row-start-1">
         <Button variant="secondary" icon={<PauseIcon />} disabled={!playing} onClick={openMenu}>
           {t('child.play.pause')}

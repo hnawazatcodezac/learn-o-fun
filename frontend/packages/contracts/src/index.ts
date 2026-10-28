@@ -4,6 +4,7 @@ export * from './bands';
 export * from './child';
 export {
   ContentId,
+  HomeRegion,
   IsoDate,
   Locale,
   LocalizedText,
@@ -13,6 +14,7 @@ export {
   TimeZone,
   Uuidv7,
 } from './common';
+export * from './consent';
 export * from './entitlements';
 export * from './events';
 export * from './family';

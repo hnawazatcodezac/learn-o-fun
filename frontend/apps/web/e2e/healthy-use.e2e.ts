@@ -1,37 +1,7 @@
-import AxeBuilder from '@axe-core/playwright';
-import type { TimeLimits } from '@learnofun/contracts';
-import { expect, test, type Page } from '@playwright/test';
-import { answerRight, passGate, playAs, ROBIN, SAM, signInAs } from './helpers';
+import { expect, test } from '@playwright/test';
+import { answerRight, meetsWcag, passGate, playAs, ROBIN, setLimits } from './helpers';
 
 const ACTIVITY = '/play?activity=hop-line-add-within-20';
-const WCAG_22_AA = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
-
-async function meetsWcag(page: Page) {
-  const { violations } = await new AxeBuilder({ page }).withTags(WCAG_22_AA).analyze();
-  expect(violations.map((v) => `${v.id}: ${v.help} (${String(v.nodes.length)})`)).toEqual([]);
-}
-
-/**
- * Sets Robin's time limits in the dashboard, as a parent does (ADR 0027), before play starts. The
- * mock API answers on the real clock; the page's clock is fast-forwarded a quarter of an hour at
- * most, so both stay on the same day.
- */
-async function setLimits(page: Page, limits: TimeLimits) {
-  await signInAs(page, SAM);
-  const status = await page.evaluate(
-    async ({ childId, body }) => {
-      const familyId = '0192f4c1-0000-7000-8000-00000000f001';
-      const response = await fetch(`/api/families/${familyId}/children/${childId}/time-limits`, {
-        method: 'PUT',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      return response.status;
-    },
-    { childId: ROBIN, body: limits },
-  );
-  expect(status, 'the limits are saved').toBe(200);
-}
 
 test.beforeEach(async ({ page }) => {
   await playAs(page, ROBIN);

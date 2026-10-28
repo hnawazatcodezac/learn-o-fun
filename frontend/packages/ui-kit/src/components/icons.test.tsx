@@ -3,9 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { PinPicture } from './PicturePin/PinPicture';
 import * as icons from './icons';
 
-const ICONS = Object.entries(icons).filter(
-  (entry): entry is [string, (props: icons.IconProps) => React.JSX.Element] =>
-    entry[0].endsWith('Icon') && typeof entry[1] === 'function',
+const ICONS = Object.entries(icons).flatMap(([name, value]) =>
+  name.endsWith('Icon') && typeof value === 'function' ? [[name, value] as const] : [],
 );
 
 describe('Learnofun’s icons (ADR 0045)', () => {
@@ -19,10 +18,12 @@ describe('Learnofun’s icons (ADR 0045)', () => {
   });
 
   it('takes a size for a mark inside a badge, in place of the world’s', () => {
-    const html = renderToString(<icons.CheckIcon className="inline-4 block-4" />);
+    const html = renderToString(<icons.CheckIcon className="block-4 inline-4" />);
 
-    expect(html).toContain('inline-4 block-4');
+    expect(html).toMatch(/class="[^"]*block-4[^"]*"/);
+    expect(html).toMatch(/class="[^"]*inline-4[^"]*"/);
     expect(html).not.toContain('inline-ui-icon');
+    expect(html).not.toContain('block-ui-icon');
   });
 
   it('turns round right to left the icons that point along the line of text', () => {
@@ -33,7 +34,17 @@ describe('Learnofun’s icons (ADR 0045)', () => {
   });
 
   it('draws every picture-PIN picture as its own coloured shape', () => {
-    const pictures = ['sun', 'moon', 'star', 'heart', 'cloud', 'flower', 'fish', 'leaf', 'drop'] as const;
+    const pictures = [
+      'sun',
+      'moon',
+      'star',
+      'heart',
+      'cloud',
+      'flower',
+      'fish',
+      'leaf',
+      'drop',
+    ] as const;
     const drawings = pictures.map((picture) =>
       renderToString(<PinPicture picture={picture} />).replace(/^<svg[^>]*>/, ''),
     );

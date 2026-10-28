@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { SAM, signInAs } from './helpers';
+import { openDevTools, SAM, signInAs } from './helpers';
 
 const ARI = '0192f4c1-0000-7000-8000-00000000c002';
 const ROBIN = '0192f4c1-0000-7000-8000-00000000c001';

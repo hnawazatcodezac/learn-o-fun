@@ -8,8 +8,8 @@ import localFont from 'next/font/local';
 /*
  * The design system's three families, self-hosted with next/font (ADR 0019, ADR 0042), under
  * their own names, as the design tokens name them: a group of faces per subset, so a browser
- * downloads only the subsets a page shows. Only the Latin faces are preloaded, and they get a
- * fallback font sized to match.
+ * downloads only the subsets a page shows. The Latin faces get a fallback font sized to match,
+ * and only the child area's family, Baloo 2, is preloaded (ADR 0040).
  */
 
 export const baloo2Devanagari = localFont({
@@ -134,7 +134,7 @@ export const andikaLatin = localFont({
     { path: '../../../../node_modules/@fontsource/andika/files/andika-latin-700-normal.woff2', weight: '700', style: 'normal' },
   ],
   display: 'swap',
-  preload: true,
+  preload: false,
   adjustFontFallback: 'Arial',
   declarations: [
     { prop: 'font-family', value: "'Andika'" },
@@ -194,7 +194,7 @@ export const readexProLatin = localFont({
     { path: '../../../../node_modules/@fontsource/readex-pro/files/readex-pro-latin-600-normal.woff2', weight: '600', style: 'normal' },
   ],
   display: 'swap',
-  preload: true,
+  preload: false,
   adjustFontFallback: 'Arial',
   declarations: [
     { prop: 'font-family', value: "'Readex Pro'" },

@@ -21,12 +21,46 @@ const DevTools = __DEV_TOOLS__
   ? dynamic(() => import('../dev/DevTools').then((module) => module.DevTools), { ssr: false })
   : () => null;
 
+/**
+ * Registers the service worker and waits until it controls the page. MSW reloads a page that its
+ * worker is registered for but does not control, so it starts only once the worker does. A worker
+ * that fails to install, or one that will not control this page (after a hard reload), is left
+ * to MSW at once, as before.
+ */
+async function controlledBy(url: string): Promise<void> {
+  const workers = navigator.serviceWorker;
+  // Once a worker controls the page, MSW checks it for an update itself.
+  if (workers.controller) return;
+  const registration = await workers.register(url);
+  const worker = registration.installing ?? registration.waiting;
+  if (!worker) return;
+  await new Promise<void>((resolve) => {
+    workers.addEventListener(
+      'controllerchange',
+      () => {
+        resolve();
+      },
+      { once: true },
+    );
+    worker.addEventListener('statechange', () => {
+      if (worker.state === 'redundant') resolve();
+    });
+  });
+}
+
 /** Starts the mock API, or registers the service worker, once per page however often it renders. */
 let started: Promise<void> | undefined;
 function startServices(): Promise<void> {
   started ??= (async () => {
     if (useMockApi) {
+      // The service worker installs, caching the app, while the mock API downloads rather than
+      // after it, so the mock answers sooner on a first visit (ADR 0040).
+      const worker =
+        'serviceWorker' in navigator
+          ? controlledBy(serviceWorkerUrl).catch(() => undefined)
+          : undefined;
       const { startMockApi } = await import('@learnofun/mock-api/browser');
+      await worker;
       await startMockApi({ workerUrl: serviceWorkerUrl, quiet: !__DEV_TOOLS__ });
     } else if (!__DEV_TOOLS__ && 'serviceWorker' in navigator) {
       void navigator.serviceWorker.register(serviceWorkerUrl).catch(() => undefined);

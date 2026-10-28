@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Locale, Market, Timestamp, TimeZone, Uuidv7 } from './common';
+import { HomeRegion, Locale, Market, Timestamp, TimeZone, Uuidv7 } from './common';
 
 /** Owner: billing and deletion. Guardian: full child management. Caregiver: child mode only (plan 8.1). */
 export const FAMILY_ROLES = ['owner', 'guardian', 'caregiver'] as const;
@@ -29,7 +29,7 @@ export const Family = z
     /** Country whose law, prices and defaults apply. */
     market: Market,
     /** Where the family's personal data lives, such as `eu-1`. */
-    homeRegion: z.string().regex(/^[a-z]{2}-\d+$/, { error: 'Expected a region such as eu-1' }),
+    homeRegion: HomeRegion,
     timeZone: TimeZone,
     members: z.array(FamilyMember).min(1, { error: 'A family needs at least one member' }),
     createdAt: Timestamp,

@@ -2,8 +2,11 @@ import {
   IsoDate,
   LearningEvent,
   LearningSession,
+  SignUpDetails,
+  Timestamp,
   Uuidv7,
   type CatalogResponse,
+  type Features,
   type Item,
   type MarketConfig,
 } from '@learnofun/contracts';
@@ -20,6 +23,23 @@ export const MockState = MockRecords.extend({
   events: z.array(LearningEvent),
   /** Who is signed in to the parent dashboard, as a real API keeps a session (ADR 0025). */
   signedInAccountId: Uuidv7.optional(),
+  /** Sign-in links not yet used (ADR 0046), each for one email; older saved state has none. */
+  magicLinks: z
+    .array(
+      z.object({
+        token: z.string().min(1),
+        email: z.string().min(1),
+        signUp: SignUpDetails.optional(),
+        expiresAt: z.int(),
+      }),
+    )
+    .default([]),
+  /** Parents' mocked passkeys (ADR 0046); the device keeps its credential IDs. */
+  passkeys: z
+    .array(z.object({ credentialId: z.string().min(1), accountId: Uuidv7, createdAt: Timestamp }))
+    .default([]),
+  /** The family this device was handed to (ADR 0046); until then, the first family. */
+  deviceFamilyId: Uuidv7.optional(),
   /** More play a grown-up allowed on one day (ADR 0022). Older saved state has none. */
   timeGrants: z
     .array(z.object({ childId: Uuidv7, date: IsoDate, minutes: z.int().min(1) }))
@@ -74,6 +94,10 @@ function parseStored(text: string | null, fingerprint: string): MockState | unde
 export class MockDatabase {
   readonly catalog: CatalogResponse;
   readonly markets: readonly MarketConfig[];
+  /** What a family that signs up starts with (ADR 0046). */
+  readonly freePlanFeatures: Features;
+  /** The data file's accounts, which the sign-in offers as demo accounts (ADR 0025). */
+  readonly demoAccountIds: ReadonlySet<string>;
   private readonly history: ScriptedHistory;
   private readonly fingerprint: string;
   private current: MockState;
@@ -84,6 +108,8 @@ export class MockDatabase {
   ) {
     this.catalog = seed.catalog;
     this.markets = seed.markets;
+    this.freePlanFeatures = seed.freePlanFeatures;
+    this.demoAccountIds = new Set(seed.accounts.map((account) => account.id));
     this.history = historyOf(seed);
     this.fingerprint = fingerprintOf(seed);
     this.current = parseStored(storage.read(), this.fingerprint) ?? this.initial();
@@ -114,7 +140,7 @@ export class MockDatabase {
   }
 
   private initial(): MockState {
-    const { accounts, families, children, settings, goals, entitlements } = this.seed;
+    const { accounts, families, children, settings, goals, entitlements, consents } = this.seed;
     return structuredClone({
       accounts,
       families,
@@ -122,6 +148,9 @@ export class MockDatabase {
       settings,
       goals,
       entitlements,
+      consents,
+      magicLinks: [],
+      passkeys: [],
       sessions: this.history.sessions,
       events: this.history.events,
       timeGrants: [],

@@ -5,13 +5,17 @@ import {
   ChildProgressResponse,
   ChildSessionsResponse,
   ChildSnapshot,
+  ConsentResponse,
   DEFAULT_PLAY_SETTINGS,
   DEFAULT_TIME_LIMITS,
   DeviceProfilesResponse,
   FamilyResponse,
+  MagicLinkResponse,
   MarketConfig,
+  MarketListResponse,
   MockAccountsResponse,
   ParentSessionResponse,
+  PasskeyResponse,
   ParentSessionState,
   TodayResponse,
 } from '@learnofun/contracts';
@@ -1263,5 +1267,200 @@ describe('failure modes', () => {
     expect(answered).toBe(false);
     await vi.advanceTimersByTimeAsync(200);
     expect((await pending)?.status).toBe(200);
+  });
+});
+
+describe('accounts: sign-up, sign-in, consent and child mode (ADR 0046)', () => {
+  const SAM = '0192f4c1-0000-7000-8000-00000000a001';
+  const ALEX = '0192f4c1-0000-7000-8000-00000000a002';
+  const FREE = '0192f4c1-0000-7000-8000-00000000f001';
+  const PREMIUM = '0192f4c1-0000-7000-8000-00000000f002';
+  const POLICY = 'draft-2026-10';
+  const JO = { displayName: 'Jo', market: 'GB', uiLocale: 'en-GB' };
+  const KIT = {
+    nickname: 'Kit',
+    birthYear: 2019,
+    birthMonth: 6,
+    learningLanguage: 'en',
+    avatarId: 'purple-star',
+  };
+  const link = async (email: string, signUp?: typeof JO) =>
+    MagicLinkResponse.parse(
+      (await json('POST', '/parent/magic-links', { email, ...(signUp ? { signUp } : {}) })).body,
+    );
+  const tokenOf = ({ mockLink }: { mockLink?: string | undefined }) =>
+    new URLSearchParams(mockLink?.split('?')[1]).get('token') ?? '';
+  const redeem = (token: string) =>
+    json('POST', '/parent/session', { method: 'magic-link', token });
+  /** Signs Jo up with a magic link; answers with the new family's ID. */
+  const signUpJo = async () => {
+    const session = ParentSessionResponse.parse(
+      (await redeem(tokenOf(await link('jo@example.com', JO)))).body,
+    );
+    return { session, familyId: session.families[0]?.family.id ?? '' };
+  };
+
+  beforeEach(() => {
+    // 28 October 2026, 10:00 in London.
+    clock = () => Date.parse('2026-10-28T10:00:00.000Z');
+  });
+
+  it('signs up with a magic link: the account, and its family with them as owner, on the free plan', async () => {
+    const sent = await link('jo@example.com', JO);
+    expect(sent.sentTo).toBe('jo@example.com');
+
+    const { status, body } = await redeem(tokenOf(sent));
+    expect(status).toBe(200);
+    const session = ParentSessionResponse.parse(body);
+    expect(session.account).toMatchObject({
+      displayName: 'Jo',
+      email: 'jo@example.com',
+      uiLocale: 'en-GB',
+    });
+    expect(session.families).toEqual([
+      expect.objectContaining({
+        role: 'owner',
+        ownerName: 'Jo',
+        family: expect.objectContaining({
+          market: 'GB',
+          homeRegion: 'eu-1',
+          timeZone: 'Europe/London',
+        }) as unknown,
+      }),
+    ]);
+    const family = FamilyResponse.parse(
+      (await json('GET', `/families/${session.families[0]?.family.id ?? ''}`)).body,
+    );
+    expect(family.children).toEqual([]);
+    expect(family.consent).toBeNull();
+    expect(family.entitlements.features).toEqual(seedData.freePlanFeatures);
+  });
+
+  it('answers a link request the same whether or not the email has an account', async () => {
+    const known = await json('POST', '/parent/magic-links', { email: 'sam@example.com' });
+    const unknown = await json('POST', '/parent/magic-links', { email: 'nobody@example.com' });
+
+    expect([known.status, unknown.status]).toEqual([200, 200]);
+    expect(Object.keys(known.body)).toEqual(Object.keys(unknown.body));
+  });
+
+  it('signs in with a magic link once, within 15 minutes', async () => {
+    const token = tokenOf(await link('sam@example.com'));
+    expect(ParentSessionResponse.parse((await redeem(token)).body).account.displayName).toBe('Sam');
+    expect((await redeem(token)).status).toBe(400);
+
+    const later = tokenOf(await link('sam@example.com'));
+    clock = () => Date.parse('2026-10-28T10:16:00.000Z');
+    expect((await redeem(later)).status).toBe(400);
+  });
+
+  it('signs nobody in from a sign-in link for an email with no account', async () => {
+    expect((await redeem(tokenOf(await link('nobody@example.com')))).status).toBe(404);
+    expect((await json('GET', '/parent/session')).body).toEqual({ session: null });
+  });
+
+  it('signs in, and makes no second account, when someone signs up with an email already used', async () => {
+    const session = ParentSessionResponse.parse(
+      (await redeem(tokenOf(await link('sam@example.com', JO)))).body,
+    );
+
+    expect(session.account.displayName).toBe('Sam');
+    expect(session.families).toHaveLength(2);
+  });
+
+  it('signs in and up with Google or Apple, mocked', async () => {
+    const google = await json('POST', '/parent/session', {
+      method: 'google',
+      email: 'alex@example.com',
+    });
+    expect(ParentSessionResponse.parse(google.body).account.displayName).toBe('Alex');
+
+    const unknown = { method: 'apple', email: 'new@example.com' };
+    expect((await json('POST', '/parent/session', unknown)).status).toBe(404);
+    const apple = await json('POST', '/parent/session', { ...unknown, signUp: JO });
+    expect(ParentSessionResponse.parse(apple.body).account.email).toBe('new@example.com');
+  });
+
+  it('adds a passkey for the signed-in parent, which signs them in again', async () => {
+    expect((await json('POST', '/parent/passkeys')).status).toBe(401);
+    await json('POST', '/parent/session', { accountId: SAM });
+    const added = await json('POST', '/parent/passkeys');
+    expect(added.status).toBe(201);
+    const { credentialId } = PasskeyResponse.parse(added.body);
+    await api('DELETE', '/parent/session');
+
+    const again = await json('POST', '/parent/session', { method: 'passkey', credentialId });
+    expect(ParentSessionResponse.parse(again.body).account.displayName).toBe('Sam');
+    const unknown = { method: 'passkey', credentialId: 'not-a-passkey' };
+    expect((await json('POST', '/parent/session', unknown)).status).toBe(400);
+  });
+
+  it('offers only the data file’s accounts as demo accounts, never one that signed up', async () => {
+    await signUpJo();
+    const { accounts } = MockAccountsResponse.parse((await json('GET', '/parent/accounts')).body);
+
+    expect(accounts.map((account) => account.displayName)).toEqual(['Sam', 'Alex']);
+  });
+
+  it('GET /markets lists the markets a family can sign up in', async () => {
+    expect(MarketListResponse.parse((await json('GET', '/markets')).body)).toEqual({
+      markets: ['GB'],
+    });
+  });
+
+  it('takes consent to the current privacy policy before a child can be added (plan 8.4)', async () => {
+    const { session, familyId } = await signUpJo();
+    const consent = (body: unknown) => json('POST', `/families/${familyId}/consent`, body);
+    expect((await json('POST', `/families/${familyId}/children`, KIT)).status).toBe(409);
+
+    expect((await consent({ policyVersion: 'older', agreed: true })).status).toBe(409);
+    expect((await consent({ policyVersion: POLICY, agreed: false })).status).toBe(400);
+    const given = await consent({ policyVersion: POLICY, agreed: true });
+    expect(given.status).toBe(201);
+    expect(ConsentResponse.parse(given.body).consent).toMatchObject({
+      familyId,
+      accountId: session.account.id,
+      policyVersion: POLICY,
+      method: 'declaration',
+      givenAt: '2026-10-28T10:00:00.000Z',
+    });
+    const family = FamilyResponse.parse((await json('GET', `/families/${familyId}`)).body);
+    expect(family.consent?.policyVersion).toBe(POLICY);
+    expect((await json('POST', `/families/${familyId}/children`, KIT)).status).toBe(201);
+  });
+
+  it('hands the device to a family: its profile picker then shows that family’s children', async () => {
+    const { familyId } = await signUpJo();
+    await json('POST', `/families/${familyId}/consent`, { policyVersion: POLICY, agreed: true });
+    const { child } = ChildProfileResponse.parse(
+      (await json('POST', `/families/${familyId}/children`, KIT)).body,
+    );
+
+    const handed = await json('POST', `/families/${familyId}/child-mode`, { childId: child.id });
+    expect(handed).toEqual({ status: 200, body: { childId: child.id } });
+    const { profiles } = DeviceProfilesResponse.parse((await json('GET', '/device/profiles')).body);
+    expect(profiles.map((profile) => profile.nickname)).toEqual(['Kit']);
+  });
+
+  it('never consents for, or hands over to, another family: not found (CLAUDE.md rule 4)', async () => {
+    await json('POST', '/parent/session', { accountId: ALEX });
+
+    const consent = { policyVersion: POLICY, agreed: true };
+    expect((await json('POST', `/families/${FREE}/consent`, consent)).status).toBe(404);
+    expect((await json('POST', `/families/${FREE}/child-mode`, { childId: ROBIN })).status).toBe(
+      404,
+    );
+    // Nor another family's child through a family of one's own.
+    expect((await json('POST', `/families/${PREMIUM}/child-mode`, { childId: ROBIN })).status).toBe(
+      404,
+    );
+  });
+
+  it('answers 401 while nobody is signed in', async () => {
+    const consent = { policyVersion: POLICY, agreed: true };
+    expect((await json('POST', `/families/${FREE}/consent`, consent)).status).toBe(401);
+    expect((await json('POST', `/families/${FREE}/child-mode`, { childId: ROBIN })).status).toBe(
+      401,
+    );
   });
 });

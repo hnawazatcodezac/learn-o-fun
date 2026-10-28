@@ -20,12 +20,22 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      testIgnore: '**/pwa.e2e.ts',
+      testIgnore: ['**/pwa.e2e.ts', '**/performance.e2e.ts'],
       use: { ...devices['Desktop Chrome'] },
     },
     {
       name: 'pwa',
       testMatch: '**/pwa.e2e.ts',
+      use: { ...devices['Desktop Chrome'], baseURL: previewURL },
+    },
+    {
+      // The performance budgets (ADR 0040): after the other projects and one test at a time, so
+      // that nothing else slows a measurement. `--project=performance --no-deps` runs them alone.
+      name: 'performance',
+      testMatch: '**/performance.e2e.ts',
+      dependencies: ['chromium', 'pwa'],
+      fullyParallel: false,
+      workers: 1,
       use: { ...devices['Desktop Chrome'], baseURL: previewURL },
     },
   ],
